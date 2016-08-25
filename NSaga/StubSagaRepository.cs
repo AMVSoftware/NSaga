@@ -18,6 +18,16 @@ namespace NSaga
             throw new NotImplementedException();
         }
 
+        public dynamic Find(Guid correlationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public dynamic InitiateSaga(Type sagaType)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Save<TSagaData>(ISaga<TSagaData> saga)
         {
             throw new NotImplementedException();
