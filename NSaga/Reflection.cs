@@ -7,12 +7,16 @@ using System.Threading.Tasks;
 
 namespace NSaga
 {
+    /// <summary>
+    /// Because of all the generics and the way .Net works with Generics,
+    /// we have to use a metric ton of reflection
+    /// </summary>
     public static class Reflection
     {
-        public static void Set(object instance, string name, object value)
+        public static void Set(object instance, string propertyName, object value)
         {
             Type type = instance.GetType();
-            PropertyInfo property = type.GetProperty(name);
+            PropertyInfo property = type.GetProperty(propertyName);
             if (property == null || property.CanWrite == false)
             {
                 return;
@@ -21,10 +25,10 @@ namespace NSaga
         }
 
 
-        public static object Get(object instance, string name)
+        public static object Get(object instance, string propertyName)
         {
             Type type = instance.GetType();
-            PropertyInfo property = type.GetProperty(name);
+            PropertyInfo property = type.GetProperty(propertyName);
             if (property == null)
             {
                 return null;
@@ -62,5 +66,53 @@ namespace NSaga
 
             return genericParameter;
         }
+
+
+        /// <summary>
+        /// Return all saga types that are initiated by this type of message
+        /// </summary>
+        /// <param name="message">Initialisation message to check for</param>
+        /// <param name="assemblies">Assemblies to scan for sagas</param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetSagaTypesInitiatedBy(IInitiatingSagaMessage message, params Assembly[] assemblies)
+        {
+            if (assemblies.Length == 0)
+            {
+                assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            }
+
+            var messageType = message.GetType();
+            var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(messageType);
+
+            var scan = assemblies.SelectMany(a => a.GetTypes())
+                                 .Where(t => initiatingInterfaceType.IsAssignableFrom(t))
+                                 .ToList();
+
+            return scan;
+        }
+
+
+        public static object InvokeGenericMethod(object invocationTarget, string methodName, Type genericParameterType, params object[] parameters)
+        {
+            var invocationTargetType = invocationTarget.GetType();
+            var methodInfo = invocationTargetType.GetMethod(methodName);
+            var genericMethod = methodInfo.MakeGenericMethod(genericParameterType);
+            return genericMethod.Invoke(invocationTarget, parameters);
+        }
+
+
+        ////http://stackoverflow.com/a/2575341/809357
+        //private static readonly Action<Exception> _internalPreserveStackTrace =
+        //    (Action<Exception>)Delegate.CreateDelegate(
+        //        typeof(Action<Exception>),
+        //        typeof(Exception).GetMethod(
+        //            "InternalPreserveStackTrace",
+        //            BindingFlags.Instance | BindingFlags.NonPublic));
+
+        //public static void PreserveStackTrace(Exception e)
+        //{
+        //    _internalPreserveStackTrace(e);
+        //}
+
     }
 }

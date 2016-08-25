@@ -7,10 +7,12 @@ namespace Samples
                                        InitiatedBy<PersonalDetailsVerification>,
                                        ConsumerOf<VerificationCodeRequest>,
                                        ConsumerOf<VerificationCodeProvided>,
-                                       ConcludeBy<AccountDetailsProvided>
+                                       ConsumerOf<AccountDetailsProvided>
     {
         public AccountCreationSagaData SagaData { get; set; }
         public Guid CorrelationId { get; set; }
+        public bool IsCompleted { get; set; }
+
 
         public AccountCreationSaga(/*Some dependencies*/)
         {
@@ -82,7 +84,7 @@ namespace Samples
         }
 
 
-        public OperationResult Conclude(AccountDetailsProvided message)
+        public OperationResult Consume(AccountDetailsProvided message)
         {
             if (!SagaData.IsVerificationCodeMatched)
             {

@@ -1,34 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSaga
 {
     public class StubSagaRepository : ISagaRepository
     {
-        public ISaga<TSagaData> InitiateSaga<TSagaData>()
+        public TSaga Find<TSaga>(Guid correlationId) where TSaga : class
         {
             throw new NotImplementedException();
         }
 
-        public ISaga<TSagaData> Find<TSagaData>(Guid correlationId)
+        public void Save<TSaga>(TSaga saga) where TSaga : class
         {
             throw new NotImplementedException();
         }
 
-        public dynamic Find(Guid correlationId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public dynamic InitiateSaga(Type sagaType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Save<TSagaData>(ISaga<TSagaData> saga)
+        public void Complete<TSaga>(TSaga saga) where TSaga : class
         {
             throw new NotImplementedException();
         }

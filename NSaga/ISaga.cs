@@ -6,7 +6,10 @@ namespace NSaga
     {
         TSagaData SagaData { get; set; }
         Guid CorrelationId { get; set; }
+        bool IsCompleted { get; set; }
     }
+
+
 
     public interface ISagaMessage
     {
@@ -15,10 +18,11 @@ namespace NSaga
 
 
     public interface IInitiatingSagaMessage : ISagaMessage
-    { }
+    {
+        // marker interface
+    }
 
     public interface InitiatedBy<TMsg> where TMsg : IInitiatingSagaMessage
-
     {
         OperationResult Initiate(TMsg message);
     }
@@ -26,10 +30,5 @@ namespace NSaga
     public interface ConsumerOf<TMsg> where TMsg : ISagaMessage
     {
         OperationResult Consume(TMsg message);
-    }
-
-    public interface ConcludeBy<TMsg> where TMsg : ISagaMessage
-    {
-        OperationResult Conclude(TMsg message);
     }
 }
