@@ -41,7 +41,6 @@ namespace Tests
 
 
 
-
         class MySagaInitiatingMessage : IInitiatingSagaMessage
         {
             public Guid CorrelationId { get; set; }
