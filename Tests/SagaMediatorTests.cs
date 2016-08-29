@@ -172,6 +172,24 @@ namespace Tests
         }
 
 
+        [Fact]
+        public void Initiate_SageDoesNotInitiateDate_InitiatesSagaDataObject()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var sagaRepository = new SagaRepositoryInMemoryStub();
+            var sut = CreateSut(sagaRepository);
+            var initiatingMessage = new InitiatingSagaWithErrors(correlationId);
+
+            // Act
+            sut.Consume(initiatingMessage);
+
+            // Assert
+            var saga = (SagaWithErrors)sagaRepository.Sagas[correlationId];
+            saga.SagaData.Should().NotBeNull();
+        }
+
+
 
 
         private static SagaMediator CreateSut(ISagaRepository repository = null, IServiceLocator serviceLocator = null)

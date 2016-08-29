@@ -14,7 +14,6 @@ namespace Tests.Stubs
     {
         public SagaWithErrors()
         {
-            SagaData = new SagaWithErrorsData();
         }
 
         public SagaWithErrorsData SagaData { get; set; }
