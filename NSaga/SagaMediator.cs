@@ -30,8 +30,10 @@ namespace NSaga
 
         public OperationResult Consume(ISagaMessage sagaMessage)
         {
-            // try to find the existing saga with this CorrelationID
-
+            if (sagaMessage.CorrelationId == default(Guid))
+            {
+                throw new ArgumentException("CorrelationId was not provided in the message. Please make sure you assign CorrelationId before initiating your Saga");
+            }
             //var saga = sagaRepository.Find(sagaMessage.CorrelationId);
 
             //var initiatingMessage = sagaMessage as IInitiatingSagaMessage;

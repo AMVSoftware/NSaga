@@ -7,13 +7,15 @@ namespace Tests.Stubs
     {
         public bool IsInitialised { get; set; }
         public bool IsAdditionalInitialiserCalled { get; set; }
+        public bool IsConsumingMessageReceived { get; set; }
     }
 
 
     public class MySaga : ISaga<MySagaData>, 
                           InitiatedBy<MySagaInitiatingMessage>,
                           InitiatedBy<MultipleSagaInitiator>,
-                          InitiatedBy<MySagaAdditionalInitialser>
+                          InitiatedBy<MySagaAdditionalInitialser>,
+                          ConsumerOf<MySagaConsumingMessage>
     {
         public MySagaData SagaData { get; set; }
         public Guid CorrelationId { get; set; }
@@ -46,9 +48,14 @@ namespace Tests.Stubs
 
             return new OperationResult();
         }
+
+        public OperationResult Consume(MySagaConsumingMessage message)
+        {
+            SagaData.IsConsumingMessageReceived = true;
+
+            return new OperationResult();
+        }
     }
-
-
 
 
     public class MySagaInitiatingMessage : IInitiatingSagaMessage
@@ -73,6 +80,22 @@ namespace Tests.Stubs
         {
             CorrelationId = correlationId;
         }
+        public Guid CorrelationId { get; set; }
+    }
+
+
+    public class MySagaConsumingMessage : ISagaMessage
+    {
+        public MySagaConsumingMessage(Guid correlationId)
+        {
+            this.CorrelationId = correlationId;
+        }
+
+        public MySagaConsumingMessage()
+        {
+            // not assigning Guid to the ID - that's deliberate
+        }
+
         public Guid CorrelationId { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Tests
 {
-    public class SagaMediatorTests
+    public class SagaMediatorInitiationsTests
     {
         [Fact]
         public void Initiate_NoCorrelationId_Throws()
@@ -196,7 +196,7 @@ namespace Tests
         {
             repository = repository ?? new SagaRepositoryInMemoryStub();
             serviceLocator = serviceLocator ?? new StubSagaServiceLocator();
-            var sut = new SagaMediator(repository, serviceLocator, typeof(SagaMediatorTests).Assembly);
+            var sut = new SagaMediator(repository, serviceLocator, typeof(SagaMediatorInitiationsTests).Assembly);
             return sut;
         }
     }
