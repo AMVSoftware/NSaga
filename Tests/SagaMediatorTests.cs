@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentAssertions;
 using NSaga;
-using NSubstitute.ExceptionExtensions;
 using Tests.Stubs;
 using Xunit;
 
@@ -149,6 +148,29 @@ namespace Tests
             // Assert
             act.ShouldThrow<ArgumentException>().Which.Message.Contains("initiating more than one saga");
         }
+
+
+
+
+        [Fact]
+        public void Initiate_AdditionalInitialser_CorrectlyCalled()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var sagaRepository = new SagaRepositoryInMemoryStub();
+            var sut = CreateSut(sagaRepository);
+            var initiatingMessage = new MySagaAdditionalInitialser(correlationId);
+
+            // Act
+            sut.Consume(initiatingMessage);
+
+            // Assert
+            var saga = (MySaga)sagaRepository.Sagas[correlationId];
+            saga.SagaData.IsInitialised.Should().BeFalse();
+            saga.SagaData.IsAdditionalInitialiserCalled.Should().BeTrue();
+            saga.CorrelationId.Should().Be(correlationId);
+        }
+
 
 
 

@@ -3,30 +3,17 @@ using NSaga;
 
 namespace Tests.Stubs
 {
-    public class MySagaInitiatingMessage : IInitiatingSagaMessage
-    {
-        public MySagaInitiatingMessage()
-        {
-        }
-
-        public MySagaInitiatingMessage(Guid correlationId)
-        {
-            this.CorrelationId = correlationId;
-        }
-
-        public Guid CorrelationId { get; set; }
-    }
-
-
     public class MySagaData
     {
         public bool IsInitialised { get; set; }
+        public bool IsAdditionalInitialiserCalled { get; set; }
     }
 
 
     public class MySaga : ISaga<MySagaData>, 
                           InitiatedBy<MySagaInitiatingMessage>,
-                          InitiatedBy<MultipleSagaInitiator>
+                          InitiatedBy<MultipleSagaInitiator>,
+                          InitiatedBy<MySagaAdditionalInitialser>
     {
         public MySagaData SagaData { get; set; }
         public Guid CorrelationId { get; set; }
@@ -52,5 +39,40 @@ namespace Tests.Stubs
 
             return new OperationResult();
         }
+
+        public OperationResult Initiate(MySagaAdditionalInitialser message)
+        {
+            SagaData.IsAdditionalInitialiserCalled = true;
+
+            return new OperationResult();
+        }
+    }
+
+
+
+
+    public class MySagaInitiatingMessage : IInitiatingSagaMessage
+    {
+        public MySagaInitiatingMessage()
+        {
+        }
+
+        public MySagaInitiatingMessage(Guid correlationId)
+        {
+            this.CorrelationId = correlationId;
+        }
+
+        public Guid CorrelationId { get; set; }
+    }
+
+
+
+    public class MySagaAdditionalInitialser : IInitiatingSagaMessage
+    {
+        public MySagaAdditionalInitialser(Guid correlationId)
+        {
+            CorrelationId = correlationId;
+        }
+        public Guid CorrelationId { get; set; }
     }
 }
