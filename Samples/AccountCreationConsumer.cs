@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSaga;
+﻿using NSaga;
 
 namespace Samples
 {
@@ -11,7 +6,7 @@ namespace Samples
     {
         public void TrySaga()
         {
-            var sagaMediator = new SagaMediator(new StubSagaRepository());
+            var sagaMediator = new SagaMediator(new StubSagaRepository(), new StubServiceLocator());
 
             var initialMessage = new PersonalDetailsVerification();
 

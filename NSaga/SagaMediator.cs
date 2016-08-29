@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace NSaga
 {
     public class SagaMediator
     {
         private readonly ISagaRepository sagaRepository;
+        private readonly IServiceLocator serviceLocator;
         private readonly Assembly[] assembliesToScan;
 
-        public SagaMediator(ISagaRepository sagaRepository, params Assembly[] assembliesToScan)
+        public SagaMediator(ISagaRepository sagaRepository, IServiceLocator serviceLocator, params Assembly[] assembliesToScan)
         {
             this.sagaRepository = sagaRepository;
+            this.serviceLocator = serviceLocator;
 
             if (assembliesToScan.Length == 0)
             {
@@ -63,6 +64,11 @@ namespace NSaga
 
         public OperationResult Consume(IInitiatingSagaMessage initiatingMessage)
         {
+            if (initiatingMessage.CorrelationId == default(Guid))
+            {
+                throw new ArgumentException("CorrelationId was not provided in the message. Please make sure you assign CorrelationId before initiating your Saga");
+            }
+
             // find all sagas that are initiated by this message
             var sagaTypes = Reflection.GetSagaTypesInitiatedBy(initiatingMessage, assembliesToScan);
 
@@ -77,11 +83,17 @@ namespace NSaga
                 }
             }
 
+            var operationResult = new OperationResult();
             // now create an instance of each saga and persist the data
+            foreach (var sagaType in sagaTypes)
+            {
+                dynamic saga = serviceLocator.Resolve(sagaType);
+                dynamic errors = saga.Initiate(initiatingMessage);
+                saga.CorrelationId = initiatingMessage.CorrelationId;
+                operationResult.Merge(errors);
+            }
 
-
-
-            throw new NotImplementedException();
+            return operationResult;
         }
     }
 }

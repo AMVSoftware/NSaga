@@ -19,4 +19,17 @@ namespace NSaga
             throw new NotImplementedException();
         }
     }
+
+    public class StubServiceLocator : IServiceLocator//IServiceProvider
+    {
+        public T Resolve<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public object Resolve(Type type)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

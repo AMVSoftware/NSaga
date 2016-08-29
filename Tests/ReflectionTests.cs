@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NSaga;
@@ -41,28 +40,7 @@ namespace Tests
 
 
 
-        class MySagaInitiatingMessage : IInitiatingSagaMessage
-        {
-            public Guid CorrelationId { get; set; }
-        }
 
-
-        class MySagaData
-        {
-            public String Name { get; set; }
-        }
-
-        class MySaga : ISaga<MySagaData>, InitiatedBy<MySagaInitiatingMessage>
-        {
-            public MySagaData SagaData { get; set; }
-            public Guid CorrelationId { get; set; }
-            public bool IsCompleted { get; set; }
-
-            public OperationResult Initiate(MySagaInitiatingMessage message)
-            {
-                throw new NotImplementedException();
-            }
-        }
 
         class RepositorySpy
         {
