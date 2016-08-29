@@ -6,12 +6,13 @@ namespace Tests.Stubs
 {
     public class SagaRepositoryInMemoryStub : ISagaRepository
     {
+        public Dictionary<Guid, object> Sagas { get; set; }
+
         public SagaRepositoryInMemoryStub()
         {
-            Sagas = new Dictionary<Guid, ISaga<MySagaData>>();
+            Sagas = new Dictionary<Guid, object>();
         }
 
-        public Dictionary<Guid, ISaga<MySagaData>> Sagas { get; set; }
 
 
         public TSaga Find<TSaga>(Guid correlationId) where TSaga : class

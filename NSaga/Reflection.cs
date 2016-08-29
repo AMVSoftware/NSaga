@@ -100,13 +100,18 @@ namespace NSaga
         }
 
 
-        public static object InvokeMethod(object invocationTarget, string methodName, params object[] parameters)
+        public static object InvokeMethod(object invocationTarget, string methodName, object parameter)
         {
             var invocationTargetType = invocationTarget.GetType();
-            var methodInfo = invocationTargetType.GetMethod(methodName);
-            var result = methodInfo.Invoke(invocationTarget, parameters);
+            var methodInfo = invocationTargetType.GetMethods()
+                                                 .Where(m => m.Name == methodName)
+                                                 .FirstOrDefault(m => m.GetParameters().First().ParameterType == parameter.GetType());
+            if (methodInfo == null)
+            {
+                throw new ArgumentException($"Unable to find method {methodName} with parameter type {parameter.GetType().Name}");
+            }
 
-            return result;
+            return methodInfo.Invoke(invocationTarget, new []{ parameter });
         }
 
 

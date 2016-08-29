@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using NSaga;
+using NSubstitute.ExceptionExtensions;
 using Tests.Stubs;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace Tests
             Action act = () => sut.Consume(initiatingMessage);
 
             // Assert
-            act.ShouldThrow<ArgumentException>();
+            act.ShouldThrow<ArgumentException>().Which.Message.Contains("CorrelationId was not provided in the message");
         }
 
 
@@ -38,7 +39,7 @@ namespace Tests
             Action act = () => sut.Consume(initiatingMessage);
 
             // Assert
-            act.ShouldThrow<ArgumentException>();
+            act.ShouldThrow<ArgumentException>().Which.Message.Contains("Trying to initiate the same saga twice");
         }
 
 
@@ -53,7 +54,7 @@ namespace Tests
             Action act = () => sut.Consume(initiatingMessage);
 
             // Assert
-            act.ShouldThrow<ArgumentException>();
+            act.ShouldThrow<ArgumentException>().Which.Message.Contains("is not initiating any Sagas");
         }
 
 
@@ -63,7 +64,7 @@ namespace Tests
             //Arrange
             var correlationId = Guid.NewGuid();
             var sagaRepository = new SagaRepositoryInMemoryStub();
-            var sut = CreateSut(sagaRepository, new StubSagaServiceLocator());
+            var sut = CreateSut(sagaRepository);
             var initiatingMessage = new MySagaInitiatingMessage(correlationId);
             
             // Act
@@ -71,7 +72,7 @@ namespace Tests
 
             // Assert
             sagaRepository.Sagas.Should().HaveCount(1);
-            var saga = sagaRepository.Sagas[correlationId];
+            var saga = (MySaga)sagaRepository.Sagas[correlationId];
             saga.CorrelationId.Should().Be(correlationId);
         }
 
@@ -82,14 +83,14 @@ namespace Tests
             //Arrange
             var correlationId = Guid.NewGuid();
             var sagaRepository = new SagaRepositoryInMemoryStub();
-            var sut = CreateSut(sagaRepository, new StubSagaServiceLocator());
+            var sut = CreateSut(sagaRepository);
             var initiatingMessage = new MySagaInitiatingMessage(correlationId);
 
             // Act
             sut.Consume(initiatingMessage);
 
             // Assert
-            var saga = sagaRepository.Sagas[correlationId];
+            var saga = (MySaga)sagaRepository.Sagas[correlationId];
             saga.CorrelationId.Should().Be(correlationId);
             saga.SagaData.IsInitialised.Should().BeTrue();
         }
@@ -101,15 +102,52 @@ namespace Tests
             //Arrange
             var correlationId = Guid.NewGuid();
             var sagaRepository = new SagaRepositoryInMemoryStub();
-            var sut = CreateSut(sagaRepository, new StubSagaServiceLocator());
+            var sut = CreateSut(sagaRepository);
             var initiatingMessage = new MySagaInitiatingMessage(correlationId);
 
             // Act
             sut.Consume(initiatingMessage);
 
             // Assert
-            var saga = sagaRepository.Sagas[correlationId];
+            var saga = (MySaga)sagaRepository.Sagas[correlationId];
             saga.SagaData.IsInitialised.Should().BeTrue();
+        }
+
+
+        [Fact]
+        public void Initiate_SagaWithErrors_ReturnsErrors()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var sagaRepository = new SagaRepositoryInMemoryStub();
+            var sut = CreateSut(sagaRepository);
+            var initiatingMessage = new InitiatingSagaWithErrors(correlationId);
+
+            // Act
+            var errors = sut.Consume(initiatingMessage);
+
+            // Assert
+            errors.Should().HaveCount(1).And.Contain("This is not right!");
+            var saga = (SagaWithErrors)sagaRepository.Sagas[correlationId];
+            saga.SagaData.IsInitiated.Should().BeTrue();
+        }
+
+
+        [Fact]
+        public void Initiate_MultipleInitiator_Throws()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var sagaRepository = new SagaRepositoryInMemoryStub();
+            var sut = CreateSut(sagaRepository);
+
+            var message = new MultipleSagaInitiator(correlationId);
+
+            // Act
+            Action act = () => sut.Consume(message);
+
+            // Assert
+            act.ShouldThrow<ArgumentException>().Which.Message.Contains("initiating more than one saga");
         }
 
 
@@ -120,18 +158,6 @@ namespace Tests
             serviceLocator = serviceLocator ?? new StubSagaServiceLocator();
             var sut = new SagaMediator(repository, serviceLocator, typeof(SagaMediatorTests).Assembly);
             return sut;
-        }
-
-
-
-
-
-
-
-        // message that does not inititate anything
-        public class MyFakeInitiatingMessage : IInitiatingSagaMessage
-        {
-            public Guid CorrelationId { get; set; }
         }
     }
 }

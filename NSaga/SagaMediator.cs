@@ -74,33 +74,34 @@ namespace NSaga
 
             if (!sagaTypes.Any())
             {
-                throw new ArgumentException($"Message with type {initiatingMessage.GetType().Name} is not initiating any Sagas. Please add InitiatedBy<{initiatingMessage.GetType().Name}> to your Saga type");
+                throw new ArgumentException($"Message of type {initiatingMessage.GetType().Name} is not initiating any Sagas. Please add InitiatedBy<{initiatingMessage.GetType().Name}> to your Saga type");
             }
+
+            if (sagaTypes.Count() > 1)
+            {
+                // can't have multiple sagas initiated by the same message - can't have 2 sagas of different types with the same CorrelationId
+                var sagaNames = String.Join(", ", sagaTypes.Select(t => t.Name));
+                throw new ArgumentException($"Message of type {initiatingMessage.GetType().Name} is initiating more than one saga. Please make sure any single message is initiating only one saga. Affected sagas: {sagaNames}");
+            }
+
+            var sagaType = sagaTypes.First();
 
             // try to find sagas that already exist
-            foreach (var sagaType in sagaTypes)
+            var existingSaga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, initiatingMessage.CorrelationId);
+            if (existingSaga != null)
             {
-                var existingSaga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, initiatingMessage.CorrelationId);
-
-                if (existingSaga != null)
-                {
-                    throw new ArgumentException($"Trying to initiate the same saga twice. {initiatingMessage.GetType().Name} is Initiating Message, but saga of type {sagaType.Name} with CorrelationId {initiatingMessage.CorrelationId} already exists");
-                }
+                throw new ArgumentException($"Trying to initiate the same saga twice. {initiatingMessage.GetType().Name} is Initiating Message, but saga of type {sagaType.Name} with CorrelationId {initiatingMessage.CorrelationId} already exists");
             }
 
-            var operationResult = new OperationResult();
             // now create an instance of each saga and persist the data
-            foreach (var sagaType in sagaTypes)
-            {
-                dynamic saga = serviceLocator.Resolve(sagaType);
-                saga.CorrelationId = initiatingMessage.CorrelationId;
+            var saga = serviceLocator.Resolve(sagaType);
+            var correlationId = initiatingMessage.CorrelationId;
+            Reflection.Set(saga, "CorrelationId", correlationId);
 
-                var errors = (OperationResult)Reflection.InvokeMethod(saga, "Initiate", initiatingMessage);
-                operationResult.Merge(errors);
-                sagaRepository.Save(saga);
-            }
+            var errors = (OperationResult)Reflection.InvokeMethod(saga, "Initiate", initiatingMessage);
+            sagaRepository.Save(saga);
 
-            return operationResult;
+            return errors;
         }
     }
 }

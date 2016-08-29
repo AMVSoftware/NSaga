@@ -20,12 +20,13 @@ namespace Tests.Stubs
 
     public class MySagaData
     {
-        public String Name { get; set; }
         public bool IsInitialised { get; set; }
     }
 
 
-    public class MySaga : ISaga<MySagaData>, InitiatedBy<MySagaInitiatingMessage>
+    public class MySaga : ISaga<MySagaData>, 
+                          InitiatedBy<MySagaInitiatingMessage>,
+                          InitiatedBy<MultipleSagaInitiator>
     {
         public MySagaData SagaData { get; set; }
         public Guid CorrelationId { get; set; }
@@ -36,7 +37,16 @@ namespace Tests.Stubs
             SagaData = new MySagaData();
         }
 
+
         public OperationResult Initiate(MySagaInitiatingMessage message)
+        {
+            SagaData.IsInitialised = true;
+
+            return new OperationResult();
+        }
+
+
+        public OperationResult Initiate(MultipleSagaInitiator message)
         {
             SagaData.IsInitialised = true;
 

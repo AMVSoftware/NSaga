@@ -52,14 +52,54 @@ namespace Tests
             testSubject.Id.Should().Be(expected);
         }
 
+        [Fact]
+        public void InvokeMethod_OverloadString_CallsTheCorrectOverload()
+        {
+            //Arrange
+            var testSubject = new MyReflectionTestSubject();
+            var expectedString = Guid.NewGuid().ToString();
+
+            // Act
+            Reflection.InvokeMethod(testSubject, "Overload", expectedString);
+
+            // Assert
+            testSubject.OverloadString.Should().Be(expectedString);
+        }
+
+        [Fact]
+        public void InvokeMethod_OverloadInt_CallsTheCorrectOverload()
+        {
+            //Arrange
+            var testSubject = new MyReflectionTestSubject();
+            var expectedInt = 42;
+
+            // Act
+            Reflection.InvokeMethod(testSubject, "Overload", expectedInt);
+
+            // Assert
+            testSubject.OverloadInt.Should().Be(expectedInt);
+        }
+
 
         public class MyReflectionTestSubject
         {
             public Guid Id { get; set; }
+            public String OverloadString { get; set; }
+            public int OverloadInt { get; set; }
 
             public void Initialise(Guid id)
             {
                 this.Id = id;
+            }
+
+            public void Overload(string value)
+            {
+                OverloadString = value;
+            }
+
+            public void Overload(int value)
+            {
+                OverloadInt = value;
             }
         }
 

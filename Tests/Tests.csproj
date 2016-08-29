@@ -68,11 +68,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Stubs\MultipleSagaInitiator.cs" />
+    <Compile Include="Stubs\MyFakeInitiatingMessage.cs" />
     <Compile Include="Stubs\SagaRepositoryInMemoryStub.cs" />
     <Compile Include="Stubs\MySaga.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionTests.cs" />
     <Compile Include="SagaMediatorTests.cs" />
+    <Compile Include="Stubs\SagaWithErrors.cs" />
     <Compile Include="Stubs\StubSagaServiceLocator.cs" />
   </ItemGroup>
   <ItemGroup>

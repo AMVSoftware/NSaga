@@ -12,14 +12,25 @@ namespace Tests.Stubs
                 return (dynamic)new MySaga(); // <-- dynamic? wtf? compiles!
             }
 
+            if (typeof(T) == typeof(SagaWithErrors))
+            {
+                return (dynamic)new SagaWithErrors(); 
+            }
+
             throw new NotImplementedException();
         }
+
 
         public object Resolve(Type type)
         {
             if (type == typeof(MySaga))
             {
                 return new MySaga();
+            }
+
+            if (type == typeof(SagaWithErrors))
+            {
+                return new SagaWithErrors();
             }
 
             throw new NotImplementedException();
