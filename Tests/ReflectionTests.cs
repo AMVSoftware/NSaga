@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using NSaga;
+using Tests.Stubs;
 using Xunit;
 
 namespace Tests
@@ -38,8 +39,29 @@ namespace Tests
 
 
 
+        [Fact]
+        public void InvokeMethod_Does_NotThrow()
+        {
+            //Arrange
+            var testSubject = new MyReflectionTestSubject();
+            var expected = Guid.NewGuid();
+            // Act
+            Reflection.InvokeMethod(testSubject, "Initialise", expected);
+
+            // Assert
+            testSubject.Id.Should().Be(expected);
+        }
 
 
+        public class MyReflectionTestSubject
+        {
+            public Guid Id { get; set; }
+
+            public void Initialise(Guid id)
+            {
+                this.Id = id;
+            }
+        }
 
 
         class RepositorySpy

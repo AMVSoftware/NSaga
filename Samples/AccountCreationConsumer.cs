@@ -6,7 +6,7 @@ namespace Samples
     {
         public void TrySaga()
         {
-            var sagaMediator = new SagaMediator(new StubSagaRepository(), new StubServiceLocator());
+            var sagaMediator = new SagaMediator(new NullSagaRepository(), new NullServiceLocator());
 
             var initialMessage = new PersonalDetailsVerification();
 

@@ -52,7 +52,7 @@
     <Compile Include="Reflection.cs" />
     <Compile Include="SagaMediator.cs" />
     <Compile Include="SagaRepository.cs" />
-    <Compile Include="StubSagaRepository.cs" />
+    <Compile Include="NullSagaRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

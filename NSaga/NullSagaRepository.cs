@@ -2,7 +2,7 @@
 
 namespace NSaga
 {
-    public class StubSagaRepository : ISagaRepository
+    public class NullSagaRepository : ISagaRepository
     {
         public TSaga Find<TSaga>(Guid correlationId) where TSaga : class
         {
@@ -20,7 +20,7 @@ namespace NSaga
         }
     }
 
-    public class StubServiceLocator : IServiceLocator//IServiceProvider
+    public class NullServiceLocator : IServiceLocator
     {
         public T Resolve<T>()
         {

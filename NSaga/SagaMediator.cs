@@ -72,6 +72,11 @@ namespace NSaga
             // find all sagas that are initiated by this message
             var sagaTypes = Reflection.GetSagaTypesInitiatedBy(initiatingMessage, assembliesToScan);
 
+            if (!sagaTypes.Any())
+            {
+                throw new ArgumentException($"Message with type {initiatingMessage.GetType().Name} is not initiating any Sagas. Please add InitiatedBy<{initiatingMessage.GetType().Name}> to your Saga type");
+            }
+
             // try to find sagas that already exist
             foreach (var sagaType in sagaTypes)
             {
@@ -79,7 +84,7 @@ namespace NSaga
 
                 if (existingSaga != null)
                 {
-                    throw new Exception($"Trying to initiate the same saga twice. {initiatingMessage.GetType().Name} is Initiating Message, but saga of type {sagaType.Name} with CorrelationId {initiatingMessage.CorrelationId} already exists");
+                    throw new ArgumentException($"Trying to initiate the same saga twice. {initiatingMessage.GetType().Name} is Initiating Message, but saga of type {sagaType.Name} with CorrelationId {initiatingMessage.CorrelationId} already exists");
                 }
             }
 
@@ -88,9 +93,11 @@ namespace NSaga
             foreach (var sagaType in sagaTypes)
             {
                 dynamic saga = serviceLocator.Resolve(sagaType);
-                dynamic errors = saga.Initiate(initiatingMessage);
                 saga.CorrelationId = initiatingMessage.CorrelationId;
+
+                var errors = (OperationResult)Reflection.InvokeMethod(saga, "Initiate", initiatingMessage);
                 operationResult.Merge(errors);
+                sagaRepository.Save(saga);
             }
 
             return operationResult;

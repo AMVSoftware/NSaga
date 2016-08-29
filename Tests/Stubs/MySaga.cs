@@ -1,7 +1,7 @@
 ﻿using System;
 using NSaga;
 
-namespace Tests
+namespace Tests.Stubs
 {
     public class MySagaInitiatingMessage : IInitiatingSagaMessage
     {
@@ -21,7 +21,9 @@ namespace Tests
     public class MySagaData
     {
         public String Name { get; set; }
+        public bool IsInitialised { get; set; }
     }
+
 
     public class MySaga : ISaga<MySagaData>, InitiatedBy<MySagaInitiatingMessage>
     {
@@ -29,9 +31,16 @@ namespace Tests
         public Guid CorrelationId { get; set; }
         public bool IsCompleted { get; set; }
 
+        public MySaga()
+        {
+            SagaData = new MySagaData();
+        }
+
         public OperationResult Initiate(MySagaInitiatingMessage message)
         {
-            throw new NotImplementedException();
+            SagaData.IsInitialised = true;
+
+            return new OperationResult();
         }
     }
 }

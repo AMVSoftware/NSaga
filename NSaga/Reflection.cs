@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace NSaga
 {
@@ -98,6 +97,16 @@ namespace NSaga
             var methodInfo = invocationTargetType.GetMethod(methodName);
             var genericMethod = methodInfo.MakeGenericMethod(genericParameterType);
             return genericMethod.Invoke(invocationTarget, parameters);
+        }
+
+
+        public static object InvokeMethod(object invocationTarget, string methodName, params object[] parameters)
+        {
+            var invocationTargetType = invocationTarget.GetType();
+            var methodInfo = invocationTargetType.GetMethod(methodName);
+            var result = methodInfo.Invoke(invocationTarget, parameters);
+
+            return result;
         }
 
 
