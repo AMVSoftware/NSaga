@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -100,6 +101,12 @@ namespace NSaga
                 var sagaDataType = Reflection.GetInterfaceGenericType(saga, typeof(ISaga<>));
                 var newSagaData = Activator.CreateInstance(sagaDataType);
                 Reflection.Set(saga, "SagaData", newSagaData);
+            }
+
+            var sagaHeaders = Reflection.Get(saga, "Headers");
+            if (sagaHeaders == null)
+            {
+                Reflection.Set(saga, "Headers", new Dictionary<String, String>());
             }
 
             var errors = (OperationResult)Reflection.InvokeMethod(saga, "Initiate", initiatingMessage);

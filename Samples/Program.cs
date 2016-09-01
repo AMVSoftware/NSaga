@@ -6,14 +6,14 @@ namespace Samples
 {
     static class Program
     {
-        private static SagaMediator sagaMediator;
-        private static ISagaRepository sagaRepository;
+        private static SagaMediator _sagaMediator;
+        private static ISagaRepository _sagaRepository;
 
         public static void Main(params string[] args)
         {
             var serviceLocator = new DumbServiceLocator();
-            sagaRepository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
-            sagaMediator = new SagaMediator(sagaRepository, serviceLocator, typeof(Program).Assembly);
+            _sagaRepository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
+            _sagaMediator = new SagaMediator(_sagaRepository, serviceLocator, typeof(Program).Assembly);
 
             var correlationId = Guid.NewGuid();
 
@@ -25,12 +25,12 @@ namespace Samples
 
             CreateAccount(correlationId);
 
-            var saga = sagaRepository.Find<AccountCreationSaga>(correlationId);
+            var saga = _sagaRepository.Find<AccountCreationSaga>(correlationId);
             var jamesName = saga.SagaData.Person.FullName;
             Console.WriteLine($"Taking information from SagaData; Person.FullName='{jamesName}'");
 
             // and time to remove saga from the storage
-            sagaRepository.Complete(correlationId);
+            _sagaRepository.Complete(correlationId);
 
             Console.WriteLine("Press Any Key");
             Console.ReadKey();
@@ -49,7 +49,7 @@ namespace Samples
                 PayrollNumber = "007",
             };
 
-            var result = sagaMediator.Consume(initialMessage);
+            var result = _sagaMediator.Consume(initialMessage);
             if (!result.IsSuccessful)
             {
                 Console.WriteLine(result.ToString());
@@ -61,7 +61,7 @@ namespace Samples
         {
             var verificationRequest = new VerificationCodeRequest(correlationId);
 
-            sagaMediator.Consume(verificationRequest);
+            _sagaMediator.Consume(verificationRequest);
         }
 
 
@@ -72,7 +72,7 @@ namespace Samples
             {
                 VerificationCode = "123456",
             };
-            sagaMediator.Consume(verificationCode);
+            _sagaMediator.Consume(verificationCode);
         }
 
 
@@ -86,7 +86,7 @@ namespace Samples
                 PasswordConfirmation = "james is awesome",
             };
 
-            var excutionResult = sagaMediator.Consume(accountCreation);
+            var excutionResult = _sagaMediator.Consume(accountCreation);
 
             if (!excutionResult.IsSuccessful)
             {

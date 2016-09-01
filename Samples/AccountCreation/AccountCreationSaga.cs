@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NSaga;
 
 namespace Samples
@@ -11,10 +12,12 @@ namespace Samples
     {
         public AccountCreationSagaData SagaData { get; set; }
         public Guid CorrelationId { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
 
         public AccountCreationSaga(/*Some dependencies*/)
         {
             SagaData = new AccountCreationSagaData();
+            Headers = new Dictionary<string, string>();
         }
 
 

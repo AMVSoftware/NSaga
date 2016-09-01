@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NSaga;
 
 namespace Tests.Stubs
@@ -20,9 +21,11 @@ namespace Tests.Stubs
     {
         public MySagaData SagaData { get; set; }
         public Guid CorrelationId { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
 
         public MySaga()
         {
+            Headers = new Dictionary<string, string>();
             SagaData = new MySagaData();
         }
 

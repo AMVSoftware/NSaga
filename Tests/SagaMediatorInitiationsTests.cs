@@ -180,16 +180,23 @@ namespace Tests
             // Assert
             var saga = repository.Find<SagaWithErrors>(correlationId);
             saga.SagaData.Should().NotBeNull();
-
         }
 
 
 
+        [Fact]
+        public void Initiate_SagaDoesNotInitiateHeaders_InitiatesHeadersAutomatically()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var initiatingMessage = new InitiatingSagaWithErrors(correlationId);
 
-        //private static SagaMediator CreateSut(ISagaRepository repository = null, IServiceLocator serviceLocator = null)
-        //{
-        //    var sut = new SagaMediator(repository, serviceLocator, typeof(SagaMediatorInitiationsTests).Assembly);
-        //    return sut;
-        //}
+            // Act
+            sut.Consume(initiatingMessage);
+
+            // Assert
+            var saga = repository.Find<SagaWithErrors>(correlationId);
+            saga.Headers.Should().NotBeNull().And.BeEmpty();
+        }
     }
 }

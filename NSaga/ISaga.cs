@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NSaga
 {
@@ -6,6 +7,12 @@ namespace NSaga
     {
         TSagaData SagaData { get; set; }
         Guid CorrelationId { get; set; }
+
+
+        /// <summary>
+        /// Metadata information
+        /// </summary>
+        Dictionary<String, String> Headers { get; set; }
     }
 
 
