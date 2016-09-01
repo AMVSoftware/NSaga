@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentAssertions;
 using NSaga;
-using NSaga.Implementations;
 using Tests.Stubs;
 using Xunit;
 

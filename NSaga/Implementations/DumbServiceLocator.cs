@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace NSaga.Implementations
+namespace NSaga
 {
     /// <summary>
     /// This is not meant to be used in production, only for demonstration purposes. 

@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NSaga;
-using NSaga.Implementations;
 using Tests.Stubs;
 using Xunit;
 
 namespace Tests.Implementations
 {
-    public class InMemorySagaPersisterTests
+    public class SpecificInMemorySagaRepositoryTests
     {
         private readonly InMemorySagaRepository sut;
 
-        public InMemorySagaPersisterTests()
+        public SpecificInMemorySagaRepositoryTests()
         {
             sut = new InMemorySagaRepository(new JsonNetSerialiser(), new DumbServiceLocator());
         }

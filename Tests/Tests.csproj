@@ -72,8 +72,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Implementations\InMemorySagaPersisterTests.cs" />
+    <Compile Include="Implementations\SpecificInMemorySagaRepositoryTests.cs" />
     <Compile Include="SagaMediatorConsumingTests.cs" />
+    <Compile Include="SagaRepositoryTestsTemplate.cs" />
     <Compile Include="Stubs\MultipleSagaInitiator.cs" />
     <Compile Include="Stubs\MyFakeInitiatingMessage.cs" />
     <Compile Include="Stubs\MySaga.cs" />
