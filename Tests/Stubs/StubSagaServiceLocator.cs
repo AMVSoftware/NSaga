@@ -17,7 +17,7 @@ namespace Tests.Stubs
                 return (dynamic)new SagaWithErrors(); 
             }
 
-            throw new NotImplementedException();
+            throw new ArgumentException("Unable to resolve saga of this type");
         }
 
 
@@ -33,7 +33,7 @@ namespace Tests.Stubs
                 return new SagaWithErrors();
             }
 
-            throw new NotImplementedException();
+            throw new ArgumentException("Unable to resolve saga of this type");
         }
     }
 }

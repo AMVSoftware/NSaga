@@ -8,6 +8,7 @@ namespace Tests.Stubs
         public bool IsInitialised { get; set; }
         public bool IsAdditionalInitialiserCalled { get; set; }
         public bool IsConsumingMessageReceived { get; set; }
+        public Guid SomeGuid { get; set; }
     }
 
 
