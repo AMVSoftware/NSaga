@@ -173,7 +173,7 @@ namespace Tests
 
 
         [Fact]
-        public void Initiate_SageDoesNotInitiateDate_InitiatesSagaDataObject()
+        public void Initiate_SagaDoesNotInitiateDate_InitiatesSagaDataObject()
         {
             //Arrange
             var correlationId = Guid.NewGuid();

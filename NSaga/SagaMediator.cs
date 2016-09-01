@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -34,15 +33,30 @@ namespace NSaga
             {
                 throw new ArgumentException("CorrelationId was not provided in the message. Please make sure you assign CorrelationId before initiating your Saga");
             }
-            //TODO Find saga
-            //var saga = sagaRepository.Find(sagaMessage.CorrelationId);
 
-            //TODO check that saga exists
-            //TODO check that saga implements ConsumerOf<TMsg>
-            //TODO execute saga message
-            //TODO save saga into repository
+            var sagaTypes = Reflection.GetSagaTypesConsuming(sagaMessage, assembliesToScan);
+            if (!sagaTypes.Any())
+            {
+                throw new ArgumentException($"Message of type {sagaMessage.GetType().Name} is not consumed by any Sagas. Please add ConsumerOf<{sagaMessage.GetType().Name}> to your Saga type");
+            }
+            if (sagaTypes.Count() > 1)
+            {
+                // can't have multiple sagas consumed by the same message
+                var sagaNames = String.Join(", ", sagaTypes.Select(t => t.Name));
+                throw new ArgumentException($"Message of type {sagaMessage.GetType().Name} is consumed by more than one saga. Please make sure any single message is consumed by only one saga. Affected sagas: {sagaNames}");
+            }
 
-            throw new NotImplementedException();
+            var sagaType = sagaTypes.First();
+            var saga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, sagaMessage.CorrelationId);
+            if (saga == null)
+            {
+                throw new ArgumentException($"Saga with this CorrelationId does not exist. Please initiate a saga with IInitiatingMessage.");
+            }
+
+            var errors = (OperationResult)Reflection.InvokeMethod(saga, "Consume", sagaMessage);
+            sagaRepository.Save(saga); // not the real question - should we persist the saga if operation returned errors? Probably should be configurable
+
+            return errors;
         }
 
 

@@ -30,13 +30,29 @@ namespace Tests
         [Fact]
         public void GetSagaTypesInitiatedBy_Returns_MySaga()
         {
+            // Arrange
             var initiatingMessage = new MySagaInitiatingMessage();
 
+            // Act
             var result = Reflection.GetSagaTypesInitiatedBy(initiatingMessage, typeof(ReflectionTests).Assembly);
 
+            // Assert
             result.Should().HaveCount(1).And.Contain(typeof(MySaga));
         }
 
+
+        [Fact]
+        public void GetSagaTypesConsuming_Returns_MySaga()
+        {
+            //Arrange
+            var consumedMessage = new MySagaConsumingMessage();
+
+            // Act
+            var result = Reflection.GetSagaTypesConsuming(consumedMessage, typeof(ReflectionTests).Assembly);
+
+            // Assert
+            result.Should().HaveCount(1).And.Contain(typeof(MySaga));
+        }
 
 
         [Fact]

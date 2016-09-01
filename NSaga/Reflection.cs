@@ -91,6 +91,30 @@ namespace NSaga
         }
 
 
+        /// <summary>
+        /// Return all saga types that consume this type of message
+        /// </summary>
+        /// <param name="message">Initialisation message to check for</param>
+        /// <param name="assemblies">Assemblies to scan for sagas</param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetSagaTypesConsuming(ISagaMessage message, params Assembly[] assemblies)
+        {
+            if (assemblies.Length == 0)
+            {
+                assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            }
+
+            var messageType = message.GetType();
+            var initiatingInterfaceType = typeof(ConsumerOf<>).MakeGenericType(messageType);
+
+            var scan = assemblies.SelectMany(a => a.GetTypes())
+                                 .Where(t => initiatingInterfaceType.IsAssignableFrom(t))
+                                 .ToList();
+
+            return scan;
+        }
+
+
         public static object InvokeGenericMethod(object invocationTarget, string methodName, Type genericParameterType, params object[] parameters)
         {
             var invocationTargetType = invocationTarget.GetType();

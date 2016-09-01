@@ -10,4 +10,13 @@ namespace Tests.Stubs
     {
         public Guid CorrelationId { get; set; }
     }
+
+
+    /// <summary>
+    /// Message that is not consumed by anything
+    /// </summary>
+    class MyFakeSagaMessage : ISagaMessage
+    {
+        public Guid CorrelationId { get; set; }
+    }
 }

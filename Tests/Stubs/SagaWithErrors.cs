@@ -6,11 +6,13 @@ namespace Tests.Stubs
     public class SagaWithErrorsData
     {
         public bool IsInitiated { get; set; }
+        public bool IsConsumed { get; set; }
     }
 
     class SagaWithErrors : ISaga<SagaWithErrorsData>,
                            InitiatedBy<InitiatingSagaWithErrors>,
-                           InitiatedBy<MultipleSagaInitiator>
+                           InitiatedBy<MultipleSagaInitiator>,
+                           ConsumerOf<GetSomeConsumedErrorsForSagaWithErrors>
     {
         public SagaWithErrors()
         {
@@ -36,7 +38,16 @@ namespace Tests.Stubs
 
             return errors;
         }
+
+        public OperationResult Consume(GetSomeConsumedErrorsForSagaWithErrors message)
+        {
+            this.SagaData.IsConsumed = true;
+            var errors = new OperationResult("This is not right!");
+
+            return errors;
+        }
     }
+
 
     public class InitiatingSagaWithErrors : IInitiatingSagaMessage
     {
@@ -44,6 +55,17 @@ namespace Tests.Stubs
         {
             CorrelationId = correlationId;
         }
+        public Guid CorrelationId { get; set; }
+    }
+
+
+    public class GetSomeConsumedErrorsForSagaWithErrors : ISagaMessage
+    {
+        public GetSomeConsumedErrorsForSagaWithErrors(Guid correlationId)
+        {
+            CorrelationId = correlationId;
+        }
+
         public Guid CorrelationId { get; set; }
     }
 }
