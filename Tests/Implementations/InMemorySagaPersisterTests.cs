@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Newtonsoft.Json;
 using NSaga;
+using NSaga.Implementations;
 using Tests.Stubs;
 using Xunit;
 
@@ -82,7 +83,7 @@ namespace Tests.Implementations
 
         public InMemorySagaRepository CreateSut()
         {
-            var sut = new InMemorySagaRepository(new JsonNetSerialiser(), new StubSagaServiceLocator());
+            var sut = new InMemorySagaRepository(new JsonNetSerialiser(), new DumbServiceLocator());
             return sut;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using NSaga;
+using NSaga.Implementations;
 using Tests.Stubs;
 using Xunit;
 
@@ -10,12 +11,11 @@ namespace Tests
     public class SagaMediatorInitiationsTests
     {
         private readonly InMemorySagaRepository repository;
-        private readonly StubSagaServiceLocator serviceLocator;
-        private SagaMediator sut;
+        private readonly SagaMediator sut;
 
         public SagaMediatorInitiationsTests()
         {
-            serviceLocator = new StubSagaServiceLocator();
+            var serviceLocator = new DumbServiceLocator();
             repository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
             sut = new SagaMediator(repository, serviceLocator, typeof(SagaMediatorInitiationsTests).Assembly);
         }

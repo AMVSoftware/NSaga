@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMessageSerialiser.cs" />
+    <Compile Include="Implementations\DumbServiceLocator.cs" />
     <Compile Include="Implementations\InMemorySagaRepository.cs" />
     <Compile Include="ISaga.cs" />
     <Compile Include="ISagaRepository.cs" />

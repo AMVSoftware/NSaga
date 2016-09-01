@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using NSaga;
+using NSaga.Implementations;
 using Tests.Stubs;
 using Xunit;
 
@@ -8,11 +9,22 @@ namespace Tests
 {
     public class SagaMediatorConsumingTests
     {
+        private readonly InMemorySagaRepository repository;
+        private readonly SagaMediator sut;
+
+        public SagaMediatorConsumingTests()
+        {
+            var serviceLocator = new DumbServiceLocator();
+            repository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
+            sut = new SagaMediator(repository, serviceLocator, typeof(SagaMediatorInitiationsTests).Assembly);
+        }
+
+
+
         [Fact]
         public void Consume_MessageWithoutId_ThrowsException()
         {
             //Arrange
-            var sut = CreateSut();
             var message = new MySagaConsumingMessage();
             
             // Act
@@ -27,7 +39,6 @@ namespace Tests
         public void Consume_MessageWithoutSaga_Throws()
         {
             //Arrange
-            var sut = CreateSut();
             var message = new MyFakeInitiatingMessage();
 
             // Act
@@ -42,7 +53,6 @@ namespace Tests
         public void Consume_NoSagaExists_Throws()
         {
             //Arrange
-            var sut = CreateSut();
             var message = new MySagaConsumingMessage(Guid.NewGuid());
 
             // Act
@@ -58,8 +68,6 @@ namespace Tests
         {
             //Arrange
             var correlationId = Guid.NewGuid();
-            var sagaRepository = new InMemorySagaRepository(new JsonNetSerialiser(), new StubSagaServiceLocator());
-            var sut = CreateSut(sagaRepository);
             sut.Consume(new MySagaInitiatingMessage(correlationId));
             var message = new MySagaConsumingMessage(correlationId);
 
@@ -67,7 +75,7 @@ namespace Tests
             sut.Consume(message);
 
             // Assert
-            var saga = sagaRepository.Find<MySaga>(correlationId);
+            var saga = repository.Find<MySaga>(correlationId);
             saga.SagaData.IsConsumingMessageReceived.Should().BeTrue();
         }
 
@@ -77,8 +85,6 @@ namespace Tests
         {
             //Arrange
             var correlationId = Guid.NewGuid();
-            var sagaRepository = new InMemorySagaRepository(new JsonNetSerialiser(), new StubSagaServiceLocator());
-            var sut = CreateSut(sagaRepository);
             sut.Consume(new InitiatingSagaWithErrors(correlationId));
             var message = new GetSomeConsumedErrorsForSagaWithErrors(correlationId);
 
@@ -87,15 +93,6 @@ namespace Tests
 
             // Assert
             result.Should().HaveCount(1).And.Contain("This is not right!");
-        }
-
-
-        private static SagaMediator CreateSut(ISagaRepository repository = null, IServiceLocator serviceLocator = null)
-        {
-            repository = repository ?? new InMemorySagaRepository(new JsonNetSerialiser(), new StubSagaServiceLocator());
-            serviceLocator = serviceLocator ?? new StubSagaServiceLocator();
-            var sut = new SagaMediator(repository, serviceLocator, typeof(SagaMediatorInitiationsTests).Assembly);
-            return sut;
         }
     }
 }

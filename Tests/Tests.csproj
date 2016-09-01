@@ -81,7 +81,6 @@
     <Compile Include="ReflectionTests.cs" />
     <Compile Include="SagaMediatorInitiationsTests.cs" />
     <Compile Include="Stubs\SagaWithErrors.cs" />
-    <Compile Include="Stubs\StubSagaServiceLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
