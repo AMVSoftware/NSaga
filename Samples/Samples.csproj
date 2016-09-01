@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountCreationConsumer.cs" />
     <Compile Include="AccountCreation\AccountCreationSaga.cs" />
     <Compile Include="AccountCreation\AccountCreationSagaData.cs" />
     <Compile Include="AccountCreation\AccountDetailsProvided.cs" />

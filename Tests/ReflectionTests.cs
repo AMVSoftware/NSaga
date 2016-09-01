@@ -147,6 +147,11 @@ namespace Tests
             public void Complete<TSaga>(TSaga saga) where TSaga : class
             {
             }
+
+            public void Complete(Guid correlationId)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

@@ -3,6 +3,10 @@
 
 namespace NSaga.Implementations
 {
+    /// <summary>
+    /// This is not meant to be used in production, only for demonstration purposes. 
+    /// Please replace service locator with a real DI service locator
+    /// </summary>
     public class DumbServiceLocator : IServiceLocator
     {
         public T Resolve<T>()

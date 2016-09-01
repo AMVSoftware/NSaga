@@ -8,7 +8,12 @@ namespace Tests.Stubs
     /// </summary>
     public class MyFakeInitiatingMessage : IInitiatingSagaMessage
     {
-        public Guid CorrelationId { get; set; }
+        public MyFakeInitiatingMessage(Guid correlationId)
+        {
+            CorrelationId = correlationId;
+        }
+
+        public Guid CorrelationId { get;  }
     }
 
 
@@ -17,6 +22,11 @@ namespace Tests.Stubs
     /// </summary>
     class MyFakeSagaMessage : ISagaMessage
     {
-        public Guid CorrelationId { get; set; }
+        public MyFakeSagaMessage(Guid correlationId)
+        {
+            CorrelationId = correlationId;
+        }
+
+        public Guid CorrelationId { get; }
     }
 }

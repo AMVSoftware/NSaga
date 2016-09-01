@@ -11,20 +11,18 @@ namespace Samples
     {
         public AccountCreationSagaData SagaData { get; set; }
         public Guid CorrelationId { get; set; }
-        public bool IsCompleted { get; set; }
-
 
         public AccountCreationSaga(/*Some dependencies*/)
         {
-            
+            SagaData = new AccountCreationSagaData();
         }
 
 
         public OperationResult Initiate(PersonalDetailsVerification message)
         {
-            if (false)
+            if (message.FirstName != "James" || message.LastName != "Bond")
             {
-                return new OperationResult("Person details don't match. Please try again");
+                return new OperationResult("This Saga only works for James Bond");
             }
 
             var person = new Person()
@@ -32,8 +30,14 @@ namespace Samples
                 FirstName = message.FirstName,
                 LastName = message.LastName,
                 ReferenceNumber = message.PayrollNumber,
+                Postcode = message.HomePostcode,
+                PrivateEmail = "bondy1920@hotmail.com",
+                WorkEmail = "James.Bond@mi6.org.uk",
+                WorkMobile = "07007007007",
+                PrivateMobile = "07123456789",
             };
             SagaData.Person = person;
+            Console.WriteLine($"Saga initiated. Person in question is {person.FullName}");
             return new OperationResult();
         }
 
@@ -45,17 +49,17 @@ namespace Samples
                 throw new Exception("Person details are not verified. How did you get here?");
             }
 
+            SagaData.VerificationCode = "123456";
+            SagaData.VerificationCodeSentDate = DateTime.UtcNow;
 
             if (message.RequestCarrier == "Mobile")
             {
-                //TODO send SMS to SagaData.Person.Mobile
+                Console.WriteLine($"sending SMS: Please enter verification code {SagaData.VerificationCode} into the form");
             }
             else
             {
-                //TODO send email to SagaData.Person.PrivateEmail
+                Console.WriteLine($"sending Email: Please enter verification code {SagaData.VerificationCode} into the form");
             }
-            SagaData.VerificationCode = "123456";
-            SagaData.VerificationCodeSentDate = DateTime.UtcNow;
 
             return new OperationResult();
         }
@@ -78,10 +82,16 @@ namespace Samples
                 return new OperationResult("Verification code has expired. Please request a new one");
             }
 
-            SagaData.IsVerificationCodeMatched = true;
+            if (message.VerificationCode != SagaData.VerificationCode)
+            {
+                return new OperationResult("Verification code does not match. Please try again");
+            }
 
+            Console.WriteLine("Verificaton code provided matches!");
+            SagaData.IsVerificationCodeMatched = true;
             return new OperationResult();
         }
+
 
 
         public OperationResult Consume(AccountDetailsProvided message)

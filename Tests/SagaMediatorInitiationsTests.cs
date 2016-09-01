@@ -55,7 +55,7 @@ namespace Tests
         public void Initiate_NoSagaTypes_Throws()
         {
             // Arrange
-            var initiatingMessage = new MyFakeInitiatingMessage() {CorrelationId = Guid.NewGuid()};
+            var initiatingMessage = new MyFakeInitiatingMessage(Guid.NewGuid());
 
             // Act
             Action act = () => sut.Consume(initiatingMessage);

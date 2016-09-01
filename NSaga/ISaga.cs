@@ -6,14 +6,13 @@ namespace NSaga
     {
         TSagaData SagaData { get; set; }
         Guid CorrelationId { get; set; }
-        bool IsCompleted { get; set; }
     }
 
 
 
     public interface ISagaMessage
     {
-        Guid CorrelationId { get; set; }
+        Guid CorrelationId { get; }
     }
 
 

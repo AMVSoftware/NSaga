@@ -8,6 +8,10 @@ namespace Samples
         public String ReferenceNumber { get; set; }
         public String FirstName { get; set; }
         public String LastName { get; set; }
+        public String Postcode { get; set; }
+
+        public String FullName => $"{ReferenceNumber} - {FirstName} {LastName}";
+
         public String WorkEmail { get; set; }
         public String WorkMobile { get; set; }
         public String PrivateEmail { get; set; }

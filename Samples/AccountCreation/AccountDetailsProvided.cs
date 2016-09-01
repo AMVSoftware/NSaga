@@ -5,7 +5,12 @@ namespace Samples
 {
     public class AccountDetailsProvided : ISagaMessage
     {
-        public Guid CorrelationId { get; set; }
+        public AccountDetailsProvided(Guid correlationId)
+        {
+            CorrelationId = correlationId;
+        }
+
+        public Guid CorrelationId { get;  }
 
         public String Username { get; set; }
         public String Password { get; set; }

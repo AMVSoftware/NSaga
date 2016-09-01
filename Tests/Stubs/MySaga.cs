@@ -20,7 +20,6 @@ namespace Tests.Stubs
     {
         public MySagaData SagaData { get; set; }
         public Guid CorrelationId { get; set; }
-        public bool IsCompleted { get; set; }
 
         public MySaga()
         {
@@ -70,7 +69,7 @@ namespace Tests.Stubs
             this.CorrelationId = correlationId;
         }
 
-        public Guid CorrelationId { get; set; }
+        public Guid CorrelationId { get; }
     }
 
 
@@ -81,7 +80,7 @@ namespace Tests.Stubs
         {
             CorrelationId = correlationId;
         }
-        public Guid CorrelationId { get; set; }
+        public Guid CorrelationId { get; }
     }
 
 
@@ -97,6 +96,6 @@ namespace Tests.Stubs
             // not assigning Guid to the ID - that's deliberate
         }
 
-        public Guid CorrelationId { get; set; }
+        public Guid CorrelationId { get; }
     }
 }

@@ -5,6 +5,11 @@ namespace Samples
 {
     public class PersonalDetailsVerification : IInitiatingSagaMessage
     {
+        public PersonalDetailsVerification(Guid correlationId)
+        {
+            this.CorrelationId = correlationId;
+        }
+
         public Guid CorrelationId { get; set; }
 
         public String FirstName { get; set; }

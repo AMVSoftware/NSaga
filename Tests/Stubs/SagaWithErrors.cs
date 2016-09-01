@@ -20,7 +20,6 @@ namespace Tests.Stubs
 
         public SagaWithErrorsData SagaData { get; set; }
         public Guid CorrelationId { get; set; }
-        public bool IsCompleted { get; set; }
 
 
         public OperationResult Initiate(InitiatingSagaWithErrors message)
@@ -55,7 +54,7 @@ namespace Tests.Stubs
         {
             CorrelationId = correlationId;
         }
-        public Guid CorrelationId { get; set; }
+        public Guid CorrelationId { get; }
     }
 
 
@@ -66,6 +65,6 @@ namespace Tests.Stubs
             CorrelationId = correlationId;
         }
 
-        public Guid CorrelationId { get; set; }
+        public Guid CorrelationId { get; }
     }
 }

@@ -12,6 +12,6 @@ namespace Tests.Stubs
         {
             CorrelationId = correlationId;
         }
-        public Guid CorrelationId { get; set; }
+        public Guid CorrelationId { get; }
     }
 }

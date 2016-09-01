@@ -56,7 +56,6 @@
     <Compile Include="Reflection.cs" />
     <Compile Include="SagaMediator.cs" />
     <Compile Include="Implementations\SagaRepository.cs" />
-    <Compile Include="Implementations\NullSagaRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

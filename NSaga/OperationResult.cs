@@ -7,7 +7,7 @@ namespace NSaga
 {
     public class OperationResult : List<String>
     {
-        public bool IsSuccessful => this.Any();
+        public bool IsSuccessful => !this.Any();
 
         public OperationResult()
         {

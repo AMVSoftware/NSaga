@@ -54,6 +54,11 @@ namespace NSaga
         {
             var correlationId = (Guid)Reflection.Get(saga, "CorrelationId");
 
+            Complete(correlationId);
+        }
+
+        public void Complete(Guid correlationId)
+        {
             DataDictionary.Remove(correlationId);
         }
     }

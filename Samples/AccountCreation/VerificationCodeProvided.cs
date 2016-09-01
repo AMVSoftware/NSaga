@@ -5,7 +5,12 @@ namespace Samples
 {
     public class VerificationCodeProvided : ISagaMessage
     {
-        public Guid CorrelationId { get; set; }
+        public VerificationCodeProvided(Guid correlationId)
+        {
+            CorrelationId = correlationId;
+        }
+
+        public Guid CorrelationId { get; }
 
         public String VerificationCode { get; set; }
     }

@@ -39,7 +39,7 @@ namespace Tests
         public void Consume_MessageWithoutSaga_Throws()
         {
             //Arrange
-            var message = new MyFakeInitiatingMessage();
+            var message = new MyFakeInitiatingMessage(Guid.NewGuid());
 
             // Act
             Action act = () => sut.Consume(message);
