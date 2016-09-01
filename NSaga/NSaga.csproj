@@ -48,6 +48,7 @@
     <Compile Include="Implementations\DumbServiceLocator.cs" />
     <Compile Include="Implementations\InMemorySagaRepository.cs" />
     <Compile Include="ISaga.cs" />
+    <Compile Include="ISagaMediator.cs" />
     <Compile Include="ISagaRepository.cs" />
     <Compile Include="IServiceLocator.cs" />
     <Compile Include="Implementations\JsonNetSerialiser.cs" />

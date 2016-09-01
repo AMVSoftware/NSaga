@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace NSaga
 {
-    public class SagaMediator
+    public class SagaMediator : ISagaMediator
     {
         private readonly ISagaRepository sagaRepository;
         private readonly IServiceLocator serviceLocator;
