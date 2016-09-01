@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NSaga;
@@ -10,12 +11,17 @@ namespace Tests.Implementations
 {
     public class InMemorySagaPersisterTests
     {
+        private readonly InMemorySagaRepository sut;
+
+        public InMemorySagaPersisterTests()
+        {
+            sut = new InMemorySagaRepository(new JsonNetSerialiser(), new DumbServiceLocator());
+        }
+
+
         [Fact]
         public void Find_NoSaga_ReturnsNull()
         {
-            //Arrange
-            var sut = CreateSut();
-
             // Act
             var result = sut.Find<MySaga>(Guid.NewGuid());
 
@@ -29,15 +35,29 @@ namespace Tests.Implementations
         {
             //Arrange
             var correlationId = Guid.NewGuid();
-            var saga = new MySaga();
-            saga.CorrelationId = correlationId;
-            var sut = CreateSut();
+            var saga = new MySaga { CorrelationId = correlationId };
 
             // Act
             sut.Save(saga);
 
             // Assert
             sut.DataDictionary.Should().NotBeNull()
+                                       .And.HaveCount(1)
+                                       .And.ContainKey(correlationId);
+        }
+
+        [Fact]
+        public void Save_Persists_Headers()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var saga = new MySaga { CorrelationId = correlationId };
+
+            // Act
+            sut.Save(saga);
+
+            // Assert
+            sut.HeadersDictionary.Should().NotBeNull()
                                        .And.HaveCount(1)
                                        .And.ContainKey(correlationId);
         }
@@ -50,7 +70,6 @@ namespace Tests.Implementations
             var correlationId = Guid.NewGuid();
             var expectedGuid = Guid.NewGuid();
             var sagaData = new MySagaData() { SomeGuid = expectedGuid };
-            var sut = CreateSut();
             sut.DataDictionary[correlationId] = JsonConvert.SerializeObject(sagaData);
 
             // Act
@@ -62,6 +81,27 @@ namespace Tests.Implementations
         }
 
 
+        [Fact]
+        public void Find_Returns_PersistedHeaders()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var expectedGuid = Guid.NewGuid();
+            var sagaData = new MySagaData() { SomeGuid = expectedGuid };
+
+            sut.DataDictionary[correlationId] = JsonConvert.SerializeObject(sagaData);
+            sut.HeadersDictionary[correlationId] = JsonConvert.SerializeObject(new Dictionary<String, String>() { { expectedGuid.ToString(), expectedGuid.ToString() } });
+
+            // Act
+            var saga = sut.Find<MySaga>(correlationId);
+
+            // Assert
+            saga.Should().NotBeNull();
+            saga.Headers.Should().HaveCount(1).And.ContainKey(expectedGuid.ToString());
+            saga.Headers[expectedGuid.ToString()].Should().Be(expectedGuid.ToString());
+        }
+
+
 
         [Fact]
         public void Complete_Removes_SagaFromStorage()
@@ -70,7 +110,6 @@ namespace Tests.Implementations
             var correlationId = Guid.NewGuid();
             var saga = new MySaga();
             saga.CorrelationId = correlationId;
-            var sut = CreateSut();
             sut.Save(saga);
 
             // Act
@@ -81,10 +120,20 @@ namespace Tests.Implementations
         }
 
 
-        public InMemorySagaRepository CreateSut()
+        [Fact]
+        public void Complete_Removes_HeadersFromStorage()
         {
-            var sut = new InMemorySagaRepository(new JsonNetSerialiser(), new DumbServiceLocator());
-            return sut;
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var saga = new MySaga();
+            saga.CorrelationId = correlationId;
+            sut.Save(saga);
+
+            // Act
+            sut.Complete(saga);
+
+            // Assert
+            sut.HeadersDictionary.Should().NotContainKey(correlationId);
         }
     }
 }

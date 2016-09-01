@@ -6,5 +6,6 @@ namespace NSaga
     {
         string Serialise(object message);
         object Deserialise(string stream, Type objectType);
+        T Deserialise<T>(String stream);
     }
 }

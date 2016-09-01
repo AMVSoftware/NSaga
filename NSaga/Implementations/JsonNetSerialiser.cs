@@ -14,5 +14,10 @@ namespace NSaga
         {
             return JsonConvert.DeserializeObject(stream, objectType);
         }
+
+        public T Deserialise<T>(string stream)
+        {
+            return JsonConvert.DeserializeObject<T>(stream);
+        }
     }
 }
