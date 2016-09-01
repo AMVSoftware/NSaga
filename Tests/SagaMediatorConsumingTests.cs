@@ -58,7 +58,7 @@ namespace Tests
         {
             //Arrange
             var correlationId = Guid.NewGuid();
-            var sagaRepository = new SagaRepositoryInMemoryStub();
+            var sagaRepository = new InMemorySagaRepository(new JsonNetSerialiser(), new StubSagaServiceLocator());
             var sut = CreateSut(sagaRepository);
             sut.Consume(new MySagaInitiatingMessage(correlationId));
             var message = new MySagaConsumingMessage(correlationId);
@@ -67,7 +67,7 @@ namespace Tests
             sut.Consume(message);
 
             // Assert
-            var saga = (MySaga)sagaRepository.Sagas[correlationId];
+            var saga = sagaRepository.Find<MySaga>(correlationId);
             saga.SagaData.IsConsumingMessageReceived.Should().BeTrue();
         }
 
@@ -77,7 +77,7 @@ namespace Tests
         {
             //Arrange
             var correlationId = Guid.NewGuid();
-            var sagaRepository = new SagaRepositoryInMemoryStub();
+            var sagaRepository = new InMemorySagaRepository(new JsonNetSerialiser(), new StubSagaServiceLocator());
             var sut = CreateSut(sagaRepository);
             sut.Consume(new InitiatingSagaWithErrors(correlationId));
             var message = new GetSomeConsumedErrorsForSagaWithErrors(correlationId);
@@ -92,7 +92,7 @@ namespace Tests
 
         private static SagaMediator CreateSut(ISagaRepository repository = null, IServiceLocator serviceLocator = null)
         {
-            repository = repository ?? new SagaRepositoryInMemoryStub();
+            repository = repository ?? new InMemorySagaRepository(new JsonNetSerialiser(), new StubSagaServiceLocator());
             serviceLocator = serviceLocator ?? new StubSagaServiceLocator();
             var sut = new SagaMediator(repository, serviceLocator, typeof(SagaMediatorInitiationsTests).Assembly);
             return sut;

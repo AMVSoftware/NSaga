@@ -80,9 +80,9 @@ namespace Tests.Implementations
         }
 
 
-        public InMemorySagaPersister CreateSut()
+        public InMemorySagaRepository CreateSut()
         {
-            var sut = new InMemorySagaPersister(new JsonNetSerialiser(), new StubSagaServiceLocator());
+            var sut = new InMemorySagaRepository(new JsonNetSerialiser(), new StubSagaServiceLocator());
             return sut;
         }
     }

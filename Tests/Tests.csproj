@@ -76,7 +76,6 @@
     <Compile Include="SagaMediatorConsumingTests.cs" />
     <Compile Include="Stubs\MultipleSagaInitiator.cs" />
     <Compile Include="Stubs\MyFakeInitiatingMessage.cs" />
-    <Compile Include="Stubs\SagaRepositoryInMemoryStub.cs" />
     <Compile Include="Stubs\MySaga.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionTests.cs" />

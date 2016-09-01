@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace NSaga
 {
-    public class InMemorySagaPersister : ISagaRepository
+    public class InMemorySagaRepository : ISagaRepository
     {
         private readonly IMessageSerialiser messageSerialiser;
         private readonly IServiceLocator serviceLocator;
         public Dictionary<Guid, String> DataDictionary { get; }
 
-        public InMemorySagaPersister(IMessageSerialiser messageSerialiser, IServiceLocator serviceLocator)
+        public InMemorySagaRepository(IMessageSerialiser messageSerialiser, IServiceLocator serviceLocator)
         {
             this.messageSerialiser = messageSerialiser;
             this.serviceLocator = serviceLocator;
