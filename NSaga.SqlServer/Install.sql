@@ -36,10 +36,24 @@ ELSE
 	CREATE TABLE [NSaga].[Headers](
 		[CorrelationId] [uniqueidentifier] NOT NULL,
 		[Key] [nvarchar](max) NOT NULL,
-		[Value] [nvarchar](max) NULL,
-		CONSTRAINT [PK_Headers] PRIMARY KEY CLUSTERED ([CorrelationId] ASC)
+		[Value] [nvarchar](max) NULL
 	);
+
+	ALTER TABLE [NSaga].[Headers]  WITH CHECK ADD  CONSTRAINT [FK_Headers_Sagas] FOREIGN KEY([CorrelationId])
+	REFERENCES [NSaga].[Sagas] ([CorrelationId])
+	ON DELETE CASCADE
+
+	ALTER TABLE [NSaga].[Headers] CHECK CONSTRAINT [FK_Headers_Sagas]
+
+	CREATE NONCLUSTERED INDEX [IX_Headers_CorrelationId] ON [NSaga].[Headers]
+	(
+		[CorrelationId] ASC
+	)
+
+
 	PRINT 'Created table [NSaga].[Headers]';
+
+
 
 
 /* End of script *****************************************/
