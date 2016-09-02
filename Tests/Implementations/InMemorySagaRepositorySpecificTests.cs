@@ -8,11 +8,11 @@ using Xunit;
 
 namespace Tests.Implementations
 {
-    public class SpecificInMemorySagaRepositoryTests
+    public class InMemorySagaRepositorySpecificTests
     {
         private readonly InMemorySagaRepository sut;
 
-        public SpecificInMemorySagaRepositoryTests()
+        public InMemorySagaRepositorySpecificTests()
         {
             sut = new InMemorySagaRepository(new JsonNetSerialiser(), new DumbServiceLocator());
         }

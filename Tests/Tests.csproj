@@ -72,9 +72,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Implementations\SpecificInMemorySagaRepositoryTests.cs" />
+    <Compile Include="Implementations\InMemorySagaRepositorySpecificTests.cs" />
+    <Compile Include="Implementations\InMemorySagaRepositoryTests.cs" />
+    <Compile Include="Implementations\SqlSagaRepositoryTests.cs" />
     <Compile Include="SagaMediatorConsumingTests.cs" />
-    <Compile Include="SagaRepositoryTestsTemplate.cs" />
+    <Compile Include="Implementations\SagaRepositoryTestsTemplate.cs" />
     <Compile Include="Stubs\MultipleSagaInitiator.cs" />
     <Compile Include="Stubs\MyFakeInitiatingMessage.cs" />
     <Compile Include="Stubs\MySaga.cs" />
@@ -87,6 +89,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NSaga.SqlServer\NSaga.SqlServer.csproj">
+      <Project>{98d2cbbc-a644-4c07-9c08-95c8e8efa710}</Project>
+      <Name>NSaga.SqlServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NSaga\NSaga.csproj">
       <Project>{e537d1bf-80a4-413b-a8f8-116c2a2382b1}</Project>
       <Name>NSaga</Name>
