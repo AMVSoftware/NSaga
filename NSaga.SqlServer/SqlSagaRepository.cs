@@ -11,11 +11,14 @@ namespace NSaga.SqlServer
     {
         private readonly IServiceLocator serviceLocator;
         private readonly String connectionString;
-        private readonly Database database;
 
-        public SqlSagaRepository(IServiceLocator serviceLocator, string connectionString)
+        private readonly Database database;
+        private readonly IMessageSerialiser messageSerialiser;
+
+        public SqlSagaRepository(IServiceLocator serviceLocator, string connectionString, IMessageSerialiser messageSerialiser)
         {
             this.connectionString = connectionString;
+            this.messageSerialiser = messageSerialiser;
             this.serviceLocator = serviceLocator;
             this.database = new Database(connectionString);
         }
@@ -23,7 +26,28 @@ namespace NSaga.SqlServer
 
         public TSaga Find<TSaga>(Guid correlationId) where TSaga : class
         {
-            throw new NotImplementedException();
+            var sql = Sql.Builder.Where("correlationId = @0", correlationId);
+            var persistedData = database.SingleOrDefault<SagaData>(sql);
+
+            if (persistedData == null)
+            {
+                return null;
+            }
+
+
+            var sagaInstance = serviceLocator.Resolve<TSaga>();
+            var sagaDataType = Reflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
+            var sagaData = messageSerialiser.Deserialise(persistedData.BlobData, sagaDataType);
+
+            var headersSql = Sql.Builder.Where("correlationId = @0", correlationId);
+            var headersPersisted = database.Query<SagaHeaders>(headersSql);
+            var headers = headersPersisted.ToDictionary(k => k.Key, v => v.Value);
+
+            Reflection.Set(sagaInstance, "CorrelationId", correlationId);
+            Reflection.Set(sagaInstance, "SagaData", sagaData);
+            Reflection.Set(sagaInstance, "Headers", headers);
+
+            return sagaInstance;
         }
 
         public void Save<TSaga>(TSaga saga) where TSaga : class

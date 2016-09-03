@@ -7,7 +7,7 @@ namespace Tests
     {
         public SqlSagaRepositoryTests()
         {
-            this.Sut = new SqlSagaRepository(new DumbServiceLocator(), "");
+            this.Sut = new SqlSagaRepository(new DumbServiceLocator(), "", new JsonNetSerialiser());
         }
     }
 }
