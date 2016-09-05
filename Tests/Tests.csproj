@@ -47,6 +47,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -77,6 +78,7 @@
     <Compile Include="Implementations\SqlSagaRepositoryTests.cs" />
     <Compile Include="SagaMediatorConsumingTests.cs" />
     <Compile Include="Implementations\SagaRepositoryTestsTemplate.cs" />
+    <Compile Include="SqlServer\DatabaseSetup.cs" />
     <Compile Include="Stubs\MultipleSagaInitiator.cs" />
     <Compile Include="Stubs\MyFakeInitiatingMessage.cs" />
     <Compile Include="Stubs\MySaga.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Stubs\SagaWithErrors.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -98,7 +101,12 @@
       <Name>NSaga</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="..\NSaga.SqlServer\Install.sql">
+      <Link>SqlServer\Install.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,3 +1,4 @@
+using System.Configuration;
 using NSaga;
 using NSaga.SqlServer;
 
@@ -7,7 +8,9 @@ namespace Tests
     {
         public SqlSagaRepositoryTests()
         {
-            this.Sut = new SqlSagaRepository(new DumbServiceLocator(), "", new JsonNetSerialiser());
+            var connectionString = ConfigurationManager.AppSettings["TestingConnectionString"];
+
+            this.Sut = new SqlSagaRepository(new DumbServiceLocator(), connectionString, new JsonNetSerialiser());
         }
     }
 }
