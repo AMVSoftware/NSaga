@@ -10,73 +10,14 @@ namespace Tests.SqlServer
 {
     public class DatabaseSetup
     {
-        //[Fact(Skip = "Not a test")]
-        [Fact]
+        [Fact(Skip = "Not a test")]
+        //[Fact]
         public void SetUpDatabase()
         {
-            var connectionString = ConfigurationManager.AppSettings["TestingConnectionString"];
-            var masterConnectionString = ConfigurationManager.AppSettings["MasterConnectionString"];
-            
-            var dbName = "NSaga-Testing";
+            var masterConnectionString = ConfigurationManager.ConnectionStrings["MasterConnectionString"].ConnectionString;
+            var connectionString = ConfigurationManager.ConnectionStrings["TestingConnectionString"].ConnectionString;
 
-            ReallyDropDatabase(dbName, masterConnectionString);
-            CreateDatabase(dbName, masterConnectionString);
-
-            CreateSchema(connectionString);
-
-            //SeedData(childConnectionString);
-        }
-
-
-        /// <summary>
-        /// Drops the database that is specified in the connection string.
-        /// 
-        /// Drops the database even if the connection is open. Sql is stolen from here:
-        /// http://daniel.wertheim.se/2012/12/02/entity-framework-really-do-drop-create-database-if-model-changes-and-db-is-in-use/
-        /// </summary>
-        private static void ReallyDropDatabase(String databaseToBeDroppedName, String masterConnectionString)
-        {
-            const string dropDatabaseSql =
-            "if (select DB_ID('{0}')) is not null\r\n"
-            + "begin\r\n"
-            + "alter database [{0}] set offline with rollback immediate;\r\n"
-            + "alter database [{0}] set online;\r\n"
-            + "drop database [{0}];\r\n"
-            + "end";
-
-            using (var connection = new SqlConnection(masterConnectionString))
-            {
-                connection.Open();
-
-                var sqlToExecute = String.Format(dropDatabaseSql, databaseToBeDroppedName);
-
-                var command = new SqlCommand(sqlToExecute, connection);
-
-                Console.WriteLine("Dropping database");
-                command.ExecuteNonQuery();
-                Console.WriteLine("Database is dropped");
-            }
-        }
-
-
-        private static void CreateDatabase(string dbName, string masterConnectionString)
-        {
-            using (var masterConnection = new SqlConnection(masterConnectionString))
-            {
-                masterConnection.Open();
-
-                var command = new SqlCommand($"Create database [{dbName}]", masterConnection);
-
-                Console.WriteLine("Creating database {0}", dbName);
-                command.ExecuteNonQuery();
-                Console.WriteLine("Database is created {0}", dbName);
-            }
-        }
-
-
-
-        private void CreateSchema(String connectionString)
-        {
+            ExecuteSqlFile(masterConnectionString, "CreateDatabase.sql");
             ExecuteSqlFile(connectionString, "Install.sql");
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using PetaPoco;
 
@@ -8,17 +7,21 @@ namespace NSaga.SqlServer
     public class SqlSagaRepository : ISagaRepository
     {
         private readonly IServiceLocator serviceLocator;
-        private readonly String connectionString;
-
         private readonly Database database;
         private readonly IMessageSerialiser messageSerialiser;
 
-        public SqlSagaRepository(IServiceLocator serviceLocator, string connectionString, IMessageSerialiser messageSerialiser)
+        public SqlSagaRepository(string connectionStringName, IServiceLocator serviceLocator, IMessageSerialiser messageSerialiser)
         {
-            this.connectionString = connectionString;
             this.messageSerialiser = messageSerialiser;
             this.serviceLocator = serviceLocator;
-            this.database = new Database(connectionString);
+            this.database = new Database(connectionStringName);
+        }
+
+        public SqlSagaRepository(string connectionString, string providerName, IServiceLocator serviceLocator, IMessageSerialiser messageSerialiser)
+        {
+            this.messageSerialiser = messageSerialiser;
+            this.serviceLocator = serviceLocator;
+            this.database = new Database(connectionString, providerName);
         }
 
 

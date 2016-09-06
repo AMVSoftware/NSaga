@@ -9,6 +9,7 @@ begin
 end
 
 create database [NSaga-Testing]
+Go
 
 use [NSaga-Testing]
 Go
