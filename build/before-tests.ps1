@@ -15,9 +15,9 @@ ForEach($add in $xml.configuration.connectionStrings.add)
     if($matchingEnvVar)
     {
         Write-Output "Found matching environment variable for key: $($add.name)"
-        Write-Output "Replacing value $($add.value) with $matchingEnvVar"
+        Write-Output "Replacing value $($add.connectionString) with $matchingEnvVar"
 
-        $add.value = $matchingEnvVar
+        $add.connectionString = $matchingEnvVar
     }
 }
 
