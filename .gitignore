@@ -22,6 +22,17 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+# Build related
+build-results/
+tools/Cake/
+tools/xunit.runners/
+tools/xunit.runner.console/
+tools/gitreleasemanager/
+tools/GitVersion.CommandLine/
+tools/Addins/
+tools/packages.config.md5sum
+tools/packages.config
+
 # Visual Studio 2015 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
