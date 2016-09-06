@@ -78,6 +78,9 @@
     <Compile Include="Implementations\SqlSagaRepositoryTests.cs" />
     <Compile Include="SagaMediatorConsumingTests.cs" />
     <Compile Include="Implementations\SagaRepositoryTestsTemplate.cs" />
+    <Content Include="SqlServer\CreateDatabase.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="SqlServer\DatabaseSetup.cs" />
     <Compile Include="Stubs\MultipleSagaInitiator.cs" />
     <Compile Include="Stubs\MyFakeInitiatingMessage.cs" />

@@ -18,8 +18,9 @@ BEGIN
     PRINT 'Created database schema [NSaga]';
 END
 ELSE
+BEGIN
     PRINT 'Database schema [NSaga] already exists';
-
+End
 
 	DECLARE @SCHEMA_ID int;
 	SELECT @SCHEMA_ID = [schema_id] FROM [sys].[schemas] WHERE [name] = 'NSaga';
