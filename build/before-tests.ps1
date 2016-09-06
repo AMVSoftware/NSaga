@@ -1,7 +1,7 @@
 # replace_appsettings.ps1
 # http://kevsoft.net/2015/09/18/using-powershell-to-replace-appsettings.html
 
-$configPath = "$env:APPLICATION_PATH\Tests\bin\Release\Tests.dll.config"
+$configPath = "$($env:appveyor_build_folder)\Tests\bin\Release\Tests.dll.config"
 
 Write-Output "Loading config file from $configPath"
 $xml = [xml](Get-Content $configPath)
