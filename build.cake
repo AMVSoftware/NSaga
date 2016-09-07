@@ -69,7 +69,8 @@ Task("Start-LocalDB")
     {
         //c:\Program Files\Microsoft SQL Server\120\Tools\Binn\
         //c:\Program Files\Microsoft SQL Server\130\Tools\Binn\
-        var sqlLocalDbPath = @"C:\Program Files\Microsoft SQL Server\120\Tools\Binn\SqlLocalDB.exe";
+        // var sqlLocalDbPath = @"C:\Program Files\Microsoft SQL Server\120\Tools\Binn\SqlLocalDB.exe";
+        var sqlLocalDbPath = @"SqlLocalDB.exe";
         if(!FileExists(sqlLocalDbPath))
         {
             Information("Unable to start LocalDB");
