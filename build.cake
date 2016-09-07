@@ -1,8 +1,5 @@
 #tool "nuget:?package=xunit.runner.console"
-#addin "Cake.SqlTools"
-
-using System;
-using System.Data.SqlClient;
+#r "tools/Cake.SqlServer.dll"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -17,7 +14,6 @@ var configuration = Argument("configuration", "Release");
 
 // Define directories.
 var buildDir = Directory("./src/NSaga/bin") + Directory(configuration);
-
 var solution = "./src/NSaga.sln";
 
 //////////////////////////////////////////////////////////////////////
@@ -58,7 +54,7 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Create-DB-And-Schema")
     .Does(() =>
     {
-        XUnit2("./src/**/bin/" + configuration + "/Tests.exe");
+        XUnit2("./src/**/bin/" + configuration + "/Tests.dll");
     });
 
 
@@ -67,10 +63,7 @@ Task("Start-LocalDB")
     .Description(@"Starts LocalDB - executes the following: C:\Program Files\Microsoft SQL Server\120\Tools\Binn\SqlLocalDB.exe create v12.0 12.0 -s")
     .Does(() => 
     {
-        //c:\Program Files\Microsoft SQL Server\120\Tools\Binn\
-        //c:\Program Files\Microsoft SQL Server\130\Tools\Binn\
-        // var sqlLocalDbPath = @"SqlLocalDB.exe";
-        // var sqlLocalDbPath = @"c:\Program Files\Microsoft SQL Server\130\Tools\Binn\\SqlLocalDB.exe";
+        // var sqlLocalDbPath = @"c:\Program Files\Microsoft SQL Server\130\Tools\Binn\SqlLocalDB.exe";
         var sqlLocalDbPath = @"C:\Program Files\Microsoft SQL Server\120\Tools\Binn\SqlLocalDB.exe";
         if(!FileExists(sqlLocalDbPath))
         {
@@ -84,36 +77,29 @@ Task("Start-LocalDB")
 
 Task("Create-DB-And-Schema")
     .IsDependentOn("Start-LocalDB")
-    .IsDependentOn("Build")
     .Description("Creates database and installs schema")
     .Does(() => 
     {
-        StartProcess(@".\src\Tests\bin\"+configuration+@"\Tests.exe");
+        var masterConnectionString = @"data source=(LocalDb)\v12.0;";
+        var dbConnectionString = @"data source=(LocalDb)\v12.0;Database=NSaga-Testing";
 
-        // var masterConnectionString = "data source=.\SQLEXPRESS;integrated security=SSPI;Initial Catalog=master;MultipleActiveResultSets=True";
-        // var testingConnectionString = "data source=.\SQLEXPRESS;integrated security=SSPI;Initial Catalog=NSaga-Testing;MultipleActiveResultSets=True"
-
-        // if(EnvironmentVariable("APPVEYOR") == "True")
-        // {
-        //     masterConnectionString = "Server=(local)\SQL2016;Database=master;User ID=sa;Password=Password12!";
-        //     testingConnectionString = "Server=(local)\SQL2016;Database=NSaga-Testing;User ID=sa;Password=Password12!";
-        // }
-
-        // ExecuteSqlFile("./src/Tests/SqlServer/CreateDatabase.sql", new SqlQuerySettings()
-        // {
-        //     Provider = "MsSql",
-        //     ConnectionString = "Server=(localdb)\v12.0;"
-        // });
-        // Information("Created NSaga-Testing database");
-
-        // ExecuteSqlFile("./src/NSaga.SqlServer/Install.sql", new SqlQuerySettings()
-        // {
-        //     Provider = "MsSql",
-        //     ConnectionString = "Server=(localdb)\v12.0;Database=NSaga-Testing"
-        // });
-        // Information("Created SQL Schema for NSaga");
+        DropAndCreateDatabase(masterConnectionString, "NSaga-Testing");
+        ExecuteSqlFile(dbConnectionString, "./src/NSaga.SqlServer/Install.sql");
     });
 
+
+Task("SqlExpress")
+    .Description("Create NSaga database on SqlExpress for local execution")
+    .Does(() => 
+    {
+        var masterConnectionString = @"data source=.\SQLEXPRESS;integrated security=SSPI;";
+        var dbConnectionString = @"data source=.\SQLEXPRESS;integrated security=SSPI;Initial Catalog=NSaga;";
+
+        CreateDatabaseIfNotExist(masterConnectionString, "NSaga");
+        ExecuteSqlFile(dbConnectionString, "./src/NSaga.SqlServer/Install.sql");
+        
+        Information("Created SQL Schema for NSaga database");
+    });
 
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS

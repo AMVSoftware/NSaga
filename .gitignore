@@ -32,6 +32,7 @@ tools/GitVersion.CommandLine/
 tools/Addins/
 tools/packages.config.md5sum
 tools/packages.config
+tools/nuget.exe
 
 # Visual Studio 2015 cache/options directory
 .vs/

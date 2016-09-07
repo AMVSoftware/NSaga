@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6A069A26-B930-49F5-B632-CBA186E5533E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Tests</RootNamespace>
     <AssemblyName>Tests</AssemblyName>
@@ -30,7 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Tests.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentAssertions, Version=4.13.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
@@ -78,14 +79,10 @@
   <ItemGroup>
     <Compile Include="Implementations\InMemorySagaRepositorySpecificTests.cs" />
     <Compile Include="Implementations\InMemorySagaRepositoryTests.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="SqlServer\SqlSagaRepositorySpecificTests.cs" />
     <Compile Include="SqlServer\SqlSagaRepositoryTests.cs" />
     <Compile Include="SagaMediatorConsumingTests.cs" />
     <Compile Include="Implementations\SagaRepositoryTestsTemplate.cs" />
-    <Content Include="SqlServer\CreateDatabase.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Compile Include="SqlServer\DatabaseSetup.cs" />
     <Compile Include="Stubs\MultipleSagaInitiator.cs" />
     <Compile Include="Stubs\MyFakeInitiatingMessage.cs" />
@@ -114,6 +111,7 @@
       <Link>SqlServer\Install.sql</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SqlServer\CreateDatabase.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
