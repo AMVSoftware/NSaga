@@ -77,7 +77,7 @@ Task("Start-LocalDB")
             throw new Exception("LocalDB v12 is not installed. Can't complete tests");
         }
 
-        StartProcess(sqlLocalDbPath, new ProcessSettings(){ Arguments="create \"v12.0\" 12.0 -s" });
+        StartProcess(sqlLocalDbPath, new ProcessSettings(){ Arguments="create \"v11.0\" 12.0 -s" });
     });
 
 
@@ -99,14 +99,14 @@ Task("Create-DB-And-Schema")
         ExecuteSqlFile("./src/Tests/SqlServer/CreateDatabase.sql", new SqlQuerySettings()
         {
             Provider = "MsSql",
-            ConnectionString = "Server=(localdb)\v12.0;"
+            ConnectionString = "Server=(localdb)\v11.0;"
         });
         Information("Created NSaga-Testing database");
 
         ExecuteSqlFile("./src/NSaga.SqlServer/Install.sql", new SqlQuerySettings()
         {
             Provider = "MsSql",
-            ConnectionString = "Server=(localdb)\v12.0;Database=NSaga-Testing"
+            ConnectionString = "Server=(localdb)\v11.0;Database=NSaga-Testing"
         });
         Information("Created SQL Schema for NSaga");
     });
