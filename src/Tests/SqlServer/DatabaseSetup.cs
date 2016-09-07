@@ -17,6 +17,10 @@ namespace Tests.SqlServer
             var masterConnectionString = ConfigurationManager.ConnectionStrings["MasterConnectionString"].ConnectionString;
             var connectionString = ConfigurationManager.ConnectionStrings["TestingConnectionString"].ConnectionString;
 
+            //var masterConnectionString = @"Server=(localdb)\v12.0;";
+            //var connectionString = @"Server=(localdb)\v12.0;Database=NSaga-Testing";
+
+
             ExecuteSqlFile(masterConnectionString, "CreateDatabase.sql");
             ExecuteSqlFile(connectionString, "Install.sql");
         }

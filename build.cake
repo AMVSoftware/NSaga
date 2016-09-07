@@ -58,7 +58,7 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Create-DB-And-Schema")
     .Does(() =>
     {
-        XUnit2("./src/**/bin/" + configuration + "/Tests.dll");
+        XUnit2("./src/**/bin/" + configuration + "/Tests.exe");
     });
 
 
@@ -69,15 +69,16 @@ Task("Start-LocalDB")
     {
         //c:\Program Files\Microsoft SQL Server\120\Tools\Binn\
         //c:\Program Files\Microsoft SQL Server\130\Tools\Binn\
-        // var sqlLocalDbPath = @"C:\Program Files\Microsoft SQL Server\120\Tools\Binn\SqlLocalDB.exe";
-        var sqlLocalDbPath = @"SqlLocalDB.exe";
+        // var sqlLocalDbPath = @"SqlLocalDB.exe";
+        // var sqlLocalDbPath = @"c:\Program Files\Microsoft SQL Server\130\Tools\Binn\\SqlLocalDB.exe";
+        var sqlLocalDbPath = @"C:\Program Files\Microsoft SQL Server\120\Tools\Binn\SqlLocalDB.exe";
         if(!FileExists(sqlLocalDbPath))
         {
             Information("Unable to start LocalDB");
             throw new Exception("LocalDB v12 is not installed. Can't complete tests");
         }
 
-        StartProcess(sqlLocalDbPath, new ProcessSettings(){ Arguments="create \"v11.0\" 12.0 -s" });
+        StartProcess(sqlLocalDbPath, new ProcessSettings(){ Arguments="create \"v12.0\" 12.0 -s" });
     });
 
 
@@ -87,6 +88,8 @@ Task("Create-DB-And-Schema")
     .Description("Creates database and installs schema")
     .Does(() => 
     {
+        StartProcess(@".\src\Tests\bin\"+configuration+@"\Tests.exe");
+
         // var masterConnectionString = "data source=.\SQLEXPRESS;integrated security=SSPI;Initial Catalog=master;MultipleActiveResultSets=True";
         // var testingConnectionString = "data source=.\SQLEXPRESS;integrated security=SSPI;Initial Catalog=NSaga-Testing;MultipleActiveResultSets=True"
 
@@ -96,19 +99,19 @@ Task("Create-DB-And-Schema")
         //     testingConnectionString = "Server=(local)\SQL2016;Database=NSaga-Testing;User ID=sa;Password=Password12!";
         // }
 
-        ExecuteSqlFile("./src/Tests/SqlServer/CreateDatabase.sql", new SqlQuerySettings()
-        {
-            Provider = "MsSql",
-            ConnectionString = "Server=(localdb)\v11.0;"
-        });
-        Information("Created NSaga-Testing database");
+        // ExecuteSqlFile("./src/Tests/SqlServer/CreateDatabase.sql", new SqlQuerySettings()
+        // {
+        //     Provider = "MsSql",
+        //     ConnectionString = "Server=(localdb)\v12.0;"
+        // });
+        // Information("Created NSaga-Testing database");
 
-        ExecuteSqlFile("./src/NSaga.SqlServer/Install.sql", new SqlQuerySettings()
-        {
-            Provider = "MsSql",
-            ConnectionString = "Server=(localdb)\v11.0;Database=NSaga-Testing"
-        });
-        Information("Created SQL Schema for NSaga");
+        // ExecuteSqlFile("./src/NSaga.SqlServer/Install.sql", new SqlQuerySettings()
+        // {
+        //     Provider = "MsSql",
+        //     ConnectionString = "Server=(localdb)\v12.0;Database=NSaga-Testing"
+        // });
+        // Information("Created SQL Schema for NSaga");
     });
 
 
