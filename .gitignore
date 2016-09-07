@@ -24,15 +24,8 @@ bld/
 
 # Build related
 build-results/
-tools/Cake/
-tools/xunit.runners/
-tools/xunit.runner.console/
-tools/gitreleasemanager/
-tools/GitVersion.CommandLine/
-tools/Addins/
-tools/packages.config.md5sum
-tools/packages.config
-tools/nuget.exe
+tools/
+
 
 # Visual Studio 2015 cache/options directory
 .vs/

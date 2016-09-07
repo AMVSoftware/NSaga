@@ -1,5 +1,5 @@
 #tool "nuget:?package=xunit.runner.console"
-#r "tools/Cake.SqlServer.dll"
+#tool "nuget:?package=Cake.SqlServer"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
