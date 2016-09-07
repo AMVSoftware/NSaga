@@ -1,4 +1,5 @@
 #tool "nuget:?package=xunit.runner.console"
+#addin "Cake.SqlTools"
 
 using System;
 using System.Data.SqlClient;
@@ -81,42 +82,32 @@ Task("Start-LocalDB")
 
 Task("Create-DB-And-Schema")
     .IsDependentOn("Start-LocalDB")
+    .IsDependentOn("Build")
     .Description("Creates database and installs schema")
     .Does(() => 
     {
-        // // var masterConnectionString = "Server=(localdb)\v12.0;";
-        // var masterConnectionString = @"data source=.\SQLEXPRESS;integrated security=SSPI;Initial Catalog=master;MultipleActiveResultSets=True";
-        // using (var masterConnection = new SqlConnection(masterConnectionString))
+        // var masterConnectionString = "data source=.\SQLEXPRESS;integrated security=SSPI;Initial Catalog=master;MultipleActiveResultSets=True";
+        // var testingConnectionString = "data source=.\SQLEXPRESS;integrated security=SSPI;Initial Catalog=NSaga-Testing;MultipleActiveResultSets=True"
+
+        // if(EnvironmentVariable("APPVEYOR") == "True")
         // {
-        //     Information("Before opening connection");
-        //     masterConnection.Open();
-
-        //     var command = new SqlCommand("Create database [NSaga-Testing]", masterConnection);
-
-        //     command.ExecuteNonQuery();
+        //     masterConnectionString = "Server=(local)\SQL2016;Database=master;User ID=sa;Password=Password12!";
+        //     testingConnectionString = "Server=(local)\SQL2016;Database=NSaga-Testing;User ID=sa;Password=Password12!";
         // }
-        // var pathToSqlCmd = @"c:\Program Files (x86)\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\sqlcmd.exe";
-        // var pathToSqlCmd = @"c:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\sqlcmd.exe";
-        // StartProcess(pathToSqlCmd, new ProcessSettings() { Arguments = @"-S ""Server=(localdb)\v12.0;"" -i ./src/Tests/SqlServer/CreateDatabase.sql" });
-        // ExecuteSqlQuery("create database [NSaga-Testing]", new SqlQuerySettings()
-        // {
-        //     Provider = "MsSql",
-        //     ConnectionString = "Server=(localdb)\v12.0;"
-        // });
 
-        // ExecuteSqlFile("./src/Tests/SqlServer/CreateDatabase.sql", new SqlQuerySettings()
-        // {
-        //     Provider = "MsSql",
-        //     ConnectionString = "Server=(localdb)\v12.0;"
-        // });
-        // Information("Created NSaga-Testing database");
+        ExecuteSqlFile("./src/Tests/SqlServer/CreateDatabase.sql", new SqlQuerySettings()
+        {
+            Provider = "MsSql",
+            ConnectionString = "Server=(localdb)\v12.0;"
+        });
+        Information("Created NSaga-Testing database");
 
-        // ExecuteSqlFile("./src/NSaga.SqlServer/Install.sql", new SqlQuerySettings()
-        // {
-        //     Provider = "MsSql",
-        //     ConnectionString = "Server=(localdb)\v12.0;Database=NSaga-Testing"
-        // });
-        // Information("Created SQL Schema for NSaga");
+        ExecuteSqlFile("./src/NSaga.SqlServer/Install.sql", new SqlQuerySettings()
+        {
+            Provider = "MsSql",
+            ConnectionString = "Server=(localdb)\v12.0;Database=NSaga-Testing"
+        });
+        Information("Created SQL Schema for NSaga");
     });
 
 
