@@ -1,6 +1,6 @@
 #tool "nuget:?package=xunit.runner.console"
-//#addin "nuget:?package=Cake.SqlServer"
-#r "D:/trailmax/docs/myCode/csharp/Cake.SqlServer/src/Cake.SqlServer/bin/Debug/Cake.SqlServer.dll"
+#addin "nuget:?package=Cake.SqlServer"
+//#r "D:/trailmax/docs/myCode/csharp/Cake.SqlServer/src/Cake.SqlServer/bin/Debug/Cake.SqlServer.dll"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
