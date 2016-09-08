@@ -1,5 +1,6 @@
 #tool "nuget:?package=xunit.runner.console"
-#tool "nuget:?package=Cake.SqlServer"
+//#addin "nuget:?package=Cake.SqlServer"
+#r "D:/trailmax/docs/myCode/csharp/Cake.SqlServer/src/Cake.SqlServer/bin/Debug/Cake.SqlServer.dll"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -95,7 +96,7 @@ Task("SqlExpress")
         var masterConnectionString = @"data source=.\SQLEXPRESS;integrated security=SSPI;";
         var dbConnectionString = @"data source=.\SQLEXPRESS;integrated security=SSPI;Initial Catalog=NSaga;";
 
-        CreateDatabaseIfNotExist(masterConnectionString, "NSaga");
+        CreateDatabaseIfNotExists(masterConnectionString, "NSaga");
         ExecuteSqlFile(dbConnectionString, "./src/NSaga.SqlServer/Install.sql");
         
         Information("Created SQL Schema for NSaga database");
