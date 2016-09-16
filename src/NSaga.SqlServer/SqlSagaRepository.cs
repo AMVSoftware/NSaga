@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PetaPoco;
 
@@ -6,18 +7,23 @@ namespace NSaga.SqlServer
 {
     public class SqlSagaRepository : ISagaRepository
     {
+        public const string SagaDataTableName = "NSaga.Sagas";
+        public const string HeadersTableName = "NSaga.Headers";
+
         private readonly IServiceLocator serviceLocator;
         private readonly Database database;
         private readonly IMessageSerialiser messageSerialiser;
 
-        public SqlSagaRepository(string connectionStringName, IServiceLocator serviceLocator, IMessageSerialiser messageSerialiser)
+        public SqlSagaRepository(string connectionStringName, IServiceLocator serviceLocator,
+            IMessageSerialiser messageSerialiser)
         {
             this.messageSerialiser = messageSerialiser;
             this.serviceLocator = serviceLocator;
             this.database = new Database(connectionStringName);
         }
 
-        public SqlSagaRepository(string connectionString, string providerName, IServiceLocator serviceLocator, IMessageSerialiser messageSerialiser)
+        public SqlSagaRepository(string connectionString, string providerName, IServiceLocator serviceLocator,
+            IMessageSerialiser messageSerialiser)
         {
             this.messageSerialiser = messageSerialiser;
             this.serviceLocator = serviceLocator;
@@ -34,7 +40,6 @@ namespace NSaga.SqlServer
             {
                 return null;
             }
-
 
             var sagaInstance = serviceLocator.Resolve<TSaga>();
             var sagaDataType = Reflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
@@ -53,23 +58,91 @@ namespace NSaga.SqlServer
 
         public void Save<TSaga>(TSaga saga) where TSaga : class
         {
-            throw new NotImplementedException();
+            var sagaData = Reflection.Get(saga, "SagaData");
+            var sagaHeaders = (Dictionary<String, String>) Reflection.Get(saga, "Headers");
+            var correlationId = (Guid) Reflection.Get(saga, "CorrelationId");
+
+            var serialisedData = messageSerialiser.Serialise(sagaData);
+
+            var dataModel = new SagaData()
+            {
+                CorrelationId = correlationId,
+                BlobData = serialisedData,
+            };
+
+
+            using (var transaction = database.GetTransaction())
+            {
+                try
+                {
+                    // check if record already exists
+                    var count = database.ExecuteScalar<int>($"select count(*) from {SagaDataTableName} where correlationId = @0", correlationId);
+
+                    if (count == 0)
+                    {
+                        // insert new record
+                        database.Insert(dataModel);
+                    }
+                    else
+                    {
+                        // update if exists
+                        database.Update(dataModel);
+                    }
+
+                    // delete all existing headers
+                    database.Delete<SagaHeaders>("WHERE CorrelationId=@0", correlationId);
+
+                    // and insert updated ones
+                    foreach (var header in sagaHeaders)
+                    {
+                        var storedHeader = new SagaHeaders()
+                        {
+                            CorrelationId = correlationId,
+                            Key = header.Key,
+                            Value = header.Value,
+                        };
+
+                        database.Insert(storedHeader);
+                    }
+                    transaction.Complete();
+                }
+                catch (Exception)
+                {
+                    transaction.Dispose();
+                    throw;
+                }
+            }
         }
+
 
         public void Complete<TSaga>(TSaga saga) where TSaga : class
         {
-            throw new NotImplementedException();
+            var correlationId = (Guid)Reflection.Get(saga, "CorrelationId");
+            Complete(correlationId);
         }
 
         public void Complete(Guid correlationId)
         {
-            throw new NotImplementedException();
+            using (var transaction = database.GetTransaction())
+            {
+                try
+                {
+                    database.Delete<SagaHeaders>("WHERE CorrelationId=@0", correlationId);
+                    database.Delete<SagaData>("WHERE CorrelationId=@0", correlationId);
+                    transaction.Complete();
+                }
+                catch (Exception)
+                {
+                    transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 
 
 
-    [TableName("NSaga.Sagas")]
+    [TableName(SqlSagaRepository.SagaDataTableName)]
     [PrimaryKey("CorrelationId", AutoIncrement = false)]
     class SagaData
     {
@@ -78,7 +151,7 @@ namespace NSaga.SqlServer
     }
 
 
-    [TableName("NSaga.Headers")]
+    [TableName(SqlSagaRepository.HeadersTableName)]
     [PrimaryKey("CorrelationId", AutoIncrement = false)]
     class SagaHeaders
     {
