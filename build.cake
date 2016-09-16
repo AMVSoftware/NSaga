@@ -37,16 +37,6 @@ Task("Build")
     });
 
 
-Task("Run-Unit-Tests")
-    .IsDependentOn("Build")
-    .IsDependentOn("Create-DB-And-Schema")
-    .Does(() =>
-    {
-        XUnit2("./src/**/bin/" + configuration + "/Tests.dll");
-    });
-
-
-
 Task("Start-LocalDB")
     .Description(@"Starts LocalDB - executes the following: C:\Program Files\Microsoft SQL Server\120\Tools\Binn\SqlLocalDB.exe create v12.0 12.0 -s")
     .Does(() => 
@@ -74,6 +64,18 @@ Task("Create-DB-And-Schema")
         DropAndCreateDatabase(masterConnectionString, "NSaga-Testing");
         ExecuteSqlFile(dbConnectionString, "./src/NSaga.SqlServer/Install.sql");
     });
+
+
+
+Task("Run-Unit-Tests")
+    .IsDependentOn("Build")
+    .IsDependentOn("Create-DB-And-Schema")
+    .Does(() =>
+    {
+        XUnit2("./src/**/bin/" + configuration + "/Tests.dll");
+    });
+
+
 
 
 Task("SqlExpress")
