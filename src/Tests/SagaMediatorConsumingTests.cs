@@ -91,7 +91,7 @@ namespace Tests
             var result = sut.Consume(message);
 
             // Assert
-            result.Should().HaveCount(1).And.Contain("This is not right!");
+            result.Errors.Should().HaveCount(1).And.Contain("This is not right!");
         }
     }
 }

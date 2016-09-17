@@ -41,7 +41,7 @@ namespace Samples
             };
             SagaData.Person = person;
             Console.WriteLine($"Saga initiated. Person in question is {person.FullName}");
-            return new OperationResult();
+            return new OperationResult().AddPayload(person);
         }
 
 

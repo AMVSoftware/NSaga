@@ -122,10 +122,10 @@ namespace Tests
             var initiatingMessage = new InitiatingSagaWithErrors(correlationId);
 
             // Act
-            var errors = sut.Consume(initiatingMessage);
+            var operationResult = sut.Consume(initiatingMessage);
 
             // Assert
-            errors.Should().HaveCount(1).And.Contain("This is not right!");
+            operationResult.Errors.Should().HaveCount(1).And.Contain("This is not right!");
             var saga = repository.Find<SagaWithErrors>(correlationId);
             saga.SagaData.IsInitiated.Should().BeTrue();
         }
