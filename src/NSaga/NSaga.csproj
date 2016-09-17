@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Guard.cs" />
     <Compile Include="IMessageSerialiser.cs" />
     <Compile Include="Implementations\DumbServiceLocator.cs" />
     <Compile Include="Implementations\InMemorySagaRepository.cs" />
