@@ -75,18 +75,12 @@ namespace NSaga.SqlServer
             {
                 try
                 {
-                    // check if record already exists
-                    var count = database.ExecuteScalar<int>($"select count(*) from {SagaDataTableName} where correlationId = @0", correlationId);
+                    int updatedRaws = database.Update(dataModel);
 
-                    if (count == 0)
+                    if (updatedRaws == 0)
                     {
-                        // insert new record
+                        // no records were updated - this means no records already exist - need to insert new record
                         database.Insert(dataModel);
-                    }
-                    else
-                    {
-                        // update if exists
-                        database.Update(dataModel);
                     }
 
                     // delete all existing headers
