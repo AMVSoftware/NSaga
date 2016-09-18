@@ -34,6 +34,10 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.1.0\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentAssertions, Version=4.14.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.4.14.0\lib\net45\FluentAssertions.dll</HintPath>
       <Private>True</Private>
@@ -81,6 +85,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Autofac\AutofacServiceLocatorTests.cs" />
     <Compile Include="Implementations\InMemorySagaRepositorySpecificTests.cs" />
     <Compile Include="Implementations\InMemorySagaRepositoryTests.cs" />
     <Compile Include="OperationResultTests.cs" />
@@ -103,6 +108,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NSaga.Autofac\NSaga.Autofac.csproj">
+      <Project>{5b7a00dc-75c7-4c94-820b-b449c427cd93}</Project>
+      <Name>NSaga.Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NSaga.SimpleInjector\NSaga.SimpleInjector.csproj">
       <Project>{b8596ea9-b88b-4415-bc6f-cad0ebf07a70}</Project>
       <Name>NSaga.SimpleInjector</Name>
