@@ -94,15 +94,15 @@ namespace NSaga.SqlServer
         /// 
         /// Actually stores SagaData and Headers. All other variables in saga are not persisted
         /// </summary>
-        /// <typeparam name="TSaga"></typeparam>
-        /// <param name="saga"></param>
+        /// <typeparam name="TSaga">Type of saga</typeparam>
+        /// <param name="saga">Saga instance</param>
         public void Save<TSaga>(TSaga saga) where TSaga : class
         {
             Guard.ArgumentIsNotNull(saga, nameof(saga));
 
             var sagaData = Reflection.Get(saga, "SagaData");
-            var sagaHeaders = (Dictionary<String, String>) Reflection.Get(saga, "Headers");
-            var correlationId = (Guid) Reflection.Get(saga, "CorrelationId");
+            var sagaHeaders = (Dictionary<String, String>)Reflection.Get(saga, "Headers");
+            var correlationId = (Guid)Reflection.Get(saga, "CorrelationId");
 
             var serialisedData = messageSerialiser.Serialise(sagaData);
 
