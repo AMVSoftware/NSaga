@@ -9,7 +9,7 @@ namespace NSaga
     /// </summary>
     public class DumbServiceLocator : IServiceLocator
     {
-        public T Resolve<T>()
+        public T Resolve<T>() where T : class
         {
             if (typeof(T).IsInterface)
             {

@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\build.cake = ..\build.cake
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSaga.SimpleInjector", "NSaga.SimpleInjector\NSaga.SimpleInjector.csproj", "{B8596EA9-B88B-4415-BC6F-CAD0EBF07A70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{98D2CBBC-A644-4C07-9C08-95C8E8EFA710}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98D2CBBC-A644-4C07-9C08-95C8E8EFA710}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98D2CBBC-A644-4C07-9C08-95C8E8EFA710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8596EA9-B88B-4415-BC6F-CAD0EBF07A70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8596EA9-B88B-4415-BC6F-CAD0EBF07A70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8596EA9-B88B-4415-BC6F-CAD0EBF07A70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8596EA9-B88B-4415-BC6F-CAD0EBF07A70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

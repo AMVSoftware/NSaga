@@ -8,7 +8,7 @@ namespace NSaga
 {
     public interface IServiceLocator
     {
-        T Resolve<T>();
+        T Resolve<T>() where T : class;
         object Resolve(Type type);
     }
 }
