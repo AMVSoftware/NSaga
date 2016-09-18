@@ -13,6 +13,7 @@ namespace Tests.Stubs
     class SagaWithErrors : ISaga<SagaWithErrorsData>,
                            InitiatedBy<InitiatingSagaWithErrors>,
                            InitiatedBy<MultipleSagaInitiator>,
+                           InitiatedBy<ActuallyInitiatingSagaWithErrors>,
                            ConsumerOf<GetSomeConsumedErrorsForSagaWithErrors>
     {
         public SagaWithErrors()
@@ -47,6 +48,13 @@ namespace Tests.Stubs
 
             return errors;
         }
+
+        public OperationResult Initiate(ActuallyInitiatingSagaWithErrors message)
+        {
+            this.SagaData.IsInitiated = true;
+
+            return new OperationResult();
+        }
     }
 
 
@@ -59,6 +67,14 @@ namespace Tests.Stubs
         public Guid CorrelationId { get; }
     }
 
+    public class ActuallyInitiatingSagaWithErrors : IInitiatingSagaMessage
+    {
+        public ActuallyInitiatingSagaWithErrors(Guid correlationId)
+        {
+            CorrelationId = correlationId;
+        }
+        public Guid CorrelationId { get; }
+    }
 
     public class GetSomeConsumedErrorsForSagaWithErrors : ISagaMessage
     {

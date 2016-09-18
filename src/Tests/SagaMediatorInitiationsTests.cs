@@ -115,7 +115,7 @@ namespace Tests
 
 
         [Fact]
-        public void Initiate_SagaWithErrors_ReturnsErrors()
+        public void Initiate_SagaWithErrors_SagaIsNotCreated()
         {
             //Arrange
             var correlationId = Guid.NewGuid();
@@ -125,9 +125,9 @@ namespace Tests
             var operationResult = sut.Consume(initiatingMessage);
 
             // Assert
-            operationResult.Errors.Should().HaveCount(1).And.Contain("This is not right!");
+            operationResult.HasErrors.Should().BeTrue();
             var saga = repository.Find<SagaWithErrors>(correlationId);
-            saga.SagaData.IsInitiated.Should().BeTrue();
+            saga.Should().BeNull();
         }
 
 
@@ -163,39 +163,6 @@ namespace Tests
             saga.SagaData.IsInitialised.Should().BeFalse();
             saga.SagaData.IsAdditionalInitialiserCalled.Should().BeTrue();
             saga.CorrelationId.Should().Be(correlationId);
-        }
-
-
-        [Fact]
-        public void Initiate_SagaDoesNotInitiateDate_InitiatesSagaDataObject()
-        {
-            //Arrange
-            var correlationId = Guid.NewGuid();
-            var initiatingMessage = new InitiatingSagaWithErrors(correlationId);
-
-            // Act
-            sut.Consume(initiatingMessage);
-
-            // Assert
-            var saga = repository.Find<SagaWithErrors>(correlationId);
-            saga.SagaData.Should().NotBeNull();
-        }
-
-
-
-        [Fact]
-        public void Initiate_SagaDoesNotInitiateHeaders_InitiatesHeadersAutomatically()
-        {
-            //Arrange
-            var correlationId = Guid.NewGuid();
-            var initiatingMessage = new InitiatingSagaWithErrors(correlationId);
-
-            // Act
-            sut.Consume(initiatingMessage);
-
-            // Assert
-            var saga = repository.Find<SagaWithErrors>(correlationId);
-            saga.Headers.Should().NotBeNull().And.BeEmpty();
         }
     }
 }

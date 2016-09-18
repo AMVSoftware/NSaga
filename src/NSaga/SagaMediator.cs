@@ -55,7 +55,10 @@ namespace NSaga
             }
 
             var errors = (OperationResult)Reflection.InvokeMethod(saga, "Consume", sagaMessage);
-            sagaRepository.Save(saga); // now the real question - should we persist the saga if operation returned errors? Probably should be configurable
+            if (errors.IsSuccessful)
+            {
+                sagaRepository.Save(saga);
+            }
 
             return errors;
         }
@@ -110,7 +113,10 @@ namespace NSaga
             }
 
             var errors = (OperationResult)Reflection.InvokeMethod(saga, "Initiate", initiatingMessage);
-            sagaRepository.Save(saga); // now the real question - should we persist the saga if operation returned errors? Probably should be configurable
+            if (errors.IsSuccessful)
+            {
+                sagaRepository.Save(saga);
+            }
 
             return errors;
         }

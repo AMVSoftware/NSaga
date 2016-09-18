@@ -84,7 +84,7 @@ namespace Tests
         {
             //Arrange
             var correlationId = Guid.NewGuid();
-            sut.Consume(new InitiatingSagaWithErrors(correlationId));
+            sut.Consume(new ActuallyInitiatingSagaWithErrors(correlationId));
             var message = new GetSomeConsumedErrorsForSagaWithErrors(correlationId);
 
             // Act
@@ -92,6 +92,24 @@ namespace Tests
 
             // Assert
             result.Errors.Should().HaveCount(1).And.Contain("This is not right!");
+        }
+
+
+        [Fact]
+        public void Consume_MessageWithErrors_SagaDataNotPersisted()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            sut.Consume(new ActuallyInitiatingSagaWithErrors(correlationId));
+            var message = new GetSomeConsumedErrorsForSagaWithErrors(correlationId);
+
+            // Act
+            sut.Consume(message);
+
+            // Assert
+            var saga = repository.Find<SagaWithErrors>(correlationId);
+            saga.SagaData.IsConsumed.Should().BeFalse();
+
         }
     }
 }
