@@ -2,7 +2,7 @@
 {
     public interface ISagaMediator
     {
-        OperationResult Consume(ISagaMessage sagaMessage);
         OperationResult Consume(IInitiatingSagaMessage initiatingMessage);
+        OperationResult Consume(ISagaMessage sagaMessage);
     }
 }
