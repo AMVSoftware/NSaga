@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace NSaga
 {
-    public interface ISaga<TSagaData>
+    public interface IAccessibleSaga
     {
-        TSagaData SagaData { get; set; }
         Guid CorrelationId { get; set; }
 
 
@@ -13,6 +12,11 @@ namespace NSaga
         /// Metadata information
         /// </summary>
         Dictionary<String, String> Headers { get; set; }
+    }
+
+    public interface ISaga<TSagaData> : IAccessibleSaga
+    {
+        TSagaData SagaData { get; set; }
     }
 
 

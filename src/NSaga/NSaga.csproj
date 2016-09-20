@@ -48,7 +48,9 @@
     <Compile Include="IMessageSerialiser.cs" />
     <Compile Include="Implementations\DumbServiceLocator.cs" />
     <Compile Include="Implementations\InMemorySagaRepository.cs" />
-    <Compile Include="IPipelineHook.cs" />
+    <Compile Include="Pipeline\CompositePipelineHook.cs" />
+    <Compile Include="Pipeline\PipelineContext.cs" />
+    <Compile Include="Pipeline\IPipelineHook.cs" />
     <Compile Include="ISaga.cs" />
     <Compile Include="ISagaMediator.cs" />
     <Compile Include="ISagaRepository.cs" />

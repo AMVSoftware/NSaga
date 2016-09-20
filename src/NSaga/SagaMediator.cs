@@ -10,12 +10,18 @@ namespace NSaga
     {
         private readonly ISagaRepository sagaRepository;
         private readonly IServiceLocator serviceLocator;
+        private readonly IPipelineHook pipelineHook;
         private readonly Assembly[] assembliesToScan;
 
-        public SagaMediator(ISagaRepository sagaRepository, IServiceLocator serviceLocator, params Assembly[] assembliesToScan)
+        public SagaMediator(ISagaRepository sagaRepository, IServiceLocator serviceLocator, IPipelineHook pipelineHook, params Assembly[] assembliesToScan)
         {
+            Guard.ArgumentIsNotNull(sagaRepository, nameof(sagaRepository));
+            Guard.ArgumentIsNotNull(serviceLocator, nameof(serviceLocator));
+            Guard.ArgumentIsNotNull(pipelineHook, nameof(pipelineHook));
+
             this.sagaRepository = sagaRepository;
             this.serviceLocator = serviceLocator;
+            this.pipelineHook = pipelineHook;
 
             if (assembliesToScan.Length == 0)
             {
@@ -30,6 +36,8 @@ namespace NSaga
 
         public OperationResult Consume(ISagaMessage sagaMessage)
         {
+            Guard.ArgumentIsNotNull(sagaMessage, nameof(sagaMessage));
+
             if (sagaMessage.CorrelationId == default(Guid))
             {
                 throw new ArgumentException("CorrelationId was not provided in the message. Please make sure you assign CorrelationId before initiating your Saga");
@@ -54,11 +62,30 @@ namespace NSaga
                 throw new ArgumentException($"Saga with this CorrelationId does not exist. Please initiate a saga with IInitiatingMessage.");
             }
 
+            var context = new PipelineContext
+            {
+                SagaRepository = sagaRepository,
+                AccessibleSaga = (IAccessibleSaga)saga,
+                Message = sagaMessage,
+                SagaData = Reflection.Get(saga, "SagaData"),
+            };
+            pipelineHook.BeforeConsuming(context);
+
             var errors = (OperationResult)Reflection.InvokeMethod(saga, "Consume", sagaMessage);
             if (errors.IsSuccessful)
             {
                 sagaRepository.Save(saga);
             }
+
+            var afterContext = new PipelineContext
+            {
+                SagaRepository = sagaRepository,
+                AccessibleSaga = (IAccessibleSaga)saga,
+                OperationResult = errors,
+                Message = sagaMessage,
+                SagaData = Reflection.Get(saga, "SagaData"),
+            };
+            pipelineHook.AfterConsuming(afterContext);
 
             return errors;
         }
@@ -66,6 +93,8 @@ namespace NSaga
 
         public OperationResult Consume(IInitiatingSagaMessage initiatingMessage)
         {
+            Guard.ArgumentIsNotNull(initiatingMessage, nameof(initiatingMessage));
+
             if (initiatingMessage.CorrelationId == default(Guid))
             {
                 throw new ArgumentException("CorrelationId was not provided in the message. Please make sure you assign CorrelationId before initiating your Saga");
@@ -112,11 +141,30 @@ namespace NSaga
                 Reflection.Set(saga, "Headers", new Dictionary<String, String>());
             }
 
+            var beforeContext = new PipelineContext
+            {
+                SagaRepository = sagaRepository,
+                AccessibleSaga = (IAccessibleSaga)saga,
+                Message = initiatingMessage,
+                SagaData = sagaData,
+            };
+            pipelineHook.BeforeInitialisation(beforeContext);
+
             var errors = (OperationResult)Reflection.InvokeMethod(saga, "Initiate", initiatingMessage);
             if (errors.IsSuccessful)
             {
                 sagaRepository.Save(saga);
             }
+
+            var context = new PipelineContext
+            {
+                SagaRepository = sagaRepository,
+                AccessibleSaga = (IAccessibleSaga)saga, 
+                OperationResult = errors,
+                Message = initiatingMessage,
+                SagaData = sagaData,
+            };
+            pipelineHook.AfterInitialisation(context);
 
             return errors;
         }

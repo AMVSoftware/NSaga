@@ -13,7 +13,7 @@ namespace Samples
         {
             var serviceLocator = new DumbServiceLocator();
             _sagaRepository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
-            _sagaMediator = new SagaMediator(_sagaRepository, serviceLocator, typeof(Program).Assembly);
+            _sagaMediator = new SagaMediator(_sagaRepository, serviceLocator, new BasePipelineHook(), typeof(Program).Assembly);
 
             var correlationId = Guid.NewGuid();
 
