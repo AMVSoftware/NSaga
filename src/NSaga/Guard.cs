@@ -13,5 +13,20 @@ namespace NSaga
                 throw new ArgumentNullException(argument);
             }
         }
+
+
+        [DebuggerHidden]
+        internal static void CheckSagaMessage(ISagaMessage sagaMessage, string argumentName)
+        {
+            if (sagaMessage == null)
+            {
+                throw new ArgumentNullException(argumentName);
+            }
+
+            if (sagaMessage.CorrelationId == default(Guid))
+            {
+                throw new ArgumentException("CorrelationId was not provided in the message. Please make sure you assign CorrelationId before initiating your Saga");
+            }
+        }
     }
 }

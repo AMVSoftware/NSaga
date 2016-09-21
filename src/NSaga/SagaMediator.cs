@@ -34,86 +34,13 @@ namespace NSaga
         }
 
 
-        public OperationResult Consume(ISagaMessage sagaMessage)
-        {
-            Guard.ArgumentIsNotNull(sagaMessage, nameof(sagaMessage));
-
-            if (sagaMessage.CorrelationId == default(Guid))
-            {
-                throw new ArgumentException("CorrelationId was not provided in the message. Please make sure you assign CorrelationId before initiating your Saga");
-            }
-
-            var sagaTypes = Reflection.GetSagaTypesConsuming(sagaMessage, assembliesToScan);
-            if (!sagaTypes.Any())
-            {
-                throw new ArgumentException($"Message of type {sagaMessage.GetType().Name} is not consumed by any Sagas. Please add ConsumerOf<{sagaMessage.GetType().Name}> to your Saga type");
-            }
-            if (sagaTypes.Count() > 1)
-            {
-                // can't have multiple sagas consumed by the same message
-                var sagaNames = String.Join(", ", sagaTypes.Select(t => t.Name));
-                throw new ArgumentException($"Message of type {sagaMessage.GetType().Name} is consumed by more than one saga. Please make sure any single message is consumed by only one saga. Affected sagas: {sagaNames}");
-            }
-
-            var sagaType = sagaTypes.First();
-            var saga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, sagaMessage.CorrelationId);
-            if (saga == null)
-            {
-                throw new ArgumentException($"Saga with this CorrelationId does not exist. Please initiate a saga with IInitiatingMessage.");
-            }
-
-            var context = new PipelineContext
-            {
-                SagaRepository = sagaRepository,
-                AccessibleSaga = (IAccessibleSaga)saga,
-                Message = sagaMessage,
-                SagaData = Reflection.Get(saga, "SagaData"),
-            };
-            pipelineHook.BeforeConsuming(context);
-
-            var errors = (OperationResult)Reflection.InvokeMethod(saga, "Consume", sagaMessage);
-            if (errors.IsSuccessful)
-            {
-                sagaRepository.Save(saga);
-            }
-
-            var afterContext = new PipelineContext
-            {
-                SagaRepository = sagaRepository,
-                AccessibleSaga = (IAccessibleSaga)saga,
-                OperationResult = errors,
-                Message = sagaMessage,
-                SagaData = Reflection.Get(saga, "SagaData"),
-            };
-            pipelineHook.AfterConsuming(afterContext);
-
-            return errors;
-        }
-
-
         public OperationResult Consume(IInitiatingSagaMessage initiatingMessage)
         {
-            Guard.ArgumentIsNotNull(initiatingMessage, nameof(initiatingMessage));
-
-            if (initiatingMessage.CorrelationId == default(Guid))
-            {
-                throw new ArgumentException("CorrelationId was not provided in the message. Please make sure you assign CorrelationId before initiating your Saga");
-            }
+            Guard.CheckSagaMessage(initiatingMessage, nameof(initiatingMessage));
 
             // find all sagas that can be initiated by this message
             var sagaTypes = Reflection.GetSagaTypesInitiatedBy(initiatingMessage, assembliesToScan);
-            if (!sagaTypes.Any())
-            {
-                throw new ArgumentException($"Message of type {initiatingMessage.GetType().Name} is not initiating any Sagas. Please add InitiatedBy<{initiatingMessage.GetType().Name}> to your Saga type");
-            }
-            if (sagaTypes.Count() > 1)
-            {
-                // can't have multiple sagas initiated by the same message - can't have 2 sagas of different types with the same CorrelationId
-                var sagaNames = String.Join(", ", sagaTypes.Select(t => t.Name));
-                throw new ArgumentException($"Message of type {initiatingMessage.GetType().Name} is initiating more than one saga. Please make sure any single message is initiating only one saga. Affected sagas: {sagaNames}");
-            }
-
-            var sagaType = sagaTypes.First();
+            var sagaType = GetSingleSagaType(initiatingMessage, sagaTypes);
 
             // try to find sagas that already exist
             var existingSaga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, initiatingMessage.CorrelationId);
@@ -143,7 +70,6 @@ namespace NSaga
 
             var beforeContext = new PipelineContext
             {
-                SagaRepository = sagaRepository,
                 AccessibleSaga = (IAccessibleSaga)saga,
                 Message = initiatingMessage,
                 SagaData = sagaData,
@@ -158,8 +84,7 @@ namespace NSaga
 
             var context = new PipelineContext
             {
-                SagaRepository = sagaRepository,
-                AccessibleSaga = (IAccessibleSaga)saga, 
+                AccessibleSaga = (IAccessibleSaga)saga,
                 OperationResult = errors,
                 Message = initiatingMessage,
                 SagaData = sagaData,
@@ -167,6 +92,64 @@ namespace NSaga
             pipelineHook.AfterInitialisation(context);
 
             return errors;
+        }
+
+        public OperationResult Consume(ISagaMessage sagaMessage)
+        {
+            Guard.CheckSagaMessage(sagaMessage, nameof(sagaMessage));
+
+            var sagaTypes = Reflection.GetSagaTypesConsuming(sagaMessage, assembliesToScan);
+            var sagaType = GetSingleSagaType(sagaMessage, sagaTypes);
+
+            var saga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, sagaMessage.CorrelationId);
+            if (saga == null)
+            {
+                throw new ArgumentException($"Saga with this CorrelationId does not exist. Please initiate a saga with IInitiatingMessage.");
+            }
+
+            var context = new PipelineContext
+            {
+                AccessibleSaga = (IAccessibleSaga)saga,
+                Message = sagaMessage,
+                SagaData = Reflection.Get(saga, "SagaData"),
+            };
+            pipelineHook.BeforeConsuming(context);
+
+            var errors = (OperationResult)Reflection.InvokeMethod(saga, "Consume", sagaMessage);
+            if (errors.IsSuccessful)
+            {
+                sagaRepository.Save(saga);
+            }
+
+            var afterContext = new PipelineContext
+            {
+                AccessibleSaga = (IAccessibleSaga)saga,
+                OperationResult = errors,
+                Message = sagaMessage,
+                SagaData = Reflection.Get(saga, "SagaData"),
+            };
+            pipelineHook.AfterConsuming(afterContext);
+
+            return errors;
+        }
+
+        
+        private Type GetSingleSagaType(ISagaMessage sagaMessage, IEnumerable<Type> sagaTypes)
+        {
+            if (!sagaTypes.Any())
+            {
+                throw new ArgumentException(
+                    $"Message of type {sagaMessage.GetType().Name} is not initiating or consumed by any Sagas. Please add InitiatedBy<{sagaMessage.GetType().Name}> or ConsumedBy<{sagaMessage.GetType().Name}> to your Saga type");
+            }
+            if (sagaTypes.Count() > 1)
+            {
+                // can't have multiple sagas initiated by the same message - can't have 2 sagas of different types with the same CorrelationId
+                var sagaNames = String.Join(", ", sagaTypes.Select(t => t.Name));
+                throw new ArgumentException(
+                    $"Message of type {sagaMessage.GetType().Name} is initiating or consumed by more than one saga. Please make sure any single message is initiating only one saga. Affected sagas: {sagaNames}");
+            }
+
+            return sagaTypes.Single();
         }
     }
 }
