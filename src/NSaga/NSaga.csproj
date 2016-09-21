@@ -49,6 +49,7 @@
     <Compile Include="Implementations\DumbServiceLocator.cs" />
     <Compile Include="Implementations\InMemorySagaRepository.cs" />
     <Compile Include="Pipeline\CompositePipelineHook.cs" />
+    <Compile Include="Pipeline\MetadataPipelineHook.cs" />
     <Compile Include="Pipeline\PipelineContext.cs" />
     <Compile Include="Pipeline\IPipelineHook.cs" />
     <Compile Include="ISaga.cs" />
@@ -57,10 +58,12 @@
     <Compile Include="IServiceLocator.cs" />
     <Compile Include="Implementations\JsonNetSerialiser.cs" />
     <Compile Include="OperationResult.cs" />
+    <Compile Include="Pipeline\SagaMetadatExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection.cs" />
     <Compile Include="SagaMediator.cs" />
     <Compile Include="Implementations\SagaRepository.cs" />
+    <Compile Include="Pipeline\SagaMetadata.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

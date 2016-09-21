@@ -27,7 +27,7 @@
         void AfterConsuming(PipelineContext context);
     }
 
-    public class BasePipelineHook : IPipelineHook
+    public abstract class BasePipelineHook : IPipelineHook
     {
         public virtual void BeforeInitialisation(PipelineContext context)
         {
@@ -42,6 +42,26 @@
         }
 
         public virtual void AfterConsuming(PipelineContext context)
+        {
+        }
+    }
+
+
+    public class NullPipelineHook : IPipelineHook
+    {
+        public virtual void BeforeInitialisation(PipelineContext context)
+        {
+        }
+
+        public void AfterInitialisation(PipelineContext context)
+        {
+        }
+
+        public void BeforeConsuming(PipelineContext context)
+        {
+        }
+
+        public void AfterConsuming(PipelineContext context)
         {
         }
     }
