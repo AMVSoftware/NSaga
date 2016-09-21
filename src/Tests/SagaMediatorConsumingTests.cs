@@ -15,7 +15,7 @@ namespace Tests
         {
             var serviceLocator = new DumbServiceLocator();
             repository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
-            sut = new SagaMediator(repository, serviceLocator, new BasePipelineHook(), typeof(SagaMediatorInitiationsTests).Assembly);
+            sut = new SagaMediator(repository, serviceLocator, new NullPipelineHook(), typeof(SagaMediatorInitiationsTests).Assembly);
         }
 
 
