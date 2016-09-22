@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tests
 {
-    class SagaMediatorPipelineTests
+    public class SagaMediatorPipelineTests
     {
     }
 }
