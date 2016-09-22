@@ -49,5 +49,13 @@ namespace NSaga.Pipeline
                 pipelineHook.AfterConsuming(context);
             }
         }
+
+        public void AfterSave(PipelineContext context)
+        {
+            foreach (var pipelineHook in hooks)
+            {
+                pipelineHook.AfterSave(context);
+            }
+        }
     }
 }

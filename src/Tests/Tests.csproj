@@ -89,6 +89,8 @@
     <Compile Include="Implementations\InMemorySagaRepositorySpecificTests.cs" />
     <Compile Include="Implementations\InMemorySagaRepositoryTests.cs" />
     <Compile Include="OperationResultTests.cs" />
+    <Compile Include="PipelineHook\MetadataPipelineHookTests.cs" />
+    <Compile Include="SagaMediatorPipelineTests.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorServiceLocatorTests.cs" />
     <Compile Include="SqlServer\SqlSagaRepositorySpecificTests.cs" />
     <Compile Include="SqlServer\SqlSagaRepositoryTests.cs" />

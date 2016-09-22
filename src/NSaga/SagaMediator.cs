@@ -68,28 +68,17 @@ namespace NSaga
                 Reflection.Set(saga, "Headers", new Dictionary<String, String>());
             }
 
-            var beforeContext = new PipelineContext
-            {
-                AccessibleSaga = (IAccessibleSaga)saga,
-                Message = initiatingMessage,
-                SagaData = sagaData,
-            };
-            pipelineHook.BeforeInitialisation(beforeContext);
+            pipelineHook.BeforeInitialisation(new PipelineContext(initiatingMessage, (IAccessibleSaga)saga));
 
             var errors = (OperationResult)Reflection.InvokeMethod(saga, "Initiate", initiatingMessage);
+
+            pipelineHook.AfterInitialisation(new PipelineContext(initiatingMessage, (IAccessibleSaga)saga, errors));
+
             if (errors.IsSuccessful)
             {
                 sagaRepository.Save(saga);
+                pipelineHook.AfterSave(new PipelineContext(initiatingMessage, (IAccessibleSaga)saga, errors));
             }
-
-            var context = new PipelineContext
-            {
-                AccessibleSaga = (IAccessibleSaga)saga,
-                OperationResult = errors,
-                Message = initiatingMessage,
-                SagaData = sagaData,
-            };
-            pipelineHook.AfterInitialisation(context);
 
             return errors;
         }
@@ -107,33 +96,22 @@ namespace NSaga
                 throw new ArgumentException($"Saga with this CorrelationId does not exist. Please initiate a saga with IInitiatingMessage.");
             }
 
-            var context = new PipelineContext
-            {
-                AccessibleSaga = (IAccessibleSaga)saga,
-                Message = sagaMessage,
-                SagaData = Reflection.Get(saga, "SagaData"),
-            };
-            pipelineHook.BeforeConsuming(context);
+            pipelineHook.BeforeConsuming(new PipelineContext(sagaMessage, (IAccessibleSaga)saga));
 
             var errors = (OperationResult)Reflection.InvokeMethod(saga, "Consume", sagaMessage);
+
+            pipelineHook.AfterConsuming(new PipelineContext(sagaMessage, (IAccessibleSaga)saga, errors));
+
             if (errors.IsSuccessful)
             {
                 sagaRepository.Save(saga);
+                pipelineHook.AfterSave(new PipelineContext(sagaMessage, (IAccessibleSaga)saga, errors));
             }
-
-            var afterContext = new PipelineContext
-            {
-                AccessibleSaga = (IAccessibleSaga)saga,
-                OperationResult = errors,
-                Message = sagaMessage,
-                SagaData = Reflection.Get(saga, "SagaData"),
-            };
-            pipelineHook.AfterConsuming(afterContext);
 
             return errors;
         }
 
-        
+
         private Type GetSingleSagaType(ISagaMessage sagaMessage, IEnumerable<Type> sagaTypes)
         {
             if (!sagaTypes.Any())
