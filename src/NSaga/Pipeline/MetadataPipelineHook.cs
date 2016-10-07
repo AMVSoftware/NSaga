@@ -1,4 +1,5 @@
 ﻿using System;
+using NSaga.Implementations;
 
 namespace NSaga.Pipeline
 {
@@ -21,8 +22,8 @@ namespace NSaga.Pipeline
                 sagaMetadata = serialiser.Deserialise<SagaMetadata>(serialisedMetadata);
             }
 
-            sagaMetadata.DateCreated = DateTime.UtcNow;
-            sagaMetadata.DateLastModified = DateTime.UtcNow;
+            sagaMetadata.DateCreated = TimeProvider.Current.UtcNow;
+            sagaMetadata.DateLastModified = TimeProvider.Current.UtcNow;
             sagaMetadata.ReceivedMessages.Add(new ReceivedMessage(context.Message, context.OperationResult));
 
             context.AccessibleSaga.Headers[MetadataKeyName] = serialiser.Serialise(sagaMetadata);
@@ -38,7 +39,7 @@ namespace NSaga.Pipeline
                 sagaMetadata = serialiser.Deserialise<SagaMetadata>(serialisedMetadata);
             }
 
-            sagaMetadata.DateLastModified = DateTime.UtcNow;
+            sagaMetadata.DateLastModified = TimeProvider.Current.UtcNow;
             sagaMetadata.ReceivedMessages.Add(new ReceivedMessage(context.Message, context.OperationResult));
 
             context.AccessibleSaga.Headers[MetadataKeyName] = serialiser.Serialise(sagaMetadata);

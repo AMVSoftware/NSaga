@@ -72,7 +72,7 @@ namespace Tests.Stubs
             this.CorrelationId = correlationId;
         }
 
-        public Guid CorrelationId { get; }
+        public Guid CorrelationId { get; set; }
     }
 
 
@@ -83,7 +83,7 @@ namespace Tests.Stubs
         {
             CorrelationId = correlationId;
         }
-        public Guid CorrelationId { get; }
+        public Guid CorrelationId { get; set; }
     }
 
 
@@ -99,6 +99,6 @@ namespace Tests.Stubs
             // not assigning Guid to the ID - that's deliberate
         }
 
-        public Guid CorrelationId { get; }
+        public Guid CorrelationId { get; set; }
     }
 }

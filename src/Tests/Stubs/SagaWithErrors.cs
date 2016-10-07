@@ -64,7 +64,7 @@ namespace Tests.Stubs
         {
             CorrelationId = correlationId;
         }
-        public Guid CorrelationId { get; }
+        public Guid CorrelationId { get; set; }
     }
 
     public class ActuallyInitiatingSagaWithErrors : IInitiatingSagaMessage
@@ -73,7 +73,7 @@ namespace Tests.Stubs
         {
             CorrelationId = correlationId;
         }
-        public Guid CorrelationId { get; }
+        public Guid CorrelationId { get; set; }
     }
 
     public class GetSomeConsumedErrorsForSagaWithErrors : ISagaMessage
@@ -83,6 +83,6 @@ namespace Tests.Stubs
             CorrelationId = correlationId;
         }
 
-        public Guid CorrelationId { get; }
+        public Guid CorrelationId { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NSaga.Implementations;
 
 namespace NSaga
 {
@@ -17,15 +18,20 @@ namespace NSaga
 
     public class ReceivedMessage
     {
+        internal ReceivedMessage()
+        {
+            // constructor for serialisation
+        }
+
         public ReceivedMessage(ISagaMessage sagaMessage)
         {
-            Timestamp = DateTime.UtcNow;
+            Timestamp = TimeProvider.Current.UtcNow;
             SagaMessage = sagaMessage;
         }
 
         public ReceivedMessage(ISagaMessage sagaMessage, OperationResult operationResult)
         {
-            Timestamp = DateTime.UtcNow;
+            Timestamp = TimeProvider.Current.UtcNow;
             SagaMessage = sagaMessage;
             OperationResult = operationResult;
         }

@@ -89,7 +89,8 @@
     <Compile Include="Implementations\InMemorySagaRepositorySpecificTests.cs" />
     <Compile Include="Implementations\InMemorySagaRepositoryTests.cs" />
     <Compile Include="OperationResultTests.cs" />
-    <Compile Include="SagaMediatorPipelineTests.cs" />
+    <Compile Include="PipelineHook\MetadataPipelineHookInitialisationTests.cs" />
+    <Compile Include="PipelineHook\SagaMediatorPipelineTests.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorServiceLocatorTests.cs" />
     <Compile Include="SqlServer\SqlSagaRepositorySpecificTests.cs" />
     <Compile Include="SqlServer\SqlSagaRepositoryTests.cs" />
@@ -133,9 +134,7 @@
     </Content>
     <Content Include="SqlServer\CreateDatabase.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PipelineHook\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

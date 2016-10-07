@@ -10,7 +10,7 @@ namespace Samples
             CorrelationId = correlationId;
         }
 
-        public Guid CorrelationId { get; }
+        public Guid CorrelationId { get; set; }
 
         public String VerificationCode { get; set; }
     }

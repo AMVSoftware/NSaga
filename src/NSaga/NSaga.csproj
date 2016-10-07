@@ -48,6 +48,7 @@
     <Compile Include="IMessageSerialiser.cs" />
     <Compile Include="Implementations\DumbServiceLocator.cs" />
     <Compile Include="Implementations\InMemorySagaRepository.cs" />
+    <Compile Include="Implementations\TimeProvider.cs" />
     <Compile Include="Pipeline\CompositePipelineHook.cs" />
     <Compile Include="Pipeline\MetadataPipelineHook.cs" />
     <Compile Include="Pipeline\PipelineContext.cs" />
@@ -62,7 +63,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection.cs" />
     <Compile Include="SagaMediator.cs" />
-    <Compile Include="Implementations\SagaRepository.cs" />
     <Compile Include="Pipeline\SagaMetadata.cs" />
   </ItemGroup>
   <ItemGroup>
