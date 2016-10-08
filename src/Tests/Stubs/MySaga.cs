@@ -73,6 +73,8 @@ namespace Tests.Stubs
         }
 
         public Guid CorrelationId { get; set; }
+
+        public Guid SomeRandomValue { get; set; }
     }
 
 
@@ -100,5 +102,7 @@ namespace Tests.Stubs
         }
 
         public Guid CorrelationId { get; set; }
+
+        public String SomeRandomValue { get; set; }
     }
 }

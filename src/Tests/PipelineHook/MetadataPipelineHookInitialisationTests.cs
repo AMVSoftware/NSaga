@@ -16,6 +16,7 @@ namespace Tests.PipelineHook
         private readonly DateTime currentTime;
         private readonly SagaMetadata sagaMetadata;
         private readonly Guid correlationId;
+        private MySagaInitiatingMessage message;
 
         public MetadataPipelineHookInitialisationTests()
         {
@@ -24,7 +25,10 @@ namespace Tests.PipelineHook
 
             sut = new MetadataPipelineHook(new JsonNetSerialiser());
             correlationId = Guid.NewGuid();
-            var message = new MySagaInitiatingMessage(correlationId);
+            message = new MySagaInitiatingMessage(correlationId)
+            {
+                SomeRandomValue = Guid.NewGuid(),
+            };
 
             saga = new MySaga();
             var context = new PipelineContext(message,saga);
@@ -79,6 +83,15 @@ namespace Tests.PipelineHook
             var receivedMessage = sagaMetadata.ReceivedMessages.First();
 
             receivedMessage.SagaMessage.CorrelationId.Should().Be(correlationId);
+        }
+
+        [Fact]
+        public void AfterInitialisation_ReceivedMessage_MessageData()
+        {
+            var receivedMessage = sagaMetadata.ReceivedMessages.First();
+
+            var sagaMessage = (MySagaInitiatingMessage)receivedMessage.SagaMessage;
+            sagaMessage.SomeRandomValue.Should().Be(message.SomeRandomValue);
         }
     }
 }
