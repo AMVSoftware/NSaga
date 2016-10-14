@@ -91,6 +91,7 @@
     <Compile Include="OperationResultTests.cs" />
     <Compile Include="PipelineHook\MetadataPipelineHookConsumingTests.cs" />
     <Compile Include="PipelineHook\MetadataPipelineHookInitialisationTests.cs" />
+    <Compile Include="PipelineHook\MetadataPipelineIntegrationTests.cs" />
     <Compile Include="PipelineHook\SagaMediatorPipelineTests.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorServiceLocatorTests.cs" />
     <Compile Include="SqlServer\SqlSagaRepositorySpecificTests.cs" />
