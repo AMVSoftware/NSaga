@@ -64,6 +64,7 @@
     <Compile Include="Reflection.cs" />
     <Compile Include="SagaMediator.cs" />
     <Compile Include="Pipeline\SagaMetadata.cs" />
+    <Compile Include="SagaMediatorBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

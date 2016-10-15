@@ -1,5 +1,6 @@
 ﻿using System;
 using NSaga;
+using NSaga.Pipeline;
 
 
 namespace Samples
@@ -12,8 +13,9 @@ namespace Samples
         public static void Main(params string[] args)
         {
             var serviceLocator = new DumbServiceLocator();
-            _sagaRepository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
-            _sagaMediator = new SagaMediator(_sagaRepository, serviceLocator, new NullPipelineHook(), typeof(Program).Assembly);
+            var messageSerialiser = new JsonNetSerialiser();
+            _sagaRepository = new InMemorySagaRepository(messageSerialiser, serviceLocator);
+            _sagaMediator = new SagaMediator(_sagaRepository, serviceLocator, new MetadataPipelineHook(messageSerialiser), typeof(Program).Assembly);
 
             var correlationId = Guid.NewGuid();
 
