@@ -43,11 +43,8 @@ namespace NSaga
             UseMessageSerialiser<JsonNetSerialiser>();
             UseRepository<InMemorySagaRepository>();
             AddAssembliesToScan(AppDomain.CurrentDomain.GetAssemblies());
-
-            compositePipeline.AddHook(new MetadataPipelineHook(container.Resolve<IMessageSerialiser>()));
-            container.Register<IPipelineHook>(compositePipeline);
-
-            container.Register<Assembly[]>((c, p) => AppDomain.CurrentDomain.GetAssemblies());
+            AddPiplineHook(new MetadataPipelineHook(container.Resolve<IMessageSerialiser>()));
+            AddAssembliesToScan(AppDomain.CurrentDomain.GetAssemblies());
 
             container.Register<ISagaMediator, SagaMediator>();
         }
@@ -89,6 +86,11 @@ namespace NSaga
 
         public ISagaMediator Build()
         {
+            container.Register<IPipelineHook>(compositePipeline);
+
+            container.Register<Assembly[]>((c, p) => assembliesToScan);
+
+
             var mediator = container.Resolve<ISagaMediator>();
             return mediator;
         }
