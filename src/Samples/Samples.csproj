@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\NSaga\Implementations\DumbServiceLocator.cs">
+      <Link>DumbServiceLocator.cs</Link>
+    </Compile>
     <Compile Include="AccountCreation\AccountCreationSaga.cs" />
     <Compile Include="AccountCreation\AccountCreationSagaData.cs" />
     <Compile Include="AccountCreation\AccountDetailsProvided.cs" />

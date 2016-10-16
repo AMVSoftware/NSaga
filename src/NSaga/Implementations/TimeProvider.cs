@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NSaga.Implementations
+namespace NSaga
 {
     /// <summary>
     /// Ambient context for providing current DateTime. 

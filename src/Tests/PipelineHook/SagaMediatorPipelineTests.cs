@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NSaga;
-using NSaga.Implementations;
 using NSubstitute;
 using Tests.Stubs;
 using Xunit;

@@ -36,6 +36,19 @@ namespace NSaga
             return property.GetValue(instance, null);
         }
 
+
+        public static object GetPrivate(object instance, string propertyName)
+        {
+            Type type = instance.GetType();
+            FieldInfo property = type.GetField(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (property == null)
+            {
+                return null;
+            }
+
+            return property.GetValue(instance);
+        }
+
         public static Type GetInterfaceGenericType(object instance, Type interfaceType)
         {
             var instanceType = instance.GetType();

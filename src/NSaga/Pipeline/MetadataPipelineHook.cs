@@ -1,5 +1,4 @@
 ﻿using System;
-using NSaga.Implementations;
 
 namespace NSaga.Pipeline
 {

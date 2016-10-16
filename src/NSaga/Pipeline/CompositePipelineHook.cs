@@ -1,21 +1,34 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
-namespace NSaga.Pipeline
+namespace NSaga
 {
     public class CompositePipelineHook : IPipelineHook
     {
-        private readonly IEnumerable<IPipelineHook> hooks;
+        private readonly IList<IPipelineHook> hooks;
+
+        public CompositePipelineHook()
+        {
+            hooks = new List<IPipelineHook>();
+        }
 
         public CompositePipelineHook(IEnumerable<IPipelineHook> hooks)
         {
             Guard.ArgumentIsNotNull(hooks, nameof(hooks));
-            this.hooks = hooks;
+            this.hooks = hooks.ToList();
         }
 
         public CompositePipelineHook(params IPipelineHook[] hooks)
         {
             Guard.ArgumentIsNotNull(hooks, nameof(hooks));
             this.hooks = hooks;
+        }
+
+        public CompositePipelineHook AddHook(IPipelineHook pipelineHook)
+        {
+            hooks.Add(pipelineHook);
+
+            return this;
         }
 
         public void BeforeInitialisation(PipelineContext context)

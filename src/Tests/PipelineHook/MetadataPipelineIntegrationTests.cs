@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using NSaga;
-using NSaga.Implementations;
 using NSaga.Pipeline;
 using Tests.Stubs;
 using Xunit;
