@@ -39,7 +39,7 @@ namespace NSaga
 
         private void RegisterDefaults()
         {
-            UseServiceLocator<TinyIocSagaFactory>();
+            UseSagaFactory<TinyIocSagaFactory>();
             UseMessageSerialiser<JsonNetSerialiser>();
             UseRepository<InMemorySagaRepository>();
             AddAssembliesToScan(AppDomain.CurrentDomain.GetAssemblies());
@@ -63,9 +63,9 @@ namespace NSaga
             return this;
         }
 
-        public InternalMediatorBuilder UseServiceLocator<TServiceLocator>() where TServiceLocator : ISagaFactory
+        public InternalMediatorBuilder UseSagaFactory<TSagaFactory>() where TSagaFactory : ISagaFactory
         {
-            container.Register(typeof(ISagaFactory), typeof(TServiceLocator));
+            container.Register(typeof(ISagaFactory), typeof(TSagaFactory));
 
             return this;
         }
