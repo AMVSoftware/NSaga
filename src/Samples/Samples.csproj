@@ -43,8 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\NSaga\ISagaFactory.cs">
-      <Link>ISagaFactory.cs</Link>
+    <Compile Include="..\NSaga\Implementations\DumbSagaFactory.cs">
+      <Link>DumbSagaFactory.cs</Link>
     </Compile>
     <Compile Include="AccountCreation\AccountCreationSaga.cs" />
     <Compile Include="AccountCreation\AccountCreationSagaData.cs" />

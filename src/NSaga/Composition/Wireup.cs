@@ -8,29 +8,36 @@ namespace NSaga
 {
     public static class Wireup
     {
-        public static InternalMediatorBuilder UseInternalContainer()
+        public static SagaMediatorBuilder UseInternalContainer()
         {
-            var builder = new InternalMediatorBuilder(TinyIoCContainer.Current);
+            var builder = new SagaMediatorBuilder(new TinyIocConformingContainer());
 
             return builder;
         }
 
-        public static InternalMediatorBuilder UseInternalContainer(TinyIoCContainer container)
+        public static SagaMediatorBuilder UseInternalContainer(TinyIoCContainer container)
         {
-            var builder = new InternalMediatorBuilder(container);
+            var builder = new SagaMediatorBuilder(new TinyIocConformingContainer(container));
+
+            return builder;
+        }
+
+        public static SagaMediatorBuilder UseContainer(IConformingContainer conformingContainer)
+        {
+            var builder = new SagaMediatorBuilder(conformingContainer);
 
             return builder;
         }
     }
 
 
-    public class InternalMediatorBuilder
+    public class SagaMediatorBuilder
     {
-        private readonly TinyIoC.TinyIoCContainer container;
+        private readonly IConformingContainer container;
         private Assembly[] assembliesToScan;
         private readonly CompositePipelineHook compositePipeline;
 
-        public InternalMediatorBuilder(TinyIoCContainer container)
+        public SagaMediatorBuilder(IConformingContainer container)
         {
             this.container = container;
             this.compositePipeline = new CompositePipelineHook();
@@ -49,35 +56,35 @@ namespace NSaga
             container.Register(typeof(ISagaMediator), typeof(SagaMediator));
         }
 
-        public InternalMediatorBuilder UseMessageSerialiser<TSerialiser>() where TSerialiser : IMessageSerialiser
+        public SagaMediatorBuilder UseMessageSerialiser<TSerialiser>() where TSerialiser : IMessageSerialiser
         {
             container.Register(typeof(IMessageSerialiser), typeof(TSerialiser));
 
             return this;
         }
 
-        public InternalMediatorBuilder UseRepository<TRepository>() where TRepository : ISagaRepository
+        public SagaMediatorBuilder UseRepository<TRepository>() where TRepository : ISagaRepository
         {
             container.Register(typeof(ISagaRepository), typeof(TRepository));
 
             return this;
         }
 
-        public InternalMediatorBuilder UseSagaFactory<TSagaFactory>() where TSagaFactory : ISagaFactory
+        public SagaMediatorBuilder UseSagaFactory<TSagaFactory>() where TSagaFactory : ISagaFactory
         {
             container.Register(typeof(ISagaFactory), typeof(TSagaFactory));
 
             return this;
         }
 
-        public InternalMediatorBuilder AddAssembliesToScan(Assembly[] assemblies)
+        public SagaMediatorBuilder AddAssembliesToScan(Assembly[] assemblies)
         {
             assembliesToScan = assemblies;
 
             return this;
         }
 
-        public InternalMediatorBuilder AddPiplineHook(IPipelineHook pipelineHook)
+        public SagaMediatorBuilder AddPiplineHook(IPipelineHook pipelineHook)
         {
             compositePipeline.AddHook(pipelineHook);
 
