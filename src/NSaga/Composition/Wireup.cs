@@ -88,7 +88,7 @@ namespace NSaga
         {
             container.Register<IPipelineHook>(compositePipeline);
 
-            container.Register<Assembly[]>((c, p) => assembliesToScan);
+            container.Register<Assembly[]>(assembliesToScan);
 
 
             var mediator = container.Resolve<ISagaMediator>();
