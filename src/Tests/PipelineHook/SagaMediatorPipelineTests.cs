@@ -16,7 +16,7 @@ namespace Tests.PipelineHook
         public SagaMediatorPipelineTests()
         {
             pipelineHook = Substitute.For<IPipelineHook>();
-            var serviceLocator = new DumbServiceLocator();
+            var serviceLocator = new DumbSagaFactory();
             repository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
             sut = new SagaMediator(repository, serviceLocator, pipelineHook, typeof(SagaMediatorInitiationsTests).Assembly);
         }

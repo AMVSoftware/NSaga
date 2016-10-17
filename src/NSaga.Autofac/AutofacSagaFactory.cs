@@ -3,11 +3,11 @@ using Autofac;
 
 namespace NSaga.Autofac
 {
-    public class AutofacServiceLocator : IServiceLocator
+    public class AutofacSagaFactory : ISagaFactory
     {
         private readonly IContainer container;
 
-        public AutofacServiceLocator(IContainer container)
+        public AutofacSagaFactory(IContainer container)
         {
             this.container = container;
         }

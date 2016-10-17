@@ -27,9 +27,9 @@ namespace Tests.Composition
         [Fact]
         public void Default_Provides_TinyIocServiceLocator()
         {
-            var sagaRepository = Reflection.GetPrivate(sagaMediator, "serviceLocator");
+            var sagaRepository = Reflection.GetPrivate(sagaMediator, "sagaFactory");
 
-            sagaRepository.Should().BeOfType<TinyIocServiceLocator>();
+            sagaRepository.Should().BeOfType<TinyIocSagaFactory>();
         }
 
 

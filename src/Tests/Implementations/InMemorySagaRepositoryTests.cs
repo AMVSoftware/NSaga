@@ -6,7 +6,7 @@ namespace Tests
     {
         public InMemorySagaRepositoryTests()
         {
-            this.Sut = new InMemorySagaRepository(new JsonNetSerialiser(), new DumbServiceLocator());
+            this.Sut = new InMemorySagaRepository(new JsonNetSerialiser(), new DumbSagaFactory());
         }
     }
 }

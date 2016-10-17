@@ -3,11 +3,11 @@ using SimpleInjector;
 
 namespace NSaga.SimpleInjector
 {
-    public class SimpleInjectorServiceLocator : IServiceLocator
+    public class SimpleInjectorSagaFactory : ISagaFactory
     {
         private readonly Container container;
 
-        public SimpleInjectorServiceLocator(Container container)
+        public SimpleInjectorSagaFactory(Container container)
         {
             this.container = container;
         }

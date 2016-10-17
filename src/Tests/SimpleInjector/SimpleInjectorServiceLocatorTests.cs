@@ -7,13 +7,13 @@ namespace Tests.SimpleInjector
 {
     public class SimpleInjectorServiceLocatorTests
     {
-        private readonly SimpleInjectorServiceLocator sut;
+        private readonly SimpleInjectorSagaFactory sut;
 
         public SimpleInjectorServiceLocatorTests()
         {
             var container = new Container();
             container.Register<IMyService, MyService>();
-            sut = new SimpleInjectorServiceLocator(container);
+            sut = new SimpleInjectorSagaFactory(container);
         }
 
         [Fact]

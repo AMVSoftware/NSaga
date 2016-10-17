@@ -7,14 +7,14 @@ namespace Tests.Autofac
 {
     public class AutofacServiceLocatorTests
     {
-        private readonly AutofacServiceLocator sut;
+        private readonly AutofacSagaFactory sut;
 
         public AutofacServiceLocatorTests()
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<MyService>().As<IMyService>();
             var container = builder.Build();
-            sut = new AutofacServiceLocator(container);
+            sut = new AutofacSagaFactory(container);
         }
 
         [Fact]

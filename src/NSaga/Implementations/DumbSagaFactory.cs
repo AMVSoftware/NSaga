@@ -7,7 +7,7 @@ namespace NSaga
     /// This is not meant to be used in production, only for demonstration purposes. 
     /// Please replace service locator with a real DI service locator
     /// </summary>
-    internal class DumbServiceLocator : IServiceLocator
+    internal class DumbSagaFactory : ISagaFactory
     {
         public T Resolve<T>() where T : class
         {

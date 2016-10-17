@@ -4,7 +4,7 @@ using TinyIoC;
 
 namespace NSaga
 {
-    public class TinyIocServiceLocator : IServiceLocator
+    public class TinyIocSagaFactory : ISagaFactory
     {
         public T Resolve<T>() where T : class
         {

@@ -12,7 +12,7 @@ namespace Samples
 
         public static void Main(params string[] args)
         {
-            var serviceLocator = new DumbServiceLocator();
+            var serviceLocator = new DumbSagaFactory();
             var messageSerialiser = new JsonNetSerialiser();
             _sagaRepository = new InMemorySagaRepository(messageSerialiser, serviceLocator);
             _sagaMediator = new SagaMediator(_sagaRepository, serviceLocator, new MetadataPipelineHook(messageSerialiser), typeof(Program).Assembly);

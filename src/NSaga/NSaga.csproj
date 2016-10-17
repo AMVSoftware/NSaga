@@ -45,10 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Composition\Wireup.cs" />
-    <Compile Include="Composition\TinyIocServiceLocator.cs" />
+    <Compile Include="Composition\TinyIocSagaFactory.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IMessageSerialiser.cs" />
-    <Compile Include="Implementations\DumbServiceLocator.cs" />
+    <Compile Include="Implementations\DumbSagaFactory.cs" />
     <Compile Include="Implementations\InMemorySagaRepository.cs" />
     <Compile Include="Implementations\TimeProvider.cs" />
     <Compile Include="Composition\TinyIoC.cs" />
@@ -59,7 +59,7 @@
     <Compile Include="ISaga.cs" />
     <Compile Include="ISagaMediator.cs" />
     <Compile Include="ISagaRepository.cs" />
-    <Compile Include="IServiceLocator.cs" />
+    <Compile Include="ISagaFactory.cs" />
     <Compile Include="Implementations\JsonNetSerialiser.cs" />
     <Compile Include="OperationResult.cs" />
     <Compile Include="Pipeline\SagaMetadatExtension.cs" />

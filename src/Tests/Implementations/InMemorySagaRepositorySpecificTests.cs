@@ -14,7 +14,7 @@ namespace Tests.Implementations
 
         public InMemorySagaRepositorySpecificTests()
         {
-            sut = new InMemorySagaRepository(new JsonNetSerialiser(), new DumbServiceLocator());
+            sut = new InMemorySagaRepository(new JsonNetSerialiser(), new DumbSagaFactory());
         }
 
 

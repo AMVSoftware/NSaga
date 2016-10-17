@@ -14,7 +14,7 @@ namespace Tests
 
         public SagaMediatorInitiationsTests()
         {
-            var serviceLocator = new DumbServiceLocator();
+            var serviceLocator = new DumbSagaFactory();
             repository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
             sut = new SagaMediator(repository, serviceLocator, new NullPipelineHook(), typeof(SagaMediatorInitiationsTests).Assembly);
         }

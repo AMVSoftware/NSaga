@@ -85,8 +85,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\NSaga\Implementations\DumbServiceLocator.cs">
-      <Link>DumbServiceLocator.cs</Link>
+    <Compile Include="..\NSaga\Implementations\DumbSagaFactory.cs">
+      <Link>DumbSagaFactory.cs</Link>
     </Compile>
     <Compile Include="Autofac\AutofacServiceLocatorTests.cs" />
     <Compile Include="Composition\WireupTests.cs" />

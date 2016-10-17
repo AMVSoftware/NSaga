@@ -39,14 +39,14 @@ namespace NSaga
 
         private void RegisterDefaults()
         {
-            UseServiceLocator<TinyIocServiceLocator>();
+            UseServiceLocator<TinyIocSagaFactory>();
             UseMessageSerialiser<JsonNetSerialiser>();
             UseRepository<InMemorySagaRepository>();
             AddAssembliesToScan(AppDomain.CurrentDomain.GetAssemblies());
             AddPiplineHook(new MetadataPipelineHook(container.Resolve<IMessageSerialiser>()));
             AddAssembliesToScan(AppDomain.CurrentDomain.GetAssemblies());
 
-            container.Register<ISagaMediator, SagaMediator>();
+            container.Register(typeof(ISagaMediator), typeof(SagaMediator));
         }
 
         public InternalMediatorBuilder UseMessageSerialiser<TSerialiser>() where TSerialiser : IMessageSerialiser
@@ -63,9 +63,9 @@ namespace NSaga
             return this;
         }
 
-        public InternalMediatorBuilder UseServiceLocator<TServiceLocator>() where TServiceLocator : IServiceLocator
+        public InternalMediatorBuilder UseServiceLocator<TServiceLocator>() where TServiceLocator : ISagaFactory
         {
-            container.Register(typeof(IServiceLocator), typeof(TServiceLocator));
+            container.Register(typeof(ISagaFactory), typeof(TServiceLocator));
 
             return this;
         }
@@ -86,9 +86,9 @@ namespace NSaga
 
         public ISagaMediator Build()
         {
-            container.Register<IPipelineHook>(compositePipeline);
+            container.Register(typeof(IPipelineHook), compositePipeline);
 
-            container.Register<Assembly[]>(assembliesToScan);
+            container.Register(typeof(Assembly[]), assembliesToScan);
 
 
             var mediator = container.Resolve<ISagaMediator>();

@@ -7,14 +7,14 @@ namespace NSaga
     public class InMemorySagaRepository : ISagaRepository
     {
         private readonly IMessageSerialiser messageSerialiser;
-        private readonly IServiceLocator serviceLocator;
+        private readonly ISagaFactory sagaFactory;
         public Dictionary<Guid, String> DataDictionary { get; }
         public Dictionary<Guid, String> HeadersDictionary { get; }
 
-        public InMemorySagaRepository(IMessageSerialiser messageSerialiser, IServiceLocator serviceLocator)
+        public InMemorySagaRepository(IMessageSerialiser messageSerialiser, ISagaFactory sagaFactory)
         {
             this.messageSerialiser = messageSerialiser;
-            this.serviceLocator = serviceLocator;
+            this.sagaFactory = sagaFactory;
             DataDictionary = new Dictionary<Guid, string>();
             HeadersDictionary = new Dictionary<Guid, string>();
         }
@@ -40,7 +40,7 @@ namespace NSaga
 
             var dataObject = messageSerialiser.Deserialise(dataSerialised, sagaDataType);
 
-            var saga = serviceLocator.Resolve<TSaga>();
+            var saga = sagaFactory.Resolve<TSaga>();
             Reflection.Set(saga, "SagaData", dataObject);
             Reflection.Set(saga, "CorrelationId", correlationId);
             Reflection.Set(saga, "Headers", headers);

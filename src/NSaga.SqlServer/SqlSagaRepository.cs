@@ -10,7 +10,7 @@ namespace NSaga.SqlServer
         public const string SagaDataTableName = "NSaga.Sagas";
         public const string HeadersTableName = "NSaga.Headers";
 
-        private readonly IServiceLocator serviceLocator;
+        private readonly ISagaFactory sagaFactory;
         private readonly Database database;
         private readonly IMessageSerialiser messageSerialiser;
 
@@ -19,16 +19,16 @@ namespace NSaga.SqlServer
         /// Actual connection string is taken from your app.config or web.config
         /// </summary>
         /// <param name="connectionStringName">Name of a connection string to use from your config file</param>
-        /// <param name="serviceLocator">An instance implementing <see cref="IServiceLocator"/></param>
+        /// <param name="sagaFactory">An instance implementing <see cref="ISagaFactory"/></param>
         /// <param name="messageSerialiser">An instance implementing <see cref="IMessageSerialiser"/></param>
-        public SqlSagaRepository(string connectionStringName, IServiceLocator serviceLocator, IMessageSerialiser messageSerialiser)
+        public SqlSagaRepository(string connectionStringName, ISagaFactory sagaFactory, IMessageSerialiser messageSerialiser)
         {
             Guard.ArgumentIsNotNull(connectionStringName, nameof(connectionStringName));
-            Guard.ArgumentIsNotNull(serviceLocator, nameof(serviceLocator));
+            Guard.ArgumentIsNotNull(sagaFactory, nameof(sagaFactory));
             Guard.ArgumentIsNotNull(messageSerialiser, nameof(messageSerialiser));
 
             this.messageSerialiser = messageSerialiser;
-            this.serviceLocator = serviceLocator;
+            this.sagaFactory = sagaFactory;
             this.database = new Database(connectionStringName);
         }
 
@@ -37,17 +37,17 @@ namespace NSaga.SqlServer
         /// </summary>
         /// <param name="connectionString">String containing a connection string</param>
         /// <param name="providerName">A provider name for the connection</param>
-        /// <param name="serviceLocator">An instance implementing <see cref="IServiceLocator"/></param>
+        /// <param name="sagaFactory">An instance implementing <see cref="ISagaFactory"/></param>
         /// <param name="messageSerialiser">An instance implementing <see cref="IMessageSerialiser"/></param>
-        public SqlSagaRepository(string connectionString, string providerName, IServiceLocator serviceLocator, IMessageSerialiser messageSerialiser)
+        public SqlSagaRepository(string connectionString, string providerName, ISagaFactory sagaFactory, IMessageSerialiser messageSerialiser)
         {
             Guard.ArgumentIsNotNull(connectionString, nameof(connectionString));
             Guard.ArgumentIsNotNull(providerName, nameof(providerName));
-            Guard.ArgumentIsNotNull(serviceLocator, nameof(serviceLocator));
+            Guard.ArgumentIsNotNull(sagaFactory, nameof(sagaFactory));
             Guard.ArgumentIsNotNull(messageSerialiser, nameof(messageSerialiser));
 
             this.messageSerialiser = messageSerialiser;
-            this.serviceLocator = serviceLocator;
+            this.sagaFactory = sagaFactory;
             this.database = new Database(connectionString, providerName);
         }
 
@@ -73,7 +73,7 @@ namespace NSaga.SqlServer
                 return null;
             }
 
-            var sagaInstance = serviceLocator.Resolve<TSaga>();
+            var sagaInstance = sagaFactory.Resolve<TSaga>();
             var sagaDataType = Reflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
             var sagaData = messageSerialiser.Deserialise(persistedData.BlobData, sagaDataType);
 

@@ -22,7 +22,7 @@ namespace Tests.PipelineHook
             initialisationTime = new DateTime(1905, 9, 13);
             TimeProvider.Current = new StubTimeProvider(initialisationTime);
 
-            var serviceLocator = new DumbServiceLocator();
+            var serviceLocator = new DumbSagaFactory();
             var jsonNetSerialiser = new JsonNetSerialiser();
             var sagaRepository = new InMemorySagaRepository(jsonNetSerialiser, serviceLocator);
             var pipeline = new CompositePipelineHook(new MetadataPipelineHook(jsonNetSerialiser));

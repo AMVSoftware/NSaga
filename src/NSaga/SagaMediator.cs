@@ -9,18 +9,18 @@ namespace NSaga
     public class SagaMediator : ISagaMediator
     {
         private readonly ISagaRepository sagaRepository;
-        private readonly IServiceLocator serviceLocator;
+        private readonly ISagaFactory sagaFactory;
         private readonly IPipelineHook pipelineHook;
         private readonly Assembly[] assembliesToScan;
 
-        public SagaMediator(ISagaRepository sagaRepository, IServiceLocator serviceLocator, IPipelineHook pipelineHook, params Assembly[] assembliesToScan)
+        public SagaMediator(ISagaRepository sagaRepository, ISagaFactory sagaFactory, IPipelineHook pipelineHook, params Assembly[] assembliesToScan)
         {
             Guard.ArgumentIsNotNull(sagaRepository, nameof(sagaRepository));
-            Guard.ArgumentIsNotNull(serviceLocator, nameof(serviceLocator));
+            Guard.ArgumentIsNotNull(sagaFactory, nameof(sagaFactory));
             Guard.ArgumentIsNotNull(pipelineHook, nameof(pipelineHook));
 
             this.sagaRepository = sagaRepository;
-            this.serviceLocator = serviceLocator;
+            this.sagaFactory = sagaFactory;
             this.pipelineHook = pipelineHook;
 
             if (assembliesToScan.Length == 0)
@@ -50,7 +50,7 @@ namespace NSaga
             }
 
             // now create an instance of saga and persist the data
-            var saga = serviceLocator.Resolve(sagaType);
+            var saga = sagaFactory.Resolve(sagaType);
             Reflection.Set(saga, "CorrelationId", initiatingMessage.CorrelationId);
 
             // if SagaData is null - create an instance of the object and assign to saga
