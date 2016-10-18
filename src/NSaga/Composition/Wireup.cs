@@ -6,7 +6,7 @@ using TinyIoC;
 
 namespace NSaga
 {
-    public static class Wireup
+    public class Wireup
     {
         public static SagaMediatorBuilder UseInternalContainer()
         {
@@ -27,6 +27,12 @@ namespace NSaga
             var builder = new SagaMediatorBuilder(conformingContainer);
 
             return builder;
+        }
+
+
+        public static Wireup Init()
+        {
+            return new Wireup();
         }
     }
 
@@ -123,6 +129,8 @@ namespace NSaga
             container.Register(typeof(IPipelineHook), compositePipeline);
 
             container.Register(typeof(Assembly[]), assembliesToScan);
+
+            //TODO register all the sagas from 
 
             return this;
         }
