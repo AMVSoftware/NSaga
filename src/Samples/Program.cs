@@ -7,15 +7,16 @@ namespace Samples
 {
     static class Program
     {
-        private static SagaMediator _sagaMediator;
+        private static ISagaMediator _sagaMediator;
         private static ISagaRepository _sagaRepository;
 
         public static void Main(params string[] args)
         {
-            var serviceLocator = new DumbSagaFactory();
-            var messageSerialiser = new JsonNetSerialiser();
-            _sagaRepository = new InMemorySagaRepository(messageSerialiser, serviceLocator);
-            _sagaMediator = new SagaMediator(_sagaRepository, serviceLocator, new MetadataPipelineHook(messageSerialiser), typeof(Program).Assembly);
+            var builder = Wireup.UseInternalContainer();
+            _sagaMediator = builder.BuildMediator();
+
+            _sagaRepository = builder.Container.Resolve<ISagaRepository>();
+            
 
             var correlationId = Guid.NewGuid();
 

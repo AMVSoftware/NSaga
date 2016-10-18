@@ -56,12 +56,23 @@ namespace NSaga
             container.Register(typeof(ISagaMediator), typeof(SagaMediator));
         }
 
+        public IConformingContainer Container => container;
+
         public SagaMediatorBuilder UseMessageSerialiser<TSerialiser>() where TSerialiser : IMessageSerialiser
         {
             container.Register(typeof(IMessageSerialiser), typeof(TSerialiser));
 
             return this;
         }
+
+        public SagaMediatorBuilder UseMessageSerialiser(IMessageSerialiser messageSerialiser)
+        {
+            container.Register(typeof(IMessageSerialiser), messageSerialiser);
+
+            return this;
+        }
+
+
 
         public SagaMediatorBuilder UseRepository<TRepository>() where TRepository : ISagaRepository
         {
@@ -70,6 +81,14 @@ namespace NSaga
             return this;
         }
 
+        public SagaMediatorBuilder UseRepository(ISagaRepository sagaRepository)
+        {
+            container.Register(typeof(ISagaRepository), sagaRepository);
+
+            return this;
+        }
+
+
         public SagaMediatorBuilder UseSagaFactory<TSagaFactory>() where TSagaFactory : ISagaFactory
         {
             container.Register(typeof(ISagaFactory), typeof(TSagaFactory));
@@ -77,6 +96,14 @@ namespace NSaga
             return this;
         }
 
+        public SagaMediatorBuilder UseSagaFactory(ISagaFactory sagaFactory)
+        {
+            container.Register(typeof(ISagaFactory), sagaFactory);
+
+            return this;
+        }
+
+        
         public SagaMediatorBuilder AddAssembliesToScan(Assembly[] assemblies)
         {
             assembliesToScan = assemblies;
@@ -91,12 +118,18 @@ namespace NSaga
             return this;
         }
 
-        public ISagaMediator Build()
+        public SagaMediatorBuilder DoRegistrations()
         {
             container.Register(typeof(IPipelineHook), compositePipeline);
 
             container.Register(typeof(Assembly[]), assembliesToScan);
 
+            return this;
+        }
+
+        public ISagaMediator BuildMediator()
+        {
+            DoRegistrations();
 
             var mediator = container.Resolve<ISagaMediator>();
             return mediator;

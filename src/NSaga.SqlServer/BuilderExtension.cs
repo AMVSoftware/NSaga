@@ -1,19 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NSaga.SqlServer
+﻿namespace NSaga.SqlServer
 {
     public static class BuilderExtension
     {
-        public static SagaMediatorBuilder UseSqlServerStorage(this SagaMediatorBuilder builder, string connectionString)
+        public static SagaMediatorBuilder UseSqlServerStorage(this SagaMediatorBuilder builder, string connectionStringName)
         {
-            //TODO register connectionstring for repository. DUH!
-
-            builder.UseRepository<SqlSagaRepository>();
+            builder.UseRepository(new SqlSagaRepository(
+                                        connectionStringName, 
+                                        builder.Container.Resolve<ISagaFactory>(),
+                                        builder.Container.Resolve<IMessageSerialiser>()));
             return builder;
         }
+
+        public static SagaMediatorBuilder UseSqlServerStorage(this SagaMediatorBuilder builder, string connectionString, string providerName)
+        {
+            builder.UseRepository(new SqlSagaRepository(
+                                        connectionString,
+                                        providerName,
+                                        builder.Container.Resolve<ISagaFactory>(),
+                                        builder.Container.Resolve<IMessageSerialiser>()));
+            return builder;
+        }
+
     }
 }

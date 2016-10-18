@@ -12,7 +12,7 @@ namespace Tests.Composition
 
         public WireupTests()
         {
-            sagaMediator = (SagaMediator)Wireup.UseInternalContainer().Build();
+            sagaMediator = (SagaMediator)Wireup.UseInternalContainer().BuildMediator();
         }
 
         [Fact]
