@@ -9,11 +9,11 @@ using Xunit;
 
 namespace Tests.SqlServer
 {
-    public class SqlServerBuilderTests
+    public class SqlServerWireupTests
     {
         private readonly Database database;
 
-        public SqlServerBuilderTests()
+        public SqlServerWireupTests()
         {
             database = new Database("TestingConnectionString");
         }
