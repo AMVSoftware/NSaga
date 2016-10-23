@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NSaga
 {
@@ -7,5 +8,6 @@ namespace NSaga
         T Resolve<T>() where T : class;
         void Register(Type registerType, object instance);
         void Register(Type registerType, Type implementation);
+        void RegisterMultiple(Type registerType, IEnumerable<Type> implementations);
     }
 }

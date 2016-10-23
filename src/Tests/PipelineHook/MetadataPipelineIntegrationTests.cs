@@ -25,9 +25,10 @@ namespace Tests.PipelineHook
             var serviceLocator = new DumbSagaFactory();
             var jsonNetSerialiser = new JsonNetSerialiser();
             var sagaRepository = new InMemorySagaRepository(jsonNetSerialiser, serviceLocator);
-            var pipeline = new CompositePipelineHook(new MetadataPipelineHook(jsonNetSerialiser));
+            var hooks = new IPipelineHook[] { new MetadataPipelineHook(jsonNetSerialiser) };
+            var assemblies = new Assembly[] { Assembly.GetAssembly(typeof(MetadataPipelineIntegrationTests)) };
 
-            var sagaMediator = new SagaMediator(sagaRepository, serviceLocator, pipeline, Assembly.GetAssembly(typeof(MetadataPipelineIntegrationTests)));
+            var sagaMediator = new SagaMediator(sagaRepository, serviceLocator, hooks, assemblies);
 
             correlationId = Guid.NewGuid();
             var initiatingMessage = new MySagaInitiatingMessage(correlationId);

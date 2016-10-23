@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SimpleInjector;
 
 namespace NSaga.SimpleInjector
@@ -25,6 +26,11 @@ namespace NSaga.SimpleInjector
         public void Register(Type registerType, Type implementation)
         {
             container.Register(registerType, implementation);
+        }
+
+        public void RegisterMultiple(Type registerType, IEnumerable<Type> implementations)
+        {
+            container.RegisterCollection(registerType, implementations);
         }
     }
 }

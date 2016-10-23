@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using NSaga;
 using NSubstitute;
 using Tests.Stubs;
@@ -15,10 +16,13 @@ namespace Tests.PipelineHook
 
         public SagaMediatorPipelineTests()
         {
-            pipelineHook = Substitute.For<IPipelineHook>();
             var serviceLocator = new DumbSagaFactory();
             repository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
-            sut = new SagaMediator(repository, serviceLocator, pipelineHook, typeof(SagaMediatorInitiationsTests).Assembly);
+            pipelineHook = Substitute.For<IPipelineHook>();
+            var pipelineHooks = new IPipelineHook[] { pipelineHook };
+            var assemblies = new Assembly[] { Assembly.GetAssembly(typeof(SagaMediatorInitiationsTests)) };
+
+            sut = new SagaMediator(repository, serviceLocator, pipelineHooks, assemblies);
         }
 
         [Fact]

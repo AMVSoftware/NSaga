@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NSaga.Pipeline;
 using TinyIoC;
@@ -41,12 +43,12 @@ namespace NSaga
     {
         private readonly IConformingContainer container;
         private Assembly[] assembliesToScan;
-        private readonly CompositePipelineHook compositePipeline;
+        private List<Type> pipelineHooks;
 
         public SagaMediatorBuilder(IConformingContainer container)
         {
             this.container = container;
-            this.compositePipeline = new CompositePipelineHook();
+            pipelineHooks = new List<Type>();
             RegisterDefaults();
         }
 
@@ -55,8 +57,7 @@ namespace NSaga
             UseSagaFactory<TinyIocSagaFactory>();
             UseMessageSerialiser<JsonNetSerialiser>();
             UseRepository<InMemorySagaRepository>();
-            AddAssembliesToScan(AppDomain.CurrentDomain.GetAssemblies());
-            AddPiplineHook(new MetadataPipelineHook(container.Resolve<IMessageSerialiser>()));
+            AddPiplineHook<MetadataPipelineHook>();
             AddAssembliesToScan(AppDomain.CurrentDomain.GetAssemblies());
 
             container.Register(typeof(ISagaMediator), typeof(SagaMediator));
@@ -117,27 +118,34 @@ namespace NSaga
             return this;
         }
 
-        public SagaMediatorBuilder AddPiplineHook(IPipelineHook pipelineHook)
+        public SagaMediatorBuilder AddPiplineHook<TPipelineHook>() where TPipelineHook : IPipelineHook
         {
-            compositePipeline.AddHook(pipelineHook);
+            pipelineHooks.Add(typeof(TPipelineHook));
 
             return this;
         }
 
-        public SagaMediatorBuilder DoRegistrations()
+
+        public SagaMediatorBuilder AddPiplineHook(Type pipelineHookType)
         {
-            container.Register(typeof(IPipelineHook), compositePipeline);
+            if (!pipelineHookType.IsClass || !pipelineHookType.GetInterfaces().Contains(typeof(IPipelineHook)))
+            {
+                throw new ArgumentException("Provided type is not a class or does not implement IPipelineHook");
+            }
 
-            container.Register(typeof(Assembly[]), assembliesToScan);
-
-            //TODO register all the sagas from 
+            pipelineHooks.Add(pipelineHookType);
 
             return this;
         }
+
 
         public ISagaMediator BuildMediator()
         {
-            DoRegistrations();
+            container.Register(typeof(Assembly[]), assembliesToScan);
+            container.RegisterMultiple(typeof(IPipelineHook), pipelineHooks);
+
+            //TODO register all the sagas from 
+            //container.RegisterMultiple(typeof(ISaga<>), assembliesToScan.Select(a => a.GetTypes().));
 
             var mediator = container.Resolve<ISagaMediator>();
             return mediator;

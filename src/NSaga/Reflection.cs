@@ -150,20 +150,5 @@ namespace NSaga
 
             return methodInfo.Invoke(invocationTarget, new []{ parameter });
         }
-
-
-        ////http://stackoverflow.com/a/2575341/809357
-        //private static readonly Action<Exception> _internalPreserveStackTrace =
-        //    (Action<Exception>)Delegate.CreateDelegate(
-        //        typeof(Action<Exception>),
-        //        typeof(Exception).GetMethod(
-        //            "InternalPreserveStackTrace",
-        //            BindingFlags.Instance | BindingFlags.NonPublic));
-
-        //public static void PreserveStackTrace(Exception e)
-        //{
-        //    _internalPreserveStackTrace(e);
-        //}
-
     }
 }
