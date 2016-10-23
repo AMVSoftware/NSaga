@@ -13,7 +13,7 @@ namespace NSaga
         private readonly IPipelineHook pipelineHook;
         private readonly Assembly[] assembliesToScan;
 
-        public SagaMediator(ISagaRepository sagaRepository, ISagaFactory sagaFactory, IPipelineHook[] pipelineHooks, params Assembly[] assembliesToScan)
+        public SagaMediator(ISagaRepository sagaRepository, ISagaFactory sagaFactory, IEnumerable<IPipelineHook> pipelineHooks, params Assembly[] assembliesToScan)
         {
             Guard.ArgumentIsNotNull(sagaRepository, nameof(sagaRepository));
             Guard.ArgumentIsNotNull(sagaFactory, nameof(sagaFactory));

@@ -6,7 +6,7 @@ namespace NSaga
 {
     public class TinyIocConformingContainer : IConformingContainer
     {
-        private TinyIoCContainer container;
+        private readonly TinyIoCContainer container;
 
         public TinyIocConformingContainer(TinyIoCContainer container)
         {
@@ -17,7 +17,6 @@ namespace NSaga
         {
             this.container = TinyIoCContainer.Current;
         }
-
 
         public T Resolve<T>() where T : class
         {
@@ -36,7 +35,7 @@ namespace NSaga
 
         public void RegisterMultiple(Type registerType, IEnumerable<Type> implementations)
         {
-            throw new NotImplementedException();
+            container.RegisterMultiple(registerType, implementations);
         }
     }
 }
