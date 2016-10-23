@@ -47,7 +47,7 @@ namespace Tests.SqlServer
             sut.Save(saga);
 
             // Assert
-            var restoredSaga = GetSagaData(correlationId);
+            var restoredSaga = DatabaseHelpers.GetSagaData(database, correlationId);
             restoredSaga.Should().NotBeNull();
             restoredSaga.CorrelationId.Should().Be(correlationId);
             restoredSaga.BlobData.Should().ContainEquivalentOf(expectedGuid.ToString());
@@ -67,7 +67,7 @@ namespace Tests.SqlServer
             sut.Save(saga);
 
             // Assert
-            var restoredHeaders = GetSagaHeaders(correlationId);
+            var restoredHeaders = DatabaseHelpers.GetSagaHeaders(database, correlationId);
             restoredHeaders.Should().HaveCount(1);
             restoredHeaders.First().Value.Should().Be(expectedValue);
         }
@@ -92,7 +92,7 @@ namespace Tests.SqlServer
             sut.Save(saga);
 
             // Assert
-            var updatedData = GetSagaData(correlationId);
+            var updatedData = DatabaseHelpers.GetSagaData(database, correlationId);
             updatedData.Should().NotBeNull();
             updatedData.BlobData.Should().ContainEquivalentOf(expectedGuid.ToString());
         }
@@ -118,7 +118,7 @@ namespace Tests.SqlServer
             sut.Save(saga);
 
             // Assert
-            var updatedHeaders = GetSagaHeaders(correlationId);
+            var updatedHeaders = DatabaseHelpers.GetSagaHeaders(database, correlationId);
             updatedHeaders.Should().HaveCount(1);
             updatedHeaders.First().Value.Should().Be(expectedValue);
         }
@@ -140,7 +140,7 @@ namespace Tests.SqlServer
             sut.Complete(saga);
 
             // Assert
-            var updatedData = GetSagaData(correlationId);
+            var updatedData = DatabaseHelpers.GetSagaData(database, correlationId);
             updatedData.Should().BeNull();
         }
 
@@ -162,41 +162,8 @@ namespace Tests.SqlServer
             sut.Complete(saga);
 
             // Assert
-            var updatedHeaders = GetSagaHeaders(correlationId);
+            var updatedHeaders = DatabaseHelpers.GetSagaHeaders(database, correlationId);
             updatedHeaders.Should().HaveCount(0);
-        }
-
-
-        private SagaData GetSagaData(Guid correlationId)
-        {
-            var data = database.SingleOrDefault<SagaData>($"select * from {SqlSagaRepository.SagaDataTableName} where correlationId = @0", correlationId);
-
-            return data;
-        }
-
-        private IEnumerable<SagaHeaders> GetSagaHeaders(Guid correlationId)
-        {
-            var headers = database.Query<SagaHeaders>($"select * from {SqlSagaRepository.HeadersTableName} where correlationId = @0", correlationId);
-
-            return headers;
-        }
-
-        [TableName("NSaga.Sagas")]
-        [PrimaryKey("CorrelationId", AutoIncrement = false)]
-        class SagaData
-        {
-            public Guid CorrelationId { get; set; }
-            public String BlobData { get; set; }
-        }
-
-
-        [TableName("NSaga.Headers")]
-        [PrimaryKey("CorrelationId", AutoIncrement = false)]
-        class SagaHeaders
-        {
-            public Guid CorrelationId { get; set; }
-            public String Key { get; set; }
-            public String Value { get; set; }
         }
     }
 }

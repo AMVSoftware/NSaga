@@ -98,11 +98,13 @@
     <Compile Include="PipelineHook\MetadataPipelineIntegrationTests.cs" />
     <Compile Include="PipelineHook\SagaMediatorPipelineTests.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorServiceLocatorTests.cs" />
+    <Compile Include="SqlServer\DatabaseHelpers.cs" />
     <Compile Include="SqlServer\SqlSagaRepositorySpecificTests.cs" />
     <Compile Include="SqlServer\SqlSagaRepositoryTests.cs" />
     <Compile Include="SagaMediatorConsumingTests.cs" />
     <Compile Include="Implementations\SagaRepositoryTestsTemplate.cs" />
     <Compile Include="SqlServer\DatabaseSetup.cs" />
+    <Compile Include="SqlServer\SqlServerBuilderTests.cs" />
     <Compile Include="Stubs\MultipleSagaInitiator.cs" />
     <Compile Include="Stubs\MyFakeInitiatingMessage.cs" />
     <Compile Include="Stubs\MySaga.cs" />
