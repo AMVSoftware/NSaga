@@ -33,6 +33,18 @@
     <StartupObject>Samples.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=3.2.3.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.3.2.3\lib\net45\SimpleInjector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,16 +63,34 @@
     <Compile Include="AccountCreation\AccountDetailsProvided.cs" />
     <Compile Include="AccountCreation\Person.cs" />
     <Compile Include="AccountCreation\PersonalDetailsVerification.cs" />
+    <Compile Include="InternalSample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AccountCreation\VerificationCodeProvided.cs" />
     <Compile Include="AccountCreation\VerificationCodeRequest.cs" />
+    <Compile Include="SimpleInjectorSample.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NSaga.Autofac\NSaga.Autofac.csproj">
+      <Project>{5b7a00dc-75c7-4c94-820b-b449c427cd93}</Project>
+      <Name>NSaga.Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NSaga.SimpleInjector\NSaga.SimpleInjector.csproj">
+      <Project>{b8596ea9-b88b-4415-bc6f-cad0ebf07a70}</Project>
+      <Name>NSaga.SimpleInjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NSaga.SqlServer\NSaga.SqlServer.csproj">
+      <Project>{98d2cbbc-a644-4c07-9c08-95c8e8efa710}</Project>
+      <Name>NSaga.SqlServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NSaga\NSaga.csproj">
       <Project>{e537d1bf-80a4-413b-a8f8-116c2a2382b1}</Project>
       <Name>NSaga</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
