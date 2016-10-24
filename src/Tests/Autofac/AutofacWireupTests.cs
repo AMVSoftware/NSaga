@@ -1,33 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Autofac;
 using FluentAssertions;
 using NSaga;
-using SimpleInjector;
-using Xunit;
-using NSaga.SimpleInjector;
+using NSaga.Autofac;
 using Tests.Stubs;
+using Xunit;
 
-
-namespace Tests.SimpleInjector
+namespace Tests.Autofac
 {
-    public class SimpleInjectorWireupTests
+    public class AutofacWireupTests
     {
-        private readonly ISagaMediator sagaMediator;
+        private readonly SagaMediator sagaMediator;
 
-        public SimpleInjectorWireupTests()
+        public AutofacWireupTests()
         {
-            var container = new Container();
-            var mediatorBuilder = Wireup.Init().UseSimpleInjector(container);
+            var container = new ContainerBuilder().Build();
 
-            // Act
-            sagaMediator = mediatorBuilder.BuildMediator();
+            sagaMediator = (SagaMediator) Wireup.Init().UseAutofac(container).BuildMediator();
         }
-
-        [Fact]
-        public void Mediator_Not_Null()
-        {
-            sagaMediator.Should().NotBeNull();
-        }
-
 
         [Fact]
         public void Default_Provides_InMemoryRepository()
@@ -37,15 +31,13 @@ namespace Tests.SimpleInjector
             sagaRepository.Should().BeOfType<InMemorySagaRepository>();
         }
 
-
         [Fact]
-        public void Default_Provides_SimpleInjectorSagaFactory()
+        public void Default_Provides_AutofacSagaFactory()
         {
             var sagaRepository = Reflection.GetPrivate(sagaMediator, "sagaFactory");
 
-            sagaRepository.Should().BeOfType<SimpleInjectorSagaFactory>();
+            sagaRepository.Should().BeOfType<AutofacSagaFactory>();
         }
-
 
         [Fact]
         public void Default_Can_Initialise_Saga()

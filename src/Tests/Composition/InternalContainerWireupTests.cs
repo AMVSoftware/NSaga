@@ -1,33 +1,19 @@
 ﻿using System;
 using FluentAssertions;
 using NSaga;
-using SimpleInjector;
-using Xunit;
-using NSaga.SimpleInjector;
 using Tests.Stubs;
+using Xunit;
 
-
-namespace Tests.SimpleInjector
+namespace Tests.Composition
 {
-    public class SimpleInjectorWireupTests
+    public class InternalContainerWireupTests
     {
-        private readonly ISagaMediator sagaMediator;
+        private readonly SagaMediator sagaMediator;
 
-        public SimpleInjectorWireupTests()
+        public InternalContainerWireupTests()
         {
-            var container = new Container();
-            var mediatorBuilder = Wireup.Init().UseSimpleInjector(container);
-
-            // Act
-            sagaMediator = mediatorBuilder.BuildMediator();
+            sagaMediator = (SagaMediator)Wireup.UseInternalContainer().BuildMediator();
         }
-
-        [Fact]
-        public void Mediator_Not_Null()
-        {
-            sagaMediator.Should().NotBeNull();
-        }
-
 
         [Fact]
         public void Default_Provides_InMemoryRepository()
@@ -39,11 +25,11 @@ namespace Tests.SimpleInjector
 
 
         [Fact]
-        public void Default_Provides_SimpleInjectorSagaFactory()
+        public void Default_Provides_TinyIocSagaFactory()
         {
             var sagaRepository = Reflection.GetPrivate(sagaMediator, "sagaFactory");
 
-            sagaRepository.Should().BeOfType<SimpleInjectorSagaFactory>();
+            sagaRepository.Should().BeOfType<TinyIocSagaFactory>();
         }
 
 

@@ -1,7 +1,8 @@
 ﻿using NSaga.SimpleInjector;
 using SimpleInjector;
+using Tests.Composition;
 
-namespace Tests.Composition
+namespace Tests.SimpleInjector
 {
     public class SimpleInjectorConformingContainerTests : ConformingContainerTestsBaseClass
     {

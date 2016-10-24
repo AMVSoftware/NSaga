@@ -8,7 +8,10 @@ namespace NSaga.SimpleInjector
         {
             var conformingContainer = new SimpleConformingContainer(simpleInjectorContainer);
 
-            return new SagaMediatorBuilder(conformingContainer);
+            var mediatorBuilder = new SagaMediatorBuilder(conformingContainer);
+            mediatorBuilder.UseSagaFactory<SimpleInjectorSagaFactory>();
+
+            return mediatorBuilder;
         }
     }
 }

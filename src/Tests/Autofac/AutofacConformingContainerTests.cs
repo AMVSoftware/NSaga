@@ -1,7 +1,8 @@
 ﻿using Autofac;
 using NSaga.Autofac;
+using Tests.Composition;
 
-namespace Tests.Composition
+namespace Tests.Autofac
 {
     public class AutofacConformingContainerTests : ConformingContainerTestsBaseClass
     {
