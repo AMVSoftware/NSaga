@@ -89,6 +89,7 @@
       <Link>DumbSagaFactory.cs</Link>
     </Compile>
     <Compile Include="Autofac\AutofacServiceLocatorTests.cs" />
+    <Compile Include="Composition\AutofacConformingContainerTests.cs" />
     <Compile Include="Composition\ConformingContainerTestsBaseClass.cs" />
     <Compile Include="Composition\SimpleInjectorConformingContainerTests.cs" />
     <Compile Include="Composition\TinyIocConformingContainerTests.cs" />
