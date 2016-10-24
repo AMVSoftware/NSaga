@@ -1,16 +1,13 @@
-﻿using System;
-using NSaga;
-using NSaga.Pipeline;
-
-
-namespace Samples
+﻿namespace Samples
 {
     static class Program
     {
         public static void Main(params string[] args)
         {
-            var simpleInjectorSample = new SimpleInjectorSample();
+            var internalSample = new InternalSample();
+            internalSample.Run();
 
+            var simpleInjectorSample = new SimpleInjectorSample();
             simpleInjectorSample.RunSample();
         }
     }
