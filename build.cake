@@ -36,28 +36,12 @@ Task("Build")
             settings.SetConfiguration(configuration));
     });
 
-
-Task("Start-LocalDB")
-    .Description(@"Starts LocalDB - executes the following: C:\Program Files\Microsoft SQL Server\120\Tools\Binn\SqlLocalDB.exe create v12.0 12.0 -s")
-    .Does(() => 
-    {
-        // var sqlLocalDbPath = @"c:\Program Files\Microsoft SQL Server\130\Tools\Binn\SqlLocalDB.exe";
-        var sqlLocalDbPath = @"C:\Program Files\Microsoft SQL Server\120\Tools\Binn\SqlLocalDB.exe";
-        if(!FileExists(sqlLocalDbPath))
-        {
-            Information("Unable to start LocalDB");
-            throw new Exception("LocalDB v12 is not installed. Can't complete tests");
-        }
-
-        StartProcess(sqlLocalDbPath, new ProcessSettings(){ Arguments="create \"v12.0\" 12.0 -s" });
-    });
-
-
 Task("Create-DB-And-Schema")
-    .IsDependentOn("Start-LocalDB")
     .Description("Creates database and installs schema")
     .Does(() => 
     {
+        LocalDbCreateInstance("v12.0", LocalDbVersion.V12);
+
         var masterConnectionString = @"data source=(LocalDb)\v12.0;";
         var dbConnectionString = @"data source=(LocalDb)\v12.0;Database=NSaga-Testing";
 
