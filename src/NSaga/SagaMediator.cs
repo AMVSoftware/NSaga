@@ -41,6 +41,9 @@ namespace NSaga
             // find all sagas that can be initiated by this message
             var sagaTypes = Reflection.GetSagaTypesInitiatedBy(initiatingMessage, assembliesToScan);
             var sagaType = GetSingleSagaType(initiatingMessage, sagaTypes);
+            //var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(initiatingMessage.GetType());
+            //var resolvedSaga = sagaFactory.Resolve(initiatingInterfaceType);
+            //var sagaType = resolvedSaga.GetType();
 
             // try to find sagas that already exist
             var existingSaga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, initiatingMessage.CorrelationId);
@@ -89,6 +92,9 @@ namespace NSaga
 
             var sagaTypes = Reflection.GetSagaTypesConsuming(sagaMessage, assembliesToScan);
             var sagaType = GetSingleSagaType(sagaMessage, sagaTypes);
+            //var initiatingInterfaceType = typeof(ConsumerOf<>).MakeGenericType(sagaMessage.GetType());
+            //var resolvedSaga = sagaFactory.Resolve(initiatingInterfaceType);
+            //var sagaType = resolvedSaga.GetType();
 
             var saga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, sagaMessage.CorrelationId);
             if (saga == null)
