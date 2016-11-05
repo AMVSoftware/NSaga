@@ -1,12 +1,12 @@
-﻿using NSaga;
+﻿//using NSaga;
 
-namespace Tests.Composition
-{
-    public class TinyIocConformingContainerTests : ConformingContainerTestsBaseClass
-    {
-        public TinyIocConformingContainerTests()
-        {
-            Sut = new TinyIocConformingContainer();
-        }
-    }
-}
+//namespace Tests.Composition
+//{
+//    public class TinyIocConformingContainerTests : ConformingContainerTestsBaseClass
+//    {
+//        public TinyIocConformingContainerTests()
+//        {
+//            Sut = new TinyIocConformingContainer();
+//        }
+//    }
+//}

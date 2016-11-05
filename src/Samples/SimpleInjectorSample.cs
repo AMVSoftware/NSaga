@@ -10,16 +10,16 @@ namespace Samples
     {
         public void RunSample()
         {
-            var simpleInjectorContainer = new Container();
-            var mediator = Wireup.Init()
-                                 .UseSimpleInjector(simpleInjectorContainer)
-                                 .UseSqlServerStorage("NSagaDatabase")
-                                 .BuildMediator();
+            //var simpleInjectorContainer = new Container();
+            //var mediator = Wireup.Init()
+            //                     .UseSimpleInjector(simpleInjectorContainer)
+            //                     .UseSqlServerStorage("NSagaDatabase")
+            //                     .BuildMediator();
 
-            var correlationId = Guid.NewGuid();
-            var initMessage = new PersonalDetailsVerification(correlationId);
+            //var correlationId = Guid.NewGuid();
+            //var initMessage = new PersonalDetailsVerification(correlationId);
 
-            mediator.Consume(initMessage);
+            //mediator.Consume(initMessage);
         }
     }
 }

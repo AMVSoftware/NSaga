@@ -4,7 +4,7 @@ using Autofac;
 
 namespace NSaga.Autofac
 {
-    public class AutofacConformingContainer : IConformingContainer
+    public class AutofacConformingContainer 
     {
         private readonly ContainerBuilder builder;
         private IContainer container;
