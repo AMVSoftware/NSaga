@@ -39,11 +39,11 @@ namespace NSaga
             Guard.CheckSagaMessage(initiatingMessage, nameof(initiatingMessage));
 
             // find all sagas that can be initiated by this message
-            var sagaTypes = Reflection.GetSagaTypesInitiatedBy(initiatingMessage, assembliesToScan);
-            var sagaType = GetSingleSagaType(initiatingMessage, sagaTypes);
-            //var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(initiatingMessage.GetType());
-            //var resolvedSaga = sagaFactory.Resolve(initiatingInterfaceType);
-            //var sagaType = resolvedSaga.GetType();
+            //var sagaTypes = Reflection.GetSagaTypesInitiatedBy(initiatingMessage, assembliesToScan);
+            //var sagaType = GetSingleSagaType(initiatingMessage, sagaTypes);
+            var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(initiatingMessage.GetType());
+            var resolvedSaga = sagaFactory.Resolve(initiatingInterfaceType);
+            var sagaType = resolvedSaga.GetType();
 
             // try to find sagas that already exist
             var existingSaga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, initiatingMessage.CorrelationId);

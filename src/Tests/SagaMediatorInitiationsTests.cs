@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using FluentAssertions;
 using NSaga;
 using Tests.Stubs;
+using TinyIoC;
 using Xunit;
 
 
@@ -14,9 +16,18 @@ namespace Tests
 
         public SagaMediatorInitiationsTests()
         {
-            var serviceLocator = new DumbSagaFactory();
+            var container = TinyIoCContainer.Current;
+            //container.Register()
+
+            var assembliesToScan = typeof(SagaMediatorInitiationsTests).Assembly;
+
+            container.RegisterMultiple(typeof(ISaga<>), assembliesToScan.GetTypes().Where(t => typeof(ISaga<>).IsAssignableFrom(t)).ToList());
+            container.RegisterMultiple(typeof(InitiatedBy<>), assembliesToScan.GetTypes().Where(t => typeof(InitiatedBy<>).IsAssignableFrom(t)).ToList());
+            container.RegisterMultiple(typeof(ConsumerOf<>), assembliesToScan.GetTypes().Where(t => typeof(ConsumerOf<>).IsAssignableFrom(t)).ToList());
+
+            var serviceLocator = new TinyIocSagaFactory(container);
             repository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
-            sut = new SagaMediator(repository, serviceLocator, new [] { new NullPipelineHook()}, typeof(SagaMediatorInitiationsTests).Assembly);
+            sut = new SagaMediator(repository, serviceLocator, new [] { new NullPipelineHook()}, assembliesToScan);
         }
 
 
