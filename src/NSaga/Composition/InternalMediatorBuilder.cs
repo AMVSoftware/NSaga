@@ -16,7 +16,7 @@ namespace NSaga
         public InternalMediatorBuilder(TinyIoCContainer container, IEnumerable<Assembly> assembliesToScan)
         {
             this.Container = container;
-            sagaFactory = new Registration(typeof(TinyIocSagaFactory));
+            sagaFactory = new Registration(typeof(ISagaFactory), typeof(TinyIocSagaFactory));
             this.assembliesToScan = assembliesToScan;
         }
 
@@ -62,11 +62,11 @@ namespace NSaga
         {
             if (registration.RegisterByType)
             {
-                Container.Register(registration.Type);
+                Container.Register(registration.Interface, registration.ImplementationType);
             }
             else
             {
-                Container.Register(registration.Instance);
+                Container.Register(registration.Interface, registration.Instance);
             }
         }
     }

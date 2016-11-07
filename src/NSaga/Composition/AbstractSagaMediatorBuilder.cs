@@ -16,11 +16,11 @@ namespace NSaga
         {
             pipelineHooks = new List<Registration>()
             {
-                new Registration(typeof(MetadataPipelineHook)),
+                new Registration(typeof(IPipelineHook), typeof(MetadataPipelineHook)),
             };
 
-            messageSerialiser = new Registration(typeof(JsonNetSerialiser));
-            repository = new Registration(typeof(InMemorySagaRepository));
+            messageSerialiser = new Registration(typeof(IMessageSerialiser), typeof(JsonNetSerialiser));
+            repository = new Registration(typeof(ISagaRepository), typeof(InMemorySagaRepository));
         }
 
         public abstract TChild GetThis();
@@ -28,56 +28,31 @@ namespace NSaga
 
         public virtual TChild UseMessageSerialiser<TSerialiser>() where TSerialiser : IMessageSerialiser
         {
-            this.messageSerialiser = new Registration(typeof(TSerialiser));
+            this.messageSerialiser = new Registration(typeof(IMessageSerialiser), typeof(TSerialiser));
             return GetThis();
         }
 
         public virtual TChild UseMessageSerialiser(IMessageSerialiser messageSerialiser)
         {
-            this.messageSerialiser = new Registration(messageSerialiser);
+            this.messageSerialiser = new Registration(typeof(IMessageSerialiser), messageSerialiser);
             return GetThis();
         }
 
         public virtual TChild UseRepository<TRepository>() where TRepository : ISagaRepository
         {
-            this.repository = new Registration(typeof(TRepository));
+            this.repository = new Registration(typeof(ISagaRepository), typeof(TRepository));
             return GetThis();
         }
 
         public virtual TChild UseRepository(ISagaRepository sagaRepository)
         {
-            this.repository = new Registration(sagaRepository);
+            this.repository = new Registration(typeof(ISagaRepository), sagaRepository);
             return GetThis();
         }
 
-        //public virtual TChild UseSagaFactory<TSagaFactory>() where TSagaFactory : ISagaFactory
-        //{
-        //    this.sagaFactory = new Registration(typeof(TSagaFactory));
-        //    return GetThis();
-        //}
-
-        //public virtual TChild UseSagaFactory(ISagaFactory sagaFactory)
-        //{
-        //    this.sagaFactory = new Registration(sagaFactory);
-        //    return GetThis();
-        //}
-
-        //public virtual TChild AddAssemblyToScan(Assembly assembly)
-        //{
-        //    assembliesToScan.Add(assembly);
-        //    return GetThis();
-        //}
-
-
-        //public virtual TChild AddAssembliesToScan(Assembly[] assemblies)
-        //{
-        //    assembliesToScan.AddRange(assemblies);
-        //    return GetThis();
-        //}
-
         public virtual TChild AddPiplineHook<TPipelineHook>() where TPipelineHook : IPipelineHook
         {
-            pipelineHooks.Add(new Registration(typeof(TPipelineHook)));
+            pipelineHooks.Add(new Registration(typeof(IPipelineHook), typeof(TPipelineHook)));
 
             return GetThis();
         }
@@ -90,14 +65,14 @@ namespace NSaga
                 throw new ArgumentException("Provided type is not a class or does not implement IPipelineHook");
             }
 
-            pipelineHooks.Add(new Registration(pipelineHookType));
+            pipelineHooks.Add(new Registration(typeof(IPipelineHook), pipelineHookType));
 
             return GetThis();
         }
 
         public virtual TChild AddPipelineHook(IPipelineHook pipelineHook)
         {
-            pipelineHooks.Add(new Registration(pipelineHook));
+            pipelineHooks.Add(new Registration(typeof(IPipelineHook), pipelineHook));
             return GetThis();
         }
 
@@ -109,18 +84,23 @@ namespace NSaga
 
     public class Registration
     {
-        public Registration(Type type)
+        public Registration(Type @interface, Type implementationType)
         {
-            Type = type;
+            Interface = @interface;
+            ImplementationType = implementationType;
         }
 
-        public Registration(object instance)
+        public Registration(Type @interface, object instance)
         {
+            Interface = @interface;
             Instance = instance;
         }
-        public Type Type { get; private set; }
+
+
+        public Type Interface { get; private set; }
+        public Type ImplementationType { get; private set; }
         public object Instance { get; private set; }
 
-        public bool RegisterByType => Type != null;
+        public bool RegisterByType => ImplementationType != null;
     }
 }
