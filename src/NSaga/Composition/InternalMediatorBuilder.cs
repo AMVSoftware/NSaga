@@ -1,31 +1,44 @@
-﻿using TinyIoC;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using NSaga.Composition;
+using TinyIoC;
 
 namespace NSaga
 {
-    public class TinyIocMediatorBuilder : AbstractSagaMediatorBuilder<TinyIocMediatorBuilder>
+    public class InternalMediatorBuilder : AbstractSagaMediatorBuilder<InternalMediatorBuilder>
     {
         private readonly TinyIoCContainer container;
+        private readonly IEnumerable<Assembly> assembliesToScan;
         private bool registrationsDone = false;
 
-        public TinyIocMediatorBuilder(TinyIoCContainer container)
+
+        public InternalMediatorBuilder(TinyIoCContainer container, IEnumerable<Assembly> assembliesToScan)
         {
             this.container = container;
             sagaFactory = new Registration(typeof(TinyIocSagaFactory));
+            this.assembliesToScan = assembliesToScan;
         }
 
-        public TinyIocMediatorBuilder()
+        public InternalMediatorBuilder(IEnumerable<Assembly> assembliesToScan)
         {
             this.container = TinyIoCContainer.Current;
             sagaFactory = new Registration(typeof(TinyIocSagaFactory));
+            this.assembliesToScan = assembliesToScan;
         }
 
-        public override TinyIocMediatorBuilder GetThis()
+        public override InternalMediatorBuilder GetThis()
         {
             return this;
         }
 
         public override void RegisterComponents()
         {
+            if (registrationsDone)
+            {
+                throw new Exception("Registration is already done. Can't register components second time.");
+            }
+
             ProcessRegistration(messageSerialiser);
             ProcessRegistration(repository);
             ProcessRegistration(sagaFactory);
@@ -35,7 +48,7 @@ namespace NSaga
                 ProcessRegistration(hookRegistration);
             }
 
-            container.Register(base.assembliesToScan);
+            container.RegisterSagas(assembliesToScan);
 
             registrationsDone = true;
         }

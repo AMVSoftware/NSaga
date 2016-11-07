@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using NSaga.Pipeline;
 
 namespace NSaga
 {
     public abstract class AbstractSagaMediatorBuilder<TChild> where TChild : AbstractSagaMediatorBuilder<TChild>
     {
-        protected List<Assembly> assembliesToScan;
         protected List<Registration> pipelineHooks;
         protected Registration messageSerialiser;
         protected Registration repository;
@@ -20,7 +18,6 @@ namespace NSaga
             {
                 new Registration(typeof(MetadataPipelineHook)),
             };
-            assembliesToScan = new List<Assembly>(AppDomain.CurrentDomain.GetAssemblies());
 
             messageSerialiser = new Registration(typeof(JsonNetSerialiser));
             repository = new Registration(typeof(InMemorySagaRepository));
@@ -65,18 +62,18 @@ namespace NSaga
         //    return GetThis();
         //}
 
-        public virtual TChild AddAssemblyToScan(Assembly assembly)
-        {
-            assembliesToScan.Add(assembly);
-            return GetThis();
-        }
+        //public virtual TChild AddAssemblyToScan(Assembly assembly)
+        //{
+        //    assembliesToScan.Add(assembly);
+        //    return GetThis();
+        //}
 
 
-        public virtual TChild AddAssembliesToScan(Assembly[] assemblies)
-        {
-            assembliesToScan.AddRange(assemblies);
-            return GetThis();
-        }
+        //public virtual TChild AddAssembliesToScan(Assembly[] assemblies)
+        //{
+        //    assembliesToScan.AddRange(assemblies);
+        //    return GetThis();
+        //}
 
         public virtual TChild AddPiplineHook<TPipelineHook>() where TPipelineHook : IPipelineHook
         {
