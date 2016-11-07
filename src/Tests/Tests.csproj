@@ -92,6 +92,7 @@
     <Compile Include="Autofac\AutofacConformingContainerTests.cs" />
     <Compile Include="Autofac\AutofacWireupTests.cs" />
     <Compile Include="Composition\ConformingContainerTestsBaseClass.cs" />
+    <Compile Include="Composition\InternalMediatorBuilderTests.cs" />
     <Compile Include="Composition\TinyIocTests.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorConformingContainerTests.cs" />
     <Compile Include="Composition\TinyIocConformingContainerTests.cs" />

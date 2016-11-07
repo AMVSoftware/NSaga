@@ -1,39 +1,37 @@
-﻿//using System;
-//using TinyIoC;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using TinyIoC;
 
 
-//namespace NSaga
-//{
-//    public class Wireup
-//    {
-//        public static SagaMediatorBuilder UseInternalContainer()
-//        {
-//            var builder = new SagaMediatorBuilder(new TinyIocConformingContainer());
+namespace NSaga
+{
+    public class Wireup
+    {
+        public static InternalMediatorBuilder UseInternalContainer()
+        {
+            var builder = new InternalMediatorBuilder(TinyIoCContainer.Current, AppDomain.CurrentDomain.GetAssemblies());
 
-//            return builder;
-//        }
+            return builder;
+        }
 
-//        public static SagaMediatorBuilder UseInternalContainer(TinyIoCContainer container)
-//        {
-//            var builder = new SagaMediatorBuilder(new TinyIocConformingContainer(container));
+        public static InternalMediatorBuilder UseInternalContainer(IEnumerable<Assembly> assembliesToScan)
+        {
+            var builder = new InternalMediatorBuilder(TinyIoCContainer.Current, assembliesToScan);
 
-//            return builder;
-//        }
+            return builder;
+        }
 
-//        public static SagaMediatorBuilder UseContainer(IConformingContainer conformingContainer)
-//        {
-//            var builder = new SagaMediatorBuilder(conformingContainer);
+        public static InternalMediatorBuilder UseInternalContainer(TinyIoCContainer container, IEnumerable<Assembly> assembliesToScan)
+        {
+            var builder = new InternalMediatorBuilder(container, assembliesToScan);
 
-//            return builder;
-//        }
-
-
-//        public static Wireup Init()
-//        {
-//            return new Wireup();
-//        }
-//    }
-
-
-
-//}
+            return builder;
+        }
+        
+        //public static Wireup Init()
+        //{
+        //    return new Wireup();
+        //}
+    }
+}

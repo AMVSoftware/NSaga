@@ -8,21 +8,14 @@ namespace NSaga
 {
     public class InternalMediatorBuilder : AbstractSagaMediatorBuilder<InternalMediatorBuilder>
     {
-        private readonly TinyIoCContainer container;
+        public readonly TinyIoCContainer Container;
         private readonly IEnumerable<Assembly> assembliesToScan;
         private bool registrationsDone = false;
 
 
         public InternalMediatorBuilder(TinyIoCContainer container, IEnumerable<Assembly> assembliesToScan)
         {
-            this.container = container;
-            sagaFactory = new Registration(typeof(TinyIocSagaFactory));
-            this.assembliesToScan = assembliesToScan;
-        }
-
-        public InternalMediatorBuilder(IEnumerable<Assembly> assembliesToScan)
-        {
-            this.container = TinyIoCContainer.Current;
+            this.Container = container;
             sagaFactory = new Registration(typeof(TinyIocSagaFactory));
             this.assembliesToScan = assembliesToScan;
         }
@@ -32,7 +25,7 @@ namespace NSaga
             return this;
         }
 
-        public override void RegisterComponents()
+        public override InternalMediatorBuilder RegisterComponents()
         {
             if (registrationsDone)
             {
@@ -48,9 +41,11 @@ namespace NSaga
                 ProcessRegistration(hookRegistration);
             }
 
-            container.RegisterSagas(assembliesToScan);
+            Container.RegisterSagas(assembliesToScan);
+            Container.Register<ISagaMediator, SagaMediator>();
 
             registrationsDone = true;
+            return GetThis();
         }
 
         public override ISagaMediator ResolveMediator()
@@ -60,18 +55,18 @@ namespace NSaga
                 RegisterComponents();
             }
 
-            return container.Resolve<ISagaMediator>();
+            return Container.Resolve<ISagaMediator>();
         }
 
         private void ProcessRegistration(Registration registration)
         {
             if (registration.RegisterByType)
             {
-                container.Register(registration.Type);
+                Container.Register(registration.Type);
             }
             else
             {
-                container.Register(registration.Instance);
+                Container.Register(registration.Instance);
             }
         }
     }

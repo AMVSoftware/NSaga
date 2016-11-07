@@ -101,7 +101,7 @@ namespace NSaga
             return GetThis();
         }
 
-        public abstract void RegisterComponents();
+        public abstract TChild RegisterComponents();
 
         public abstract ISagaMediator ResolveMediator();
     }

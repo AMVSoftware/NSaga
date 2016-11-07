@@ -1,49 +1,49 @@
-﻿//using System;
-//using FluentAssertions;
-//using NSaga;
-//using Tests.Stubs;
-//using Xunit;
+﻿using System;
+using FluentAssertions;
+using NSaga;
+using Tests.Stubs;
+using Xunit;
 
-//namespace Tests.Composition
-//{
-//    public class InternalContainerWireupTests
-//    {
-//        private readonly SagaMediator sagaMediator;
+namespace Tests.Composition
+{
+    public class InternalContainerWireupTests
+    {
+        private readonly ISagaMediator sagaMediator;
 
-//        public InternalContainerWireupTests()
-//        {
-//            sagaMediator = (SagaMediator)Wireup.UseInternalContainer().BuildMediator();
-//        }
+        public InternalContainerWireupTests()
+        {
+            sagaMediator = Wireup.UseInternalContainer().ResolveMediator();
+        }
 
-//        [Fact]
-//        public void Default_Provides_InMemoryRepository()
-//        {
-//            var sagaRepository = Reflection.GetPrivate(sagaMediator, "sagaRepository");
+        [Fact]
+        public void Default_Provides_InMemoryRepository()
+        {
+            var sagaRepository = Reflection.GetPrivate(sagaMediator, "sagaRepository");
 
-//            sagaRepository.Should().BeOfType<InMemorySagaRepository>();
-//        }
-
-
-//        [Fact]
-//        public void Default_Provides_TinyIocSagaFactory()
-//        {
-//            var sagaRepository = Reflection.GetPrivate(sagaMediator, "sagaFactory");
-
-//            sagaRepository.Should().BeOfType<TinyIocSagaFactory>();
-//        }
+            sagaRepository.Should().BeOfType<InMemorySagaRepository>();
+        }
 
 
-//        [Fact]
-//        public void Default_Can_Initialise_Saga()
-//        {
-//            //Arrange
-//            var correlationId = Guid.NewGuid();
+        [Fact]
+        public void Default_Provides_TinyIocSagaFactory()
+        {
+            var sagaRepository = Reflection.GetPrivate(sagaMediator, "sagaFactory");
 
-//            // Act
-//            var result = sagaMediator.Consume(new MySagaInitiatingMessage(correlationId));
+            sagaRepository.Should().BeOfType<TinyIocSagaFactory>();
+        }
 
-//            // Assert
-//            result.IsSuccessful.Should().BeTrue();
-//        }
-//    }
-//}
+
+        [Fact]
+        public void Default_Can_Initialise_Saga()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+
+            // Act
+            var result = sagaMediator.Consume(new MySagaInitiatingMessage(correlationId));
+
+            // Assert
+            result.IsSuccessful.Should().BeTrue();
+        }
+    }
+}
