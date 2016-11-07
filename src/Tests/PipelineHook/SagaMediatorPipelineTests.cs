@@ -19,8 +19,7 @@ namespace Tests.PipelineHook
         public SagaMediatorPipelineTests()
         {
             var container = TinyIoCContainer.Current;
-            var assembliesToScan = typeof(SagaMediatorPipelineTests).Assembly;
-            container.RegisterSagas(assembliesToScan);
+            container.RegisterSagas(typeof(SagaMediatorPipelineTests).Assembly);
             var serviceLocator = new TinyIocSagaFactory(container);
 
 

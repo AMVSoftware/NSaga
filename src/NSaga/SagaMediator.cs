@@ -11,9 +11,8 @@ namespace NSaga
         private readonly ISagaRepository sagaRepository;
         private readonly ISagaFactory sagaFactory;
         private readonly IPipelineHook pipelineHook;
-        private readonly Assembly[] assembliesToScan;
 
-        public SagaMediator(ISagaRepository sagaRepository, ISagaFactory sagaFactory, IEnumerable<IPipelineHook> pipelineHooks, params Assembly[] assembliesToScan)
+        public SagaMediator(ISagaRepository sagaRepository, ISagaFactory sagaFactory, IEnumerable<IPipelineHook> pipelineHooks)
         {
             Guard.ArgumentIsNotNull(sagaRepository, nameof(sagaRepository));
             Guard.ArgumentIsNotNull(sagaFactory, nameof(sagaFactory));
@@ -22,15 +21,6 @@ namespace NSaga
             this.sagaRepository = sagaRepository;
             this.sagaFactory = sagaFactory;
             this.pipelineHook = new CompositePipelineHook(pipelineHooks);
-
-            if (assembliesToScan.Length == 0)
-            {
-                this.assembliesToScan = AppDomain.CurrentDomain.GetAssemblies();
-            }
-            else
-            {
-                this.assembliesToScan = assembliesToScan;
-            }
         }
 
 
@@ -38,9 +28,6 @@ namespace NSaga
         {
             Guard.CheckSagaMessage(initiatingMessage, nameof(initiatingMessage));
 
-            // find all sagas that can be initiated by this message
-            //var sagaTypes = Reflection.GetSagaTypesInitiatedBy(initiatingMessage, assembliesToScan);
-            //var sagaType = GetSingleSagaType(initiatingMessage, sagaTypes);
             var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(initiatingMessage.GetType());
             var resolvedSaga = sagaFactory.Resolve(initiatingInterfaceType);
             var sagaType = resolvedSaga.GetType();
@@ -90,11 +77,9 @@ namespace NSaga
         {
             Guard.CheckSagaMessage(sagaMessage, nameof(sagaMessage));
 
-            var sagaTypes = Reflection.GetSagaTypesConsuming(sagaMessage, assembliesToScan);
-            var sagaType = GetSingleSagaType(sagaMessage, sagaTypes);
-            //var initiatingInterfaceType = typeof(ConsumerOf<>).MakeGenericType(sagaMessage.GetType());
-            //var resolvedSaga = sagaFactory.Resolve(initiatingInterfaceType);
-            //var sagaType = resolvedSaga.GetType();
+            var initiatingInterfaceType = typeof(ConsumerOf<>).MakeGenericType(sagaMessage.GetType());
+            var resolvedSaga = sagaFactory.Resolve(initiatingInterfaceType);
+            var sagaType = resolvedSaga.GetType();
 
             var saga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, sagaMessage.CorrelationId);
             if (saga == null)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using FluentAssertions;
 using NSaga;
 using NSaga.Composition;
@@ -16,8 +17,7 @@ namespace Tests
         public SagaMediatorConsumingTests()
         {
             var container = TinyIoCContainer.Current;
-            var assembliesToScan = typeof(SagaMediatorConsumingTests).Assembly;
-            container.RegisterSagas(assembliesToScan);
+            container.RegisterSagas(typeof(SagaMediatorConsumingTests).Assembly);
             var serviceLocator = new TinyIocSagaFactory(container);
             repository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
             sut = new SagaMediator(repository, serviceLocator, new[] { new NullPipelineHook() });

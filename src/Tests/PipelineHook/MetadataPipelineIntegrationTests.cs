@@ -25,8 +25,7 @@ namespace Tests.PipelineHook
             TimeProvider.Current = new StubTimeProvider(initialisationTime);
 
             var container = TinyIoCContainer.Current;
-            var assembliesToScan = typeof(MetadataPipelineIntegrationTests).Assembly;
-            container.RegisterSagas(assembliesToScan);
+            container.RegisterSagas(typeof(MetadataPipelineIntegrationTests).Assembly);
             var serviceLocator = new TinyIocSagaFactory(container);
 
 
