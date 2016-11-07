@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using NSaga;
 using Tests.Stubs;
@@ -14,10 +16,25 @@ namespace Tests.Composition
         {
             //Arrange
             var container = TinyIoCContainer.Current;
-            var assembliesToScan = typeof(SagaMediatorInitiationsTests).Assembly;
+            var assembly = typeof(TinyIocTests).Assembly;
 
-            var typesToRegister = assembliesToScan.GetTypes().Where(t => typeof(InitiatedBy<>).IsAssignableFrom(t)).ToList();
-            container.RegisterMultiple(typeof(InitiatedBy<>), typesToRegister);
+            var sagaInterfaces = new List<Type>() { typeof(ISaga<>), typeof(InitiatedBy<>), typeof(ConsumerOf<>) };
+
+            var allSagaTypes = assembly.GetTypes()
+                                .Where(t => DoesTypeSupportInterface(t, typeof(ISaga<>)))
+                                .ToList();
+
+            foreach (var sagaType in allSagaTypes)
+            {
+                var interfaces = sagaType.GetInterfaces()
+                                         .Where(i => i.IsGenericType && sagaInterfaces.Contains(i.GetGenericTypeDefinition()))
+                                         .ToList();
+
+                foreach (var @interface in interfaces)
+                {
+                    container.Register(@interface, sagaType);
+                }
+            }
 
             // Act
             var result = container.Resolve<InitiatedBy<MySagaInitiatingMessage>>();
@@ -25,6 +42,20 @@ namespace Tests.Composition
             // Assert
             result.Should().NotBeNull()
                        .And.BeOfType<MySaga>();
+        }
+
+        private static bool DoesTypeSupportInterface(Type type, Type inter)
+        {
+            if (inter.IsAssignableFrom(type))
+            {
+                return true;
+            }
+
+            if (type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == inter))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

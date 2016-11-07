@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Reflection;
 using NSaga;
+using NSaga.Composition;
 using NSubstitute;
 using Tests.Stubs;
+using TinyIoC;
 using Xunit;
 
 namespace Tests.PipelineHook
@@ -16,13 +18,17 @@ namespace Tests.PipelineHook
 
         public SagaMediatorPipelineTests()
         {
-            var serviceLocator = new DumbSagaFactory();
+            var container = TinyIoCContainer.Current;
+            var assembliesToScan = typeof(SagaMediatorPipelineTests).Assembly;
+            container.RegisterSagas(assembliesToScan);
+            var serviceLocator = new TinyIocSagaFactory(container);
+
+
             repository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
             pipelineHook = Substitute.For<IPipelineHook>();
             var pipelineHooks = new IPipelineHook[] { pipelineHook };
-            var assemblies = new Assembly[] { Assembly.GetAssembly(typeof(SagaMediatorInitiationsTests)) };
 
-            sut = new SagaMediator(repository, serviceLocator, pipelineHooks, assemblies);
+            sut = new SagaMediator(repository, serviceLocator, pipelineHooks);
         }
 
         [Fact]

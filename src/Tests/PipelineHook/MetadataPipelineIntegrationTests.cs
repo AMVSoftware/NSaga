@@ -3,8 +3,10 @@ using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using NSaga;
+using NSaga.Composition;
 using NSaga.Pipeline;
 using Tests.Stubs;
+using TinyIoC;
 using Xunit;
 
 
@@ -22,13 +24,17 @@ namespace Tests.PipelineHook
             initialisationTime = new DateTime(1905, 9, 13);
             TimeProvider.Current = new StubTimeProvider(initialisationTime);
 
-            var serviceLocator = new DumbSagaFactory();
+            var container = TinyIoCContainer.Current;
+            var assembliesToScan = typeof(MetadataPipelineIntegrationTests).Assembly;
+            container.RegisterSagas(assembliesToScan);
+            var serviceLocator = new TinyIocSagaFactory(container);
+
+
             var jsonNetSerialiser = new JsonNetSerialiser();
             var sagaRepository = new InMemorySagaRepository(jsonNetSerialiser, serviceLocator);
             var hooks = new IPipelineHook[] { new MetadataPipelineHook(jsonNetSerialiser) };
-            var assemblies = new Assembly[] { Assembly.GetAssembly(typeof(MetadataPipelineIntegrationTests)) };
 
-            var sagaMediator = new SagaMediator(sagaRepository, serviceLocator, hooks, assemblies);
+            var sagaMediator = new SagaMediator(sagaRepository, serviceLocator, hooks);
 
             correlationId = Guid.NewGuid();
             var initiatingMessage = new MySagaInitiatingMessage(correlationId);
