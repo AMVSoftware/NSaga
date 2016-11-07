@@ -65,7 +65,7 @@ namespace NSaga
         }
 
 
-        public static Type GetInterfaceGenericType(Type interfaceType, Type instanceType)
+        private static Type GetInterfaceGenericType(Type interfaceType, Type instanceType)
         {
             var genericInterface = instanceType.GetInterface(interfaceType.Name);
 
@@ -149,6 +149,27 @@ namespace NSaga
             }
 
             return methodInfo.Invoke(invocationTarget, new []{ parameter });
+        }
+
+
+        /// <summary>
+        /// Checks if provided type implements a given interface. Also works with open generics. It will tell you if MyClass implements MyInterface<>
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="interface"></param>
+        /// <returns></returns>
+        public static bool TypeImplementsInterface(Type type, Type @interface)
+        {
+            if (@interface.IsAssignableFrom(type))
+            {
+                return true;
+            }
+
+            if (type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == @interface))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

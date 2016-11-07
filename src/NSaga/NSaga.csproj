@@ -46,6 +46,9 @@
   <ItemGroup>
     <Compile Include="Composition\AbstractSagaMediatorBuilder.cs" />
     <Compile Include="Composition\TinyIocMediatorBuilder.cs" />
+    <Compile Include="Composition\IConformingContainer.cs" />
+    <Compile Include="Composition\TinyIocConformingContainer.cs" />
+    <Compile Include="Composition\TinyIocExtensions.cs" />
     <Compile Include="Composition\Wireup.cs" />
     <Compile Include="Composition\TinyIocSagaFactory.cs" />
     <Compile Include="Guard.cs" />
