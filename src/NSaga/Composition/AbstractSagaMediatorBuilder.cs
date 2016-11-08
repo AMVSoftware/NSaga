@@ -5,52 +5,63 @@ using NSaga.Pipeline;
 
 namespace NSaga
 {
-    public abstract class AbstractSagaMediatorBuilder<TChild> where TChild : AbstractSagaMediatorBuilder<TChild>
+    public interface IPersistenceMediatorBuilder
     {
-        protected List<Registration> pipelineHooks;
-        protected Registration messageSerialiser;
-        protected Registration repository;
-        protected Registration sagaFactory;
+        AbstractSagaMediatorBuilder UseRepository<TRepository>() where TRepository : ISagaRepository;
+        AbstractSagaMediatorBuilder UseRepository(ISagaRepository sagaRepository);
+    }
+
+    public abstract class AbstractSagaMediatorBuilder : IPersistenceMediatorBuilder
+    {
+        protected List<Registration> allRegistrations;
 
         protected AbstractSagaMediatorBuilder()
         {
-            pipelineHooks = new List<Registration>()
+            allRegistrations = new List<Registration>()
             {
                 new Registration(typeof(IPipelineHook), typeof(MetadataPipelineHook)),
+                new Registration(typeof(IMessageSerialiser), typeof(JsonNetSerialiser)),
+                new Registration(typeof(ISagaRepository), typeof(InMemorySagaRepository)),
             };
-
-            messageSerialiser = new Registration(typeof(IMessageSerialiser), typeof(JsonNetSerialiser));
-            repository = new Registration(typeof(ISagaRepository), typeof(InMemorySagaRepository));
         }
 
-        public abstract TChild GetThis();
+        public abstract AbstractSagaMediatorBuilder GetThis();
 
 
-        public virtual TChild UseMessageSerialiser<TSerialiser>() where TSerialiser : IMessageSerialiser
+        public virtual AbstractSagaMediatorBuilder UseMessageSerialiser<TSerialiser>() where TSerialiser : IMessageSerialiser
         {
-            this.messageSerialiser = new Registration(typeof(IMessageSerialiser), typeof(TSerialiser));
+            var existingRegistration = allRegistrations.FirstOrDefault(r => r.Interface == typeof(IMessageSerialiser));
+            if (existingRegistration != null)
+            {
+                existingRegistration = new Registration(typeof(IMessageSerialiser), typeof(TSerialiser));
+            }
+            else
+            {
+                allRegistrations.Add(new Registration(typeof(IMessageSerialiser), typeof(TSerialiser)));
+            }
+            
             return GetThis();
         }
 
-        public virtual TChild UseMessageSerialiser(IMessageSerialiser messageSerialiser)
+        public virtual AbstractSagaMediatorBuilder UseMessageSerialiser(IMessageSerialiser messageSerialiser)
         {
             this.messageSerialiser = new Registration(typeof(IMessageSerialiser), messageSerialiser);
             return GetThis();
         }
 
-        public virtual TChild UseRepository<TRepository>() where TRepository : ISagaRepository
+        public virtual AbstractSagaMediatorBuilder UseRepository<TRepository>() where TRepository : ISagaRepository
         {
             this.repository = new Registration(typeof(ISagaRepository), typeof(TRepository));
             return GetThis();
         }
 
-        public virtual TChild UseRepository(ISagaRepository sagaRepository)
+        public virtual AbstractSagaMediatorBuilder UseRepository(ISagaRepository sagaRepository)
         {
             this.repository = new Registration(typeof(ISagaRepository), sagaRepository);
             return GetThis();
         }
 
-        public virtual TChild AddPiplineHook<TPipelineHook>() where TPipelineHook : IPipelineHook
+        public virtual AbstractSagaMediatorBuilder AddPiplineHook<TPipelineHook>() where TPipelineHook : IPipelineHook
         {
             pipelineHooks.Add(new Registration(typeof(IPipelineHook), typeof(TPipelineHook)));
 
@@ -58,7 +69,7 @@ namespace NSaga
         }
 
 
-        public virtual TChild AddPiplineHook(Type pipelineHookType)
+        public virtual AbstractSagaMediatorBuilder AddPiplineHook(Type pipelineHookType)
         {
             if (!pipelineHookType.IsClass || !pipelineHookType.GetInterfaces().Contains(typeof(IPipelineHook)))
             {
@@ -70,13 +81,13 @@ namespace NSaga
             return GetThis();
         }
 
-        public virtual TChild AddPipelineHook(IPipelineHook pipelineHook)
+        public virtual AbstractSagaMediatorBuilder AddPipelineHook(IPipelineHook pipelineHook)
         {
             pipelineHooks.Add(new Registration(typeof(IPipelineHook), pipelineHook));
             return GetThis();
         }
 
-        public abstract TChild RegisterComponents();
+        //public abstract AbstractSagaMediatorBuilder RegisterComponents();
 
         public abstract ISagaMediator ResolveMediator();
     }

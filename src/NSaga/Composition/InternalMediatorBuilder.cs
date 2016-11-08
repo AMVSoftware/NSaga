@@ -6,7 +6,7 @@ using TinyIoC;
 
 namespace NSaga
 {
-    public class InternalMediatorBuilder : AbstractSagaMediatorBuilder<InternalMediatorBuilder>
+    public class InternalMediatorBuilder : AbstractSagaMediatorBuilder
     {
         public readonly TinyIoCContainer Container;
         private readonly IEnumerable<Assembly> assembliesToScan;
@@ -20,12 +20,12 @@ namespace NSaga
             this.assembliesToScan = assembliesToScan;
         }
 
-        public override InternalMediatorBuilder GetThis()
+        public override AbstractSagaMediatorBuilder GetThis()
         {
             return this;
         }
 
-        public override InternalMediatorBuilder RegisterComponents()
+        public InternalMediatorBuilder RegisterComponents()
         {
             if (registrationsDone)
             {
@@ -45,7 +45,7 @@ namespace NSaga
             Container.Register<ISagaMediator, SagaMediator>();
 
             registrationsDone = true;
-            return GetThis();
+            return this;
         }
 
         public override ISagaMediator ResolveMediator()
