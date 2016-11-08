@@ -7,8 +7,8 @@
             var internalSample = new InternalSample();
             internalSample.Run();
 
-            var simpleInjectorSample = new SimpleInjectorSample();
-            simpleInjectorSample.RunSample();
+            //var simpleInjectorSample = new SimpleInjectorSample();
+            //simpleInjectorSample.RunSample();
         }
     }
 }

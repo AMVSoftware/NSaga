@@ -12,42 +12,30 @@ namespace NSaga
     {
         public static SagaMediatorBuilder UseInternalContainer()
         {
-            var builder = new SagaMediatorBuilder(new TinyIocConformingContainer());
+            var builder = new SagaMediatorBuilder(TinyIoCContainer.Current);
 
             return builder;
         }
 
         public static SagaMediatorBuilder UseInternalContainer(TinyIoCContainer container)
         {
-            var builder = new SagaMediatorBuilder(new TinyIocConformingContainer(container));
+            var builder = new SagaMediatorBuilder(container);
 
             return builder;
-        }
-
-        public static SagaMediatorBuilder UseContainer(IConformingContainer conformingContainer)
-        {
-            var builder = new SagaMediatorBuilder(conformingContainer);
-
-            return builder;
-        }
-
-
-        public static Wireup Init()
-        {
-            return new Wireup();
         }
     }
 
 
     public class SagaMediatorBuilder
     {
-        private readonly IConformingContainer container;
         private Assembly[] assembliesToScan;
         private List<Type> pipelineHooks;
 
-        public SagaMediatorBuilder(IConformingContainer container)
+        public TinyIoCContainer Container { get; private set; }
+
+        public SagaMediatorBuilder(TinyIoCContainer Container)
         {
-            this.container = container;
+            this.Container = Container;
             pipelineHooks = new List<Type>();
             RegisterDefaults();
         }
@@ -60,21 +48,19 @@ namespace NSaga
             AddPiplineHook<MetadataPipelineHook>();
             AddAssembliesToScan(AppDomain.CurrentDomain.GetAssemblies());
 
-            container.Register(typeof(ISagaMediator), typeof(SagaMediator));
+            Container.Register(typeof(ISagaMediator), typeof(SagaMediator));
         }
-
-        public IConformingContainer Container => container;
 
         public SagaMediatorBuilder UseMessageSerialiser<TSerialiser>() where TSerialiser : IMessageSerialiser
         {
-            container.Register(typeof(IMessageSerialiser), typeof(TSerialiser));
+            Container.Register(typeof(IMessageSerialiser), typeof(TSerialiser));
 
             return this;
         }
 
         public SagaMediatorBuilder UseMessageSerialiser(IMessageSerialiser messageSerialiser)
         {
-            container.Register(typeof(IMessageSerialiser), messageSerialiser);
+            Container.Register(typeof(IMessageSerialiser), messageSerialiser);
 
             return this;
         }
@@ -83,14 +69,14 @@ namespace NSaga
 
         public SagaMediatorBuilder UseRepository<TRepository>() where TRepository : ISagaRepository
         {
-            container.Register(typeof(ISagaRepository), typeof(TRepository));
+            Container.Register(typeof(ISagaRepository), typeof(TRepository));
 
             return this;
         }
 
         public SagaMediatorBuilder UseRepository(ISagaRepository sagaRepository)
         {
-            container.Register(typeof(ISagaRepository), sagaRepository);
+            Container.Register(typeof(ISagaRepository), sagaRepository);
 
             return this;
         }
@@ -98,14 +84,14 @@ namespace NSaga
 
         public SagaMediatorBuilder UseSagaFactory<TSagaFactory>() where TSagaFactory : ISagaFactory
         {
-            container.Register(typeof(ISagaFactory), typeof(TSagaFactory));
+            Container.Register(typeof(ISagaFactory), typeof(TSagaFactory));
 
             return this;
         }
 
         public SagaMediatorBuilder UseSagaFactory(ISagaFactory sagaFactory)
         {
-            container.Register(typeof(ISagaFactory), sagaFactory);
+            Container.Register(typeof(ISagaFactory), sagaFactory);
 
             return this;
         }
@@ -141,13 +127,12 @@ namespace NSaga
 
         public ISagaMediator BuildMediator()
         {
-            container.Register(typeof(Assembly[]), assembliesToScan);
-            container.RegisterMultiple(typeof(IPipelineHook), pipelineHooks);
+            Container.RegisterMultiple(typeof(IPipelineHook), pipelineHooks);
 
             //TODO register all the sagas from 
-            //container.RegisterMultiple(typeof(ISaga<>), assembliesToScan.Select(a => a.GetTypes().));
+            //Container.RegisterMultiple(typeof(ISaga<>), assembliesToScan.Select(a => a.GetTypes().));
 
-            var mediator = container.Resolve<ISagaMediator>();
+            var mediator = Container.Resolve<ISagaMediator>();
             return mediator;
         }
     }

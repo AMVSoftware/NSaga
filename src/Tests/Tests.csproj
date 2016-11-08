@@ -89,12 +89,8 @@
       <Link>DumbSagaFactory.cs</Link>
     </Compile>
     <Compile Include="Autofac\AutofacServiceLocatorTests.cs" />
-    <Compile Include="Autofac\AutofacConformingContainerTests.cs" />
     <Compile Include="Autofac\AutofacWireupTests.cs" />
-    <Compile Include="Composition\ConformingContainerTestsBaseClass.cs" />
     <Compile Include="Composition\TinyIocTests.cs" />
-    <Compile Include="SimpleInjector\SimpleInjectorConformingContainerTests.cs" />
-    <Compile Include="Composition\TinyIocConformingContainerTests.cs" />
     <Compile Include="Composition\InternalContainerWireupTests.cs" />
     <Compile Include="Implementations\InMemorySagaRepositorySpecificTests.cs" />
     <Compile Include="Implementations\InMemorySagaRepositoryTests.cs" />

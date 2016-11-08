@@ -44,8 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Composition\IConformingContainer.cs" />
-    <Compile Include="Composition\TinyIocConformingContainer.cs" />
     <Compile Include="Composition\TinyIocExtensions.cs" />
     <Compile Include="Composition\Wireup.cs" />
     <Compile Include="Composition\TinyIocSagaFactory.cs" />
