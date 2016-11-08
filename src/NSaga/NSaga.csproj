@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Composition\SagaMediatorBuilder.cs" />
     <Compile Include="Composition\TinyIocExtensions.cs" />
     <Compile Include="Composition\Wireup.cs" />
     <Compile Include="Composition\TinyIocSagaFactory.cs" />
@@ -68,7 +69,6 @@
     <Compile Include="Reflection.cs" />
     <Compile Include="SagaMediator.cs" />
     <Compile Include="Pipeline\SagaMetadata.cs" />
-    <Compile Include="Composition\SagaMediatorBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
