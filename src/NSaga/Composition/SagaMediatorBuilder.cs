@@ -10,18 +10,20 @@ namespace NSaga
 {
     public class SagaMediatorBuilder
     {
-        private List<Type> pipelineHooks;
-        private IEnumerable<Assembly> assembliesToScan;
+        private readonly List<Type> pipelineHooks;
+        private List<Assembly> assembliesToScan;
+        private bool areComponentsRegistered;
         public TinyIoCContainer Container { get; private set; }
 
-        public SagaMediatorBuilder(IEnumerable<Assembly> assembliesToScan, TinyIoCContainer container)
+        public SagaMediatorBuilder(TinyIoCContainer container)
         {
-            this.Container = container;
+            Container = container;
             pipelineHooks = new List<Type>();
-            this.assembliesToScan = assembliesToScan;
+            this.assembliesToScan = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            areComponentsRegistered = false;
+
             RegisterDefaults();
         }
-
 
         private void RegisterDefaults()
         {
@@ -29,10 +31,32 @@ namespace NSaga
             UseMessageSerialiser<JsonNetSerialiser>();
             UseRepository<InMemorySagaRepository>();
             AddPiplineHook<MetadataPipelineHook>();
-
-            Container.Register(typeof(ISagaMediator), typeof(SagaMediator));
-            Container.RegisterSagas(assembliesToScan);
         }
+
+
+        /// <summary>
+        /// Replaces all previosly reigstered assemblies with the provided ones
+        /// </summary>
+        /// <param name="assemblies">List of assemblies to scan for sagas</param>
+        /// <returns>Current Builder</returns>
+        public SagaMediatorBuilder ReplaceAssembliesToScan(IEnumerable<Assembly> assemblies)
+        {
+            this.assembliesToScan = assembliesToScan.ToList();
+            return this;
+        }
+
+        public SagaMediatorBuilder AddAssemblyToScan(Assembly assembly)
+        {
+            assembliesToScan.Add(assembly);
+            return this;
+        }
+        
+        public SagaMediatorBuilder AddAssembliesToScan(IEnumerable<Assembly> assemblies)
+        {
+            assembliesToScan.AddRange(assemblies);
+            return this;
+        }
+
 
         public SagaMediatorBuilder UseMessageSerialiser<TSerialiser>() where TSerialiser : IMessageSerialiser
         {
@@ -100,9 +124,28 @@ namespace NSaga
         }
 
 
-        public ISagaMediator BuildMediator()
+        public SagaMediatorBuilder RegisterComponents()
         {
+            if (areComponentsRegistered)
+            {
+                throw new Exception("Components have already been registered. Can't register second time");
+            }
+
             Container.RegisterMultiple(typeof(IPipelineHook), pipelineHooks);
+            Container.Register(typeof(ISagaMediator), typeof(SagaMediator));
+            Container.RegisterSagas(assembliesToScan);
+            areComponentsRegistered = true;
+
+            return this;
+        }
+
+
+        public ISagaMediator ResolveMediator()
+        {
+            if (!areComponentsRegistered)
+            {
+                RegisterComponents();
+            }
 
             var mediator = Container.Resolve<ISagaMediator>();
             return mediator;

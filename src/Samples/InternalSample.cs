@@ -17,7 +17,7 @@ namespace Samples
         {
             var builder = Wireup.UseInternalContainer();
 
-            sagaMediator = builder.BuildMediator();
+            sagaMediator = builder.ResolveMediator();
 
             sagaRepository = builder.Container.Resolve<ISagaRepository>();
 

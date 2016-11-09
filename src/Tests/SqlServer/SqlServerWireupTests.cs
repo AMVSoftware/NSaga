@@ -9,7 +9,8 @@ using Xunit;
 
 namespace Tests.SqlServer
 {
-    public class SqlServerWireupTests
+    [AutoRollback]
+    public class SqlServerWireupTests : IDisposable
     {
         private readonly Database database;
 
@@ -40,7 +41,7 @@ namespace Tests.SqlServer
             //Arrange
             var mediator = Wireup.UseInternalContainer()
                                  .UseSqlServerStorage("TestingConnectionString")
-                                 .BuildMediator();
+                                 .ResolveMediator();
             var correlationId = Guid.NewGuid();
 
             // Act
@@ -59,7 +60,7 @@ namespace Tests.SqlServer
             //Arrange
             var mediator = Wireup.UseInternalContainer()
                                  .UseSqlServerStorage(@"Server=(localdb)\v12.0;Database=NSaga-Testing", "System.Data.SqlClient")
-                                 .BuildMediator();
+                                 .ResolveMediator();
             var correlationId = Guid.NewGuid();
 
             // Act
@@ -69,6 +70,12 @@ namespace Tests.SqlServer
             result.IsSuccessful.Should().BeTrue();
             var sagaData = DatabaseHelpers.GetSagaData(database, correlationId);
             sagaData.Should().NotBeNull();
+        }
+
+
+        public void Dispose()
+        {
+            DatabaseHelpers.CleanUpData(database);
         }
     }
 }

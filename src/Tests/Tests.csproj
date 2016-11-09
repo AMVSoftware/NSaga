@@ -61,6 +61,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -90,6 +91,7 @@
     </Compile>
     <Compile Include="Autofac\AutofacServiceLocatorTests.cs" />
     <Compile Include="Autofac\AutofacWireupTests.cs" />
+    <Compile Include="AutoRollbackAttribute.cs" />
     <Compile Include="Composition\TinyIocTests.cs" />
     <Compile Include="Composition\InternalContainerWireupTests.cs" />
     <Compile Include="Implementations\InMemorySagaRepositorySpecificTests.cs" />
