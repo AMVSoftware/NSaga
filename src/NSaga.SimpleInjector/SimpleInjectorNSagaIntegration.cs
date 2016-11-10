@@ -4,10 +4,16 @@ using NSaga.Pipeline;
 using SimpleInjector;
 using SimpleInjector.Advanced;
 
+
 namespace NSaga.SimpleInjector
 {
     public static class SimpleInjectorNSagaIntegration
     {
+        public static Container RegisterNSagaComponents(this Container container)
+        {
+            return container.RegisterNSagaComponents(AppDomain.CurrentDomain.GetAssemblies());
+        }
+
         public static Container RegisterNSagaComponents(this Container container, params Assembly[] assemblies)
         {
             container.Register<ISagaFactory, SimpleInjectorSagaFactory>();
@@ -23,38 +29,22 @@ namespace NSaga.SimpleInjector
             return container;
         }
 
-        //TODO Test
-        public static Container UseSagaRepository<TSagaRepository>(this Container container)
+        public static Container UseSagaRepository<TSagaRepository>(this Container container) where TSagaRepository : ISagaRepository
         {
-            var oldValue = container.Options.AllowOverridingRegistrations;
-            container.Options.AllowOverridingRegistrations = true;
-
-            container.Register(typeof(ISagaRepository), typeof(TSagaRepository));
-
-            container.Options.AllowOverridingRegistrations = oldValue;
+            container.OverrideRegistration(c => c.Register(typeof(ISagaRepository), typeof(TSagaRepository)));
 
             return container;
         }
 
 
-        //TODO Test
         public static Container UseSagaRepository(this Container container, Func<ISagaRepository> repositoryFactory)
         {
-            //var oldValue = container.Options.AllowOverridingRegistrations;
-            //container.Options.AllowOverridingRegistrations = true;
-
-            //container.Register(typeof(ISagaRepository), repositoryFactory);
             container.OverrideRegistration(c => c.Register(typeof(ISagaRepository), repositoryFactory));
-
-            //container.Options.AllowOverridingRegistrations = oldValue;
-
 
             return container;
         }
 
 
-        //TODO test
-        //TODO override to register factory
         public static Container AddSagaPipelineHook<TPipelineHook>(this Container container)
             where TPipelineHook : IPipelineHook
         {
@@ -64,7 +54,19 @@ namespace NSaga.SimpleInjector
         }
 
 
-        //TODO override serialiser
+        public static Container UseMessageSerialiser<TMessageSerialiser>(this Container container) where TMessageSerialiser : IMessageSerialiser
+        {
+            container.OverrideRegistration(c => c.Register(typeof(IMessageSerialiser), typeof(TMessageSerialiser)));
+
+            return container;
+        }
+
+        public static Container UseMessageSerialiser(this Container container, Func<IMessageSerialiser> messageSerialiserFactory)
+        {
+            container.OverrideRegistration(c => c.Register(typeof(IMessageSerialiser), messageSerialiserFactory));
+
+            return container;
+        }
 
 
         private static void OverrideRegistration(this Container container, Action<Container> act)

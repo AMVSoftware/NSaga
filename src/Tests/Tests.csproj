@@ -89,6 +89,7 @@
     <Compile Include="Autofac\AutofacSagaFactoryTests.cs" />
     <Compile Include="AutoRollbackAttribute.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorNSagaIntegrationTests.cs" />
+    <Compile Include="Stubs\NullMessageSerialiser.cs" />
     <Compile Include="Stubs\NullSagaFactory.cs" />
     <Compile Include="Stubs\NullSagaRepository.cs" />
     <Compile Include="Composition\TinyIocTests.cs" />
