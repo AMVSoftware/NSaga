@@ -3,6 +3,7 @@ using FluentAssertions;
 using NSaga;
 using NSaga.SqlServer;
 using PetaPoco;
+using TinyIoC;
 using Xunit;
 
 
@@ -12,10 +13,12 @@ namespace Tests.SqlServer
     public class SqlServerWireupTests : IDisposable
     {
         private readonly Database database;
+        private readonly TinyIoCContainer container;
 
         public SqlServerWireupTests()
         {
             database = new Database("TestingConnectionString");
+            container = new TinyIoCContainer();
         }
 
 
@@ -23,7 +26,7 @@ namespace Tests.SqlServer
         public void UseSqlServer_Registers_SqlServerRepository()
         {
             //Arrange
-            var mediatorBuilder = Wireup.UseInternalContainer()
+            var mediatorBuilder = Wireup.UseInternalContainer(container)
                 .UseSqlServerStorage("TestingConnectionString");
 
             // Act
@@ -38,7 +41,7 @@ namespace Tests.SqlServer
         public void UseSqlServer_Database_IsUsed()
         {
             //Arrange
-            var mediator = Wireup.UseInternalContainer()
+            var mediator = Wireup.UseInternalContainer(container)
                                  .UseSqlServerStorage("TestingConnectionString")
                                  .ResolveMediator();
             var correlationId = Guid.NewGuid();
@@ -57,7 +60,7 @@ namespace Tests.SqlServer
         public void UseSqlServerWithProviderName_Database_IsUsed()
         {
             //Arrange
-            var mediator = Wireup.UseInternalContainer()
+            var mediator = Wireup.UseInternalContainer(container)
                                  .UseSqlServerStorage(@"Server=(localdb)\v12.0;Database=NSaga-Testing", "System.Data.SqlClient")
                                  .ResolveMediator();
             var correlationId = Guid.NewGuid();
@@ -76,7 +79,7 @@ namespace Tests.SqlServer
         public void UseSqlServer_SetsPrivate_ToSqlRepository()
         {
             //Arrange
-            var mediator = Wireup.UseInternalContainer()
+            var mediator = Wireup.UseInternalContainer(container)
                                  .UseSqlServerStorage("TestingConnectionString")
                                  .ResolveMediator();
             // Act
@@ -89,6 +92,8 @@ namespace Tests.SqlServer
         public void Dispose()
         {
             DatabaseHelpers.CleanUpData(database);
+            TinyIoCContainer.Current.Dispose();
+            container.Dispose();
         }
     }
 }

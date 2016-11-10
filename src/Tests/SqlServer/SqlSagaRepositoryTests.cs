@@ -4,6 +4,7 @@ using NSaga.SqlServer;
 
 namespace Tests.SqlServer
 {
+    [AutoRollback]
     public class SqlSagaRepositoryTests : SagaRepositoryTestsTemplate
     {
         public SqlSagaRepositoryTests()
