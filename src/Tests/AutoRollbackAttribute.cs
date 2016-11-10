@@ -53,7 +53,9 @@ namespace Tests
         {
             var options = new TransactionOptions { IsolationLevel = IsolationLevel };
             if (TimeoutInMS > 0)
+            {
                 options.Timeout = TimeSpan.FromMilliseconds(TimeoutInMS);
+            }
 
             scope = new TransactionScope(ScopeOption, options, AsyncFlowOption);
         }

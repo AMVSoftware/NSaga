@@ -11,6 +11,7 @@ using Xunit;
 
 namespace Tests.SqlServer
 {
+    [AutoRollback]
     public class SqlSagaRepositorySpecificTests
     {
         private readonly SqlSagaRepository sut;
