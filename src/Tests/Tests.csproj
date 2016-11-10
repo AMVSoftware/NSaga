@@ -86,8 +86,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Autofac\AutofacServiceLocatorTests.cs" />
-    <Compile Include="Autofac\AutofacWireupTests.cs" />
+    <Compile Include="Autofac\AutofacSagaFactoryTests.cs" />
     <Compile Include="AutoRollbackAttribute.cs" />
     <Compile Include="Stubs\NullSagaFactory.cs" />
     <Compile Include="Stubs\NullSagaRepository.cs" />
@@ -101,7 +100,6 @@
     <Compile Include="PipelineHook\MetadataPipelineIntegrationTests.cs" />
     <Compile Include="PipelineHook\SagaMediatorPipelineTests.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorSagaFactoryTests.cs" />
-    <Compile Include="SimpleInjector\SimpleInjectorWireupTests.cs" />
     <Compile Include="SqlServer\DatabaseHelpers.cs" />
     <Compile Include="SqlServer\SqlSagaRepositorySpecificTests.cs" />
     <Compile Include="SqlServer\SqlSagaRepositoryTests.cs" />

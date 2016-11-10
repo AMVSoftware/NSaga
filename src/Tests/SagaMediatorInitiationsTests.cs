@@ -2,7 +2,7 @@
 using FluentAssertions;
 using NSaga;
 using NSaga.Composition;
-using Tests.Stubs;
+
 using TinyIoC;
 using Xunit;
 

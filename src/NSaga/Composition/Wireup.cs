@@ -18,6 +18,5 @@ namespace NSaga
 
             return builder;
         }
-
     }
 }

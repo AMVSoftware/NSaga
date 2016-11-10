@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using NSaga;
 using NSaga.Composition;
 using NSaga.Pipeline;
-using Tests.Stubs;
 using TinyIoC;
 using Xunit;
 

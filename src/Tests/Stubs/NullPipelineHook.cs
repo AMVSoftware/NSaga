@@ -1,6 +1,6 @@
 ﻿using NSaga;
 
-namespace Tests.Stubs
+namespace Tests
 {
     public class NullPipelineHook : IPipelineHook
     {

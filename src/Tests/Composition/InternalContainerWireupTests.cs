@@ -4,8 +4,8 @@ using System.Linq;
 using FluentAssertions;
 using NSaga;
 using NSaga.Pipeline;
-using Tests.Stubs;
 using Xunit;
+
 
 namespace Tests.Composition
 {
