@@ -9,6 +9,8 @@ namespace NSaga.SimpleInjector
 
         public SimpleInjectorSagaFactory(Container container)
         {
+            Guard.ArgumentIsNotNull(container, nameof(container));
+
             this.container = container;
         }
 

@@ -12,7 +12,7 @@ namespace Tests
 
     class SagaWithErrors : ISaga<SagaWithErrorsData>,
                            InitiatedBy<InitiatingSagaWithErrors>,
-                           InitiatedBy<MultipleSagaInitiator>,
+                           //InitiatedBy<MultipleSagaInitiator>,
                            InitiatedBy<ActuallyInitiatingSagaWithErrors>,
                            ConsumerOf<GetSomeConsumedErrorsForSagaWithErrors>
     {
