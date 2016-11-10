@@ -12,7 +12,8 @@ using Xunit;
 namespace Tests.SqlServer
 {
     [AutoRollback]
-    public class SqlSagaRepositorySpecificTests
+    [Collection("Sql Tests")]
+    public class SqlSagaRepositorySpecificTests : IDisposable
     {
         private readonly SqlSagaRepository sut;
         private readonly Database database;
@@ -164,6 +165,11 @@ namespace Tests.SqlServer
             // Assert
             var updatedHeaders = DatabaseHelpers.GetSagaHeaders(database, correlationId);
             updatedHeaders.Should().HaveCount(0);
+        }
+
+        public void Dispose()
+        {
+            DatabaseHelpers.CleanUpData(database);
         }
     }
 }

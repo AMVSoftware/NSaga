@@ -10,6 +10,7 @@ using Xunit;
 namespace Tests.SqlServer
 {
     [AutoRollback]
+    [Collection("Sql Tests")]
     public class SqlServerWireupTests : IDisposable
     {
         private readonly Database database;
