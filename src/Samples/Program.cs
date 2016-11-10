@@ -4,8 +4,8 @@
     {
         public static void Main(params string[] args)
         {
-            var internalSample = new InternalSample();
-            internalSample.Run();
+            var internalContainerSample = new InternalContainerSample();
+            internalContainerSample.Run();
 
             //var simpleInjectorSample = new SimpleInjectorSample();
             //simpleInjectorSample.RunSample();

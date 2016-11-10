@@ -1,29 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NSaga;
 using NSaga.SqlServer;
 
 namespace Samples
 {
-    public class InternalSample
+    public class InternalContainerSample
     {
-        private  ISagaMediator sagaMediator;
-        private  ISagaRepository sagaRepository;
+        private ISagaMediator sagaMediator;
+        private ISagaRepository sagaRepository;
 
-        public  void Run()
+        public void Run()
         {
-            var builder = Wireup.UseInternalContainer();
+            var builder = Wireup.UseInternalContainer().UseSqlServerStorage("NSagaDatabase");
 
             sagaMediator = builder.ResolveMediator();
 
             sagaRepository = builder.Container.Resolve<ISagaRepository>();
 
             var correlationId = Guid.NewGuid();
-
-
 
             StartSaga(correlationId);
 
@@ -38,7 +32,7 @@ namespace Samples
             Console.WriteLine($"Taking information from SagaData; Person.FullName='{jamesName}'");
 
             // and time to remove saga from the storage
-            sagaRepository.Complete(correlationId);
+            //sagaRepository.Complete(correlationId);
 
             Console.WriteLine("Press Any Key");
             Console.ReadKey();
@@ -46,7 +40,7 @@ namespace Samples
 
 
 
-        private  void StartSaga(Guid correlationId)
+        private void StartSaga(Guid correlationId)
         {
             var initialMessage = new PersonalDetailsVerification(correlationId)
             {
@@ -65,7 +59,7 @@ namespace Samples
         }
 
 
-        private  void RequestVerificationCode(Guid correlationId)
+        private void RequestVerificationCode(Guid correlationId)
         {
             var verificationRequest = new VerificationCodeRequest(correlationId);
 
@@ -74,7 +68,7 @@ namespace Samples
 
 
 
-        private  void ProvideVerificationCode(Guid correlationId)
+        private void ProvideVerificationCode(Guid correlationId)
         {
             var verificationCode = new VerificationCodeProvided(correlationId)
             {
@@ -85,7 +79,7 @@ namespace Samples
 
 
 
-        private  void CreateAccount(Guid correlationId)
+        private void CreateAccount(Guid correlationId)
         {
             var accountCreation = new AccountDetailsProvided(correlationId)
             {
