@@ -105,7 +105,6 @@
     <Compile Include="SqlServer\SqlSagaRepositoryTests.cs" />
     <Compile Include="SagaMediatorConsumingTests.cs" />
     <Compile Include="Implementations\SagaRepositoryTestsTemplate.cs" />
-    <Compile Include="SqlServer\DatabaseSetup.cs" />
     <Compile Include="SqlServer\SqlServerWireupTests.cs" />
     <Compile Include="Stubs\DumbSagaFactory.cs" />
     <Compile Include="Stubs\MultipleSagaInitiator.cs" />

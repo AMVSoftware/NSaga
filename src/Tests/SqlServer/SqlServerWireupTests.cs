@@ -3,7 +3,6 @@ using FluentAssertions;
 using NSaga;
 using NSaga.SqlServer;
 using PetaPoco;
-
 using Xunit;
 
 
@@ -72,6 +71,20 @@ namespace Tests.SqlServer
             sagaData.Should().NotBeNull();
         }
 
+
+        [Fact]
+        public void UseSqlServer_SetsPrivate_ToSqlRepository()
+        {
+            //Arrange
+            var mediator = Wireup.UseInternalContainer()
+                                 .UseSqlServerStorage("TestingConnectionString")
+                                 .ResolveMediator();
+            // Act
+            var repository = Reflection.GetPrivate(mediator, "sagaRepository");
+
+            // Assert
+            repository.Should().BeOfType<SqlSagaRepository>();
+        }
 
         public void Dispose()
         {
