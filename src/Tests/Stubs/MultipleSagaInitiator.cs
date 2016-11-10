@@ -1,7 +1,7 @@
 ﻿using System;
 using NSaga;
 
-namespace Tests.Stubs
+namespace Tests
 {
     /// <summary>
     /// Saga Message that initiates multiple sagas of different type

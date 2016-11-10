@@ -50,7 +50,6 @@
     <Compile Include="Composition\TinyIocSagaFactory.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IMessageSerialiser.cs" />
-    <Compile Include="Implementations\DumbSagaFactory.cs" />
     <Compile Include="Implementations\InMemorySagaRepository.cs" />
     <Compile Include="Implementations\TimeProvider.cs" />
     <Compile Include="Composition\TinyIoC.cs" />

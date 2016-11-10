@@ -86,12 +86,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\NSaga\Implementations\DumbSagaFactory.cs">
-      <Link>DumbSagaFactory.cs</Link>
-    </Compile>
     <Compile Include="Autofac\AutofacServiceLocatorTests.cs" />
     <Compile Include="Autofac\AutofacWireupTests.cs" />
     <Compile Include="AutoRollbackAttribute.cs" />
+    <Compile Include="Stubs\NullSagaFactory.cs" />
+    <Compile Include="Stubs\NullSagaRepository.cs" />
     <Compile Include="Composition\TinyIocTests.cs" />
     <Compile Include="Composition\InternalContainerWireupTests.cs" />
     <Compile Include="Implementations\InMemorySagaRepositorySpecificTests.cs" />
@@ -110,12 +109,14 @@
     <Compile Include="Implementations\SagaRepositoryTestsTemplate.cs" />
     <Compile Include="SqlServer\DatabaseSetup.cs" />
     <Compile Include="SqlServer\SqlServerWireupTests.cs" />
+    <Compile Include="Stubs\DumbSagaFactory.cs" />
     <Compile Include="Stubs\MultipleSagaInitiator.cs" />
     <Compile Include="Stubs\MyFakeInitiatingMessage.cs" />
     <Compile Include="Stubs\MySaga.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionTests.cs" />
     <Compile Include="SagaMediatorInitiationsTests.cs" />
+    <Compile Include="Stubs\NullPipelineHook.cs" />
     <Compile Include="Stubs\SagaWithErrors.cs" />
   </ItemGroup>
   <ItemGroup>

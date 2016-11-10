@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NSaga;
 
-namespace Tests.Stubs
+namespace Tests
 {
     public class SagaWithErrorsData
     {

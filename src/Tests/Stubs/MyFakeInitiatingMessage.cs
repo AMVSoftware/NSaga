@@ -1,7 +1,7 @@
 using System;
 using NSaga;
 
-namespace Tests.Stubs
+namespace Tests
 {
     /// <summary>
     /// Message that does not inititate anything
