@@ -18,25 +18,25 @@ namespace Benchmarking
         }
 
 
-        public TSaga Find<TSaga>(Guid correlationId) where TSaga : class
+        public TSaga Find<TSaga>(Guid correlationId) where TSaga : class, IAccessibleSaga
         {
             if (correlationId == Program.FirstGuid)
             {
                 return null;
             }
 
-            var saga = sagaFactory.Resolve<TSaga>();
+            var saga = sagaFactory.ResolveSaga<TSaga>();
             Reflection.Set(saga, "CorrelationId", correlationId);
 
             return saga;
         }
 
-        public void Save<TSaga>(TSaga saga) where TSaga : class
+        public void Save<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
             // nothing
         }
 
-        public void Complete<TSaga>(TSaga saga) where TSaga : class
+        public void Complete<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
             // nothing
         }
