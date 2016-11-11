@@ -11,7 +11,7 @@ namespace NSaga.SqlServer
         public const string HeadersTableName = "NSaga.Headers";
 
         private readonly ISagaFactory sagaFactory;
-        private readonly Database database;
+        private readonly IDatabase database;
         private readonly IMessageSerialiser messageSerialiser;
 
         /// <summary>
@@ -29,7 +29,10 @@ namespace NSaga.SqlServer
 
             this.messageSerialiser = messageSerialiser;
             this.sagaFactory = sagaFactory;
-            this.database = new Database(connectionStringName);
+
+            IDatabaseBuildConfiguration db = DatabaseConfiguration.Build().UsingConnectionStringName(connectionStringName);
+
+            this.database = db.Create();
         }
 
         /// <summary>
@@ -48,7 +51,13 @@ namespace NSaga.SqlServer
 
             this.messageSerialiser = messageSerialiser;
             this.sagaFactory = sagaFactory;
-            this.database = new Database(connectionString, providerName);
+
+            var provider = DatabaseProvider.Resolve(providerName, true, connectionString);
+            IDatabaseBuildConfiguration db = DatabaseConfiguration.Build().UsingConnectionString(connectionString).UsingProvider(provider);
+
+            this.database = db.Create();
+
+            //this.database = new Database(connectionString, providerName);
         }
 
 
