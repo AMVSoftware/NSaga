@@ -3,7 +3,6 @@ using FluentAssertions;
 using NSaga;
 using NSaga.SqlServer;
 using PetaPoco;
-using TinyIoC;
 using Xunit;
 
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NSaga.Pipeline
+namespace NSaga
 {
     public class MetadataPipelineHook : BasePipelineHook, IPipelineHook
     {

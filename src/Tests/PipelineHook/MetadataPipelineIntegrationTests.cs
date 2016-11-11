@@ -2,9 +2,6 @@
 using System.Linq;
 using FluentAssertions;
 using NSaga;
-using NSaga.Composition;
-using NSaga.Pipeline;
-using TinyIoC;
 using Xunit;
 
 

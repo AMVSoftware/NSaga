@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NSaga;
-using NSaga.Composition;
 using NSubstitute;
-using TinyIoC;
 using Xunit;
 
 namespace Tests.PipelineHook

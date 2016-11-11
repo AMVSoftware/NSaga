@@ -2,9 +2,6 @@
 using System.Reflection;
 using FluentAssertions;
 using NSaga;
-using NSaga.Composition;
-
-using TinyIoC;
 using Xunit;
 
 namespace Tests

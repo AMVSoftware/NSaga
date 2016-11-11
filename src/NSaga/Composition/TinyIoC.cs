@@ -94,7 +94,7 @@
 using System.Runtime.Serialization;
 #endif
 
-namespace TinyIoC
+namespace NSaga
 {
     using System;
     using System.Collections.Generic;

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using NSaga;
-using NSaga.Pipeline;
 using NSaga.SimpleInjector;
 using NSaga.SqlServer;
 using SimpleInjector;

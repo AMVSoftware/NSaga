@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Composition\SagaReflection.cs" />
     <Compile Include="Composition\SagaMediatorBuilder.cs" />
     <Compile Include="Composition\TinyIocExtensions.cs" />
     <Compile Include="Composition\Wireup.cs" />

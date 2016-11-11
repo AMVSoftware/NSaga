@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using TinyIoC;
 
-namespace NSaga.Composition
+namespace NSaga
 {
     public static class TinyIocExtensions
     {

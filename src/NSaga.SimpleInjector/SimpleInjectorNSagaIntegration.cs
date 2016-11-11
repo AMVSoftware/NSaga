@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using NSaga.Pipeline;
 using SimpleInjector;
 using SimpleInjector.Advanced;
 
