@@ -7,8 +7,8 @@
             var internalContainerSample = new InternalContainerSample();
             internalContainerSample.Run();
 
-            //var simpleInjectorSample = new SimpleInjectorSample();
-            //simpleInjectorSample.RunSample();
+            var simpleInjectorSample = new SimpleInjectorSample();
+            simpleInjectorSample.RunSample();
         }
     }
 }

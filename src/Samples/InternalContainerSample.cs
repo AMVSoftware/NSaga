@@ -31,8 +31,6 @@ namespace Samples
             var jamesName = saga.SagaData.Person.FullName;
             Console.WriteLine($"Taking information from SagaData; Person.FullName='{jamesName}'");
 
-            // and time to remove saga from the storage
-            //sagaRepository.Complete(correlationId);
 
             Console.WriteLine("Press Any Key");
             Console.ReadKey();
