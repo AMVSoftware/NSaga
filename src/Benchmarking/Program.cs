@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Benchmarking.Sagas;
@@ -12,11 +8,17 @@ namespace Benchmarking
 {
     class Program
     {
+        public static Guid FirstGuid = new Guid("85B8ED38-D0BA-4CD3-BBB3-15952B76E774");
+
         static void Main(string[] args)
         {
+#if DEBUG
+            var bench = new MediatorBenchmarking();
+            bench.InitiateSaga();
+            bench.ConsumeMessage();
+#else
             var summary = BenchmarkRunner.Run<MediatorBenchmarking>();
-            //var bench = new MediatorBenchmarking();
-            //bench.InitiateSaga();
+#endif
         }
     }
 
@@ -27,17 +29,19 @@ namespace Benchmarking
 
         public MediatorBenchmarking()
         {
-            var builder = Wireup.UseInternalContainer();
-            mediator = builder.ResolveMediator();
+            mediator = Wireup.UseInternalContainer().UseRepository<FastSagaRepository>().ResolveMediator();
+
             correlationId = Guid.NewGuid();
-            mediator.Consume(new FirstMessage(correlationId));
+            //mediator.Consume(new FirstMessage(correlationId));
+            mediator.Consume(new FirstMessage(Program.FirstGuid));
         }
 
 
         [Benchmark]
         public void InitiateSaga()
         {
-            mediator.Consume(new FirstMessage(Guid.NewGuid()));
+            //mediator.Consume(new FirstMessage(Guid.NewGuid()));
+            mediator.Consume(new FirstMessage(Program.FirstGuid));
         }
 
         [Benchmark]

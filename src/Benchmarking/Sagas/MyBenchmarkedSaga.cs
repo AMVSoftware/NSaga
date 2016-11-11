@@ -25,7 +25,8 @@ namespace Benchmarking.Sagas
 
         public MyBenchmarkedSaga()
         {
-            // nothing here just for the sake of it
+            Headers = new Dictionary<string, string>();
+            SagaData = new MyBenchmarkedSagaData();
         }
 
 
