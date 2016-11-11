@@ -9,7 +9,7 @@ namespace Tests
     /// </summary>
     public class DumbSagaFactory : ISagaFactory
     {
-        public T Resolve<T>() where T : class
+        public T ResolveSaga<T>() where T : class, IAccessibleSaga
         {
             if (typeof(T).IsInterface)
             {
@@ -20,14 +20,24 @@ namespace Tests
         }
 
 
-        public object Resolve(Type type)
+        public IAccessibleSaga ResolveSaga(Type type)
         {
             if (type.IsInterface)
             {
                 throw new ArgumentException("Unable to create interface. Sorry - this is a dumb service locator - use a DI of your choice to do real service resolution");
             }
 
-            return Activator.CreateInstance(type);
+            return (IAccessibleSaga)Activator.CreateInstance(type);
+        }
+
+        public IAccessibleSaga ResolveSagaInititatedBy(IInitiatingSagaMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAccessibleSaga ResolveSagaConsumedBy(ISagaMessage message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

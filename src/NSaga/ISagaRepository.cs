@@ -14,7 +14,7 @@ namespace NSaga
         /// <typeparam name="TSaga">Type of saga we are looking for</typeparam>
         /// <param name="correlationId">CorrelationId to identify the saga</param>
         /// <returns>An instance of the saga. Or Null if there is no saga with this ID.</returns>
-        TSaga Find<TSaga>(Guid correlationId) where TSaga : class;
+        TSaga Find<TSaga>(Guid correlationId) where TSaga : class, IAccessibleSaga;
 
         /// <summary>
         /// Persists the instance of saga into the database storage.
@@ -22,14 +22,14 @@ namespace NSaga
         /// </summary>
         /// <typeparam name="TSaga">Type of saga</typeparam>
         /// <param name="saga">Saga instance</param>
-        void Save<TSaga>(TSaga saga) where TSaga : class;
+        void Save<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga;
 
         /// <summary>
         /// Deletes the saga instance from the storage
         /// </summary>
         /// <typeparam name="TSaga">Type of saga</typeparam>
         /// <param name="saga">Saga to be deleted</param>
-        void Complete<TSaga>(TSaga saga) where TSaga : class;
+        void Complete<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga;
 
         /// <summary>
         /// Deletes the saga instance from the storage

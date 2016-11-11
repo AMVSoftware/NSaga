@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using NSaga.SimpleInjector;
 using SimpleInjector;
 using Xunit;
@@ -12,39 +13,50 @@ namespace Tests.SimpleInjector
         public SimpleInjectorSagaFactoryTests()
         {
             var container = new Container();
-            container.Register<IMyService, MyService>();
+            container.RegisterNSagaComponents();
             sut = new SimpleInjectorSagaFactory(container);
         }
 
         [Fact]
-        public void Resolve_Resolves_Instance()
+        public void Resolve_Saga_Resolved()
         {
-            var result = sut.Resolve<IMyService>();
+            var result = sut.ResolveSaga(typeof(MySaga));
 
-            result.Should().BeOfType<MyService>();
+            result.Should().NotBeNull().And.BeOfType<MySaga>();
+        }
+
+        [Fact]
+        public void ResolveGeneric_Saga_Resolved()
+        {
+            var result = sut.ResolveSaga<MySaga>();
+
+            result.Should().NotBeNull().And.BeOfType<MySaga>();
+        }
+
+        [Fact]
+        public void ResolveByConsumed_Always_Resolves()
+        {
+            var result = sut.ResolveSagaConsumedBy(new MySagaConsumingMessage(Guid.NewGuid()));
+
+            result.Should().NotBeNull().And.BeOfType<MySaga>();
         }
 
 
         [Fact]
-        public void ResolveByType_Resolves_Instance()
+        public void ResolveByInitiated_Always_Resolves()
         {
-            var result = sut.Resolve(typeof(IMyService));
+            var result = sut.ResolveSagaInititatedBy(new MySagaInitiatingMessage(Guid.NewGuid()));
 
-            result.Should().BeOfType<MyService>();
+            result.Should().NotBeNull().And.BeOfType<MySaga>();
         }
 
 
-        public interface IMyService
+        [Fact]
+        public void ResolveByInitiated_AdditinalInterface_Resolves()
         {
-            void DoSomething();
-        }
+            var result = sut.ResolveSagaInititatedBy(new MySagaAdditionalInitialser(Guid.NewGuid()));
 
-        public class MyService : IMyService
-        {
-            public void DoSomething()
-            {
-                // nothing
-            }
+            result.Should().NotBeNull().And.BeOfType<MySaga>();
         }
     }
 }

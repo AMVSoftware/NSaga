@@ -14,14 +14,26 @@ namespace NSaga.SimpleInjector
             this.container = container;
         }
 
-        public T Resolve<T>() where T : class 
+        public T ResolveSaga<T>() where T : class, IAccessibleSaga 
         {
             return container.GetInstance<T>();
         }
 
-        public object Resolve(Type type)
+        public IAccessibleSaga ResolveSaga(Type type)
         {
-            return container.GetInstance(type);
+            return (IAccessibleSaga)container.GetInstance(type);
+        }
+
+        public IAccessibleSaga ResolveSagaInititatedBy(IInitiatingSagaMessage message)
+        {
+            var interfaceType = typeof(InitiatedBy<>).MakeGenericType(message.GetType());
+            return (IAccessibleSaga)container.GetInstance(interfaceType);
+        }
+
+        public IAccessibleSaga ResolveSagaConsumedBy(ISagaMessage message)
+        {
+            var interfaceType = typeof(ConsumerOf<>).MakeGenericType(message.GetType());
+            return (IAccessibleSaga)container.GetInstance(interfaceType);
         }
     }
 }

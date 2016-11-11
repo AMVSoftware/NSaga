@@ -28,8 +28,7 @@ namespace NSaga
         {
             Guard.CheckSagaMessage(initiatingMessage, nameof(initiatingMessage));
 
-            var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(initiatingMessage.GetType());
-            var resolvedSaga = sagaFactory.Resolve(initiatingInterfaceType);
+            var resolvedSaga = sagaFactory.ResolveSagaInititatedBy(initiatingMessage);
             var sagaType = resolvedSaga.GetType();
 
             // try to find sagas that already exist
@@ -40,7 +39,7 @@ namespace NSaga
             }
 
             // now create an instance of saga and persist the data
-            var saga = sagaFactory.Resolve(sagaType);
+            var saga = sagaFactory.ResolveSaga(sagaType);
             Reflection.Set(saga, "CorrelationId", initiatingMessage.CorrelationId);
 
             // if SagaData is null - create an instance of the object and assign to saga
@@ -77,8 +76,7 @@ namespace NSaga
         {
             Guard.CheckSagaMessage(sagaMessage, nameof(sagaMessage));
 
-            var initiatingInterfaceType = typeof(ConsumerOf<>).MakeGenericType(sagaMessage.GetType());
-            var resolvedSaga = sagaFactory.Resolve(initiatingInterfaceType);
+            var resolvedSaga = sagaFactory.ResolveSagaConsumedBy(sagaMessage);
             var sagaType = resolvedSaga.GetType();
 
             var saga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, sagaMessage.CorrelationId);
@@ -95,7 +93,7 @@ namespace NSaga
 
             if (errors.IsSuccessful)
             {
-                sagaRepository.Save(saga);
+                sagaRepository.Save((IAccessibleSaga)saga);
                 pipelineHook.AfterSave(new PipelineContext(sagaMessage, (IAccessibleSaga)saga, errors));
             }
 

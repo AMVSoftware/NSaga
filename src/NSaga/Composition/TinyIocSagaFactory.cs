@@ -13,7 +13,7 @@ namespace NSaga
             this.container = container;
         }
 
-        public T Resolve<T>() where T : class
+        public T ResolveSaga<T>() where T : class, IAccessibleSaga
         {
             var result = container.Resolve<T>();
 
@@ -21,11 +21,25 @@ namespace NSaga
         }
 
 
-        public object Resolve(Type type)
+        public IAccessibleSaga ResolveSaga(Type type)
         {
             var result = container.Resolve(type);
 
-            return result;
+            return (IAccessibleSaga)result;
+        }
+
+        public IAccessibleSaga ResolveSagaInititatedBy(IInitiatingSagaMessage message)
+        {
+            var interfaceType = typeof(InitiatedBy<>).MakeGenericType(message.GetType());
+            var saga = container.Resolve(interfaceType);
+            return (IAccessibleSaga)saga;
+        }
+
+        public IAccessibleSaga ResolveSagaConsumedBy(ISagaMessage message)
+        {
+            var interfaceType = typeof(ConsumerOf<>).MakeGenericType(message.GetType());
+            var saga = container.Resolve(interfaceType);
+            return (IAccessibleSaga)saga;
         }
     }
 }

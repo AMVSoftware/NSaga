@@ -12,14 +12,24 @@ namespace NSaga.Autofac
             this.container = container;
         }
 
-        public T Resolve<T>() where T : class
+        public T ResolveSaga<T>() where T : class, IAccessibleSaga
         {
             return container.Resolve<T>();
         }
 
-        public object Resolve(Type type)
+        public IAccessibleSaga ResolveSaga(Type type)
         {
-            return container.Resolve(type);
+            return (IAccessibleSaga)container.Resolve(type);
+        }
+
+        public IAccessibleSaga ResolveSagaInititatedBy(IInitiatingSagaMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAccessibleSaga ResolveSagaConsumedBy(ISagaMessage message)
+        {
+            throw new NotImplementedException();
         }
     }
 }
