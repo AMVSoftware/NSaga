@@ -28,8 +28,7 @@ namespace NSaga
         {
             Guard.CheckSagaMessage(initiatingMessage, nameof(initiatingMessage));
 
-            var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(initiatingMessage.GetType());
-            var resolvedSaga = sagaFactory.ResolveSaga(initiatingInterfaceType);
+            var resolvedSaga = sagaFactory.ResolveSagaInititatedBy(initiatingMessage);
             var sagaType = resolvedSaga.GetType();
 
             // try to find sagas that already exist
@@ -77,8 +76,7 @@ namespace NSaga
         {
             Guard.CheckSagaMessage(sagaMessage, nameof(sagaMessage));
 
-            var initiatingInterfaceType = typeof(ConsumerOf<>).MakeGenericType(sagaMessage.GetType());
-            var resolvedSaga = sagaFactory.ResolveSaga(initiatingInterfaceType);
+            var resolvedSaga = sagaFactory.ResolveSagaConsumedBy(sagaMessage);
             var sagaType = resolvedSaga.GetType();
 
             var saga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, sagaMessage.CorrelationId);
