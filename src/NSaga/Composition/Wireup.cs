@@ -1,7 +1,4 @@
-﻿using NSaga;
-
-
-namespace NSaga
+﻿namespace NSaga
 {
     public class Wireup
     {

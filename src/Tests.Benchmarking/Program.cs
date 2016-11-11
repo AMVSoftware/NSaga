@@ -24,15 +24,14 @@ namespace Benchmarking
 
     public class MediatorBenchmarking
     {
-        private ISagaMediator mediator;
-        private Guid correlationId;
+        private readonly ISagaMediator mediator;
+        private readonly Guid correlationId;
 
         public MediatorBenchmarking()
         {
             mediator = Wireup.UseInternalContainer().UseRepository<FastSagaRepository>().ResolveMediator();
 
             correlationId = Guid.NewGuid();
-            //mediator.Consume(new FirstMessage(correlationId));
             mediator.Consume(new FirstMessage(Program.FirstGuid));
         }
 
