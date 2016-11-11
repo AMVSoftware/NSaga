@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSaga.SimpleInjector", "NSa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSaga.Autofac", "NSaga.Autofac\NSaga.Autofac.csproj", "{5B7A00DC-75C7-4C94-820B-B449C427CD93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarking", "Benchmarking\Benchmarking.csproj", "{7E5DAAC9-EDCD-48EA-99EF-8C5541F38BB8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Benchmarking", "Tests.Benchmarking\Tests.Benchmarking.csproj", "{7E5DAAC9-EDCD-48EA-99EF-8C5541F38BB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
