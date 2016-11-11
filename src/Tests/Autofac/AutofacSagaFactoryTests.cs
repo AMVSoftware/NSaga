@@ -1,52 +1,52 @@
-﻿using Autofac;
-using FluentAssertions;
-using NSaga.Autofac;
-using Xunit;
+﻿//using Autofac;
+//using FluentAssertions;
+//using NSaga.Autofac;
+//using Xunit;
 
-namespace Tests.Autofac
-{
-    public class AutofacSagaFactoryTests
-    {
-        private readonly AutofacSagaFactory sut;
+//namespace Tests.Autofac
+//{
+//    public class AutofacSagaFactoryTests
+//    {
+//        private readonly AutofacSagaFactory sut;
 
-        public AutofacSagaFactoryTests()
-        {
-            var builder = new ContainerBuilder();
-            builder.RegisterType<MyService>().As<IMyService>();
-            var container = builder.Build();
-            sut = new AutofacSagaFactory(container);
-        }
+//        public AutofacSagaFactoryTests()
+//        {
+//            var builder = new ContainerBuilder();
+//            builder.RegisterType<MyService>().As<IMyService>();
+//            var container = builder.Build();
+//            sut = new AutofacSagaFactory(container);
+//        }
 
-        [Fact]
-        public void Resolve_Resolves_Instance()
-        {
-            var result = sut.Resolve<IMyService>();
+//        [Fact]
+//        public void Resolve_Resolves_Instance()
+//        {
+//            var result = sut.ResolveSaga<IMyService>();
 
-            result.Should().BeOfType<MyService>();
-        }
-
-
-        [Fact]
-        public void ResolveByType_Resolves_Instance()
-        {
-            var result = sut.Resolve(typeof(IMyService));
-
-            result.Should().BeOfType<MyService>();
-        }
+//            result.Should().BeOfType<MyService>();
+//        }
 
 
+//        [Fact]
+//        public void ResolveByType_Resolves_Instance()
+//        {
+//            var result = sut.ResolveSaga(typeof(IMyService));
 
-        public interface IMyService
-        {
-            void DoSomething();
-        }
+//            result.Should().BeOfType<MyService>();
+//        }
 
-        public class MyService : IMyService
-        {
-            public void DoSomething()
-            {
-                // nothing
-            }
-        }
-    }
-}
+
+
+//        public interface IMyService
+//        {
+//            void DoSomething();
+//        }
+
+//        public class MyService : IMyService
+//        {
+//            public void DoSomething()
+//            {
+//                // nothing
+//            }
+//        }
+//    }
+//}

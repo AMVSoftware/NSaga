@@ -5,7 +5,16 @@ namespace Tests
 {
     public class NullSagaFactory : ISagaFactory
     {
-        public T Resolve<T>() where T : class  { throw new NotImplementedException(); }
-        public object Resolve(Type type) { throw new NotImplementedException(); }
+        public T ResolveSaga<T>() where T : class, IAccessibleSaga { throw new NotImplementedException(); }
+        public IAccessibleSaga ResolveSaga(Type type) { throw new NotImplementedException(); }
+        public IAccessibleSaga ResolveSagaInititatedBy(IInitiatingSagaMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAccessibleSaga ResolveSagaConsumedBy(ISagaMessage message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

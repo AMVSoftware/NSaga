@@ -2,11 +2,11 @@
 
 namespace NSaga
 {
-    //TODO remove generic option
-    //TODO use IAccessibleSaga more here
     public interface ISagaFactory
     {
-        T Resolve<T>() where T : class;
-        object Resolve(Type type);
+        T ResolveSaga<T>() where T : class, IAccessibleSaga;
+        IAccessibleSaga ResolveSaga(Type type);
+        IAccessibleSaga ResolveSagaInititatedBy(IInitiatingSagaMessage message);
+        IAccessibleSaga ResolveSagaConsumedBy(ISagaMessage message);
     }
 }

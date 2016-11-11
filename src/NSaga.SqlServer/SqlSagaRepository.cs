@@ -61,7 +61,7 @@ namespace NSaga.SqlServer
         /// <typeparam name="TSaga">Type of saga we are looking for</typeparam>
         /// <param name="correlationId">CorrelationId to identify the saga</param>
         /// <returns>An instance of the saga. Or Null if there is no saga with this ID.</returns>
-        public TSaga Find<TSaga>(Guid correlationId) where TSaga : class
+        public TSaga Find<TSaga>(Guid correlationId) where TSaga : class, IAccessibleSaga
         {
             Guard.ArgumentIsNotNull(correlationId, nameof(correlationId));
 
@@ -73,7 +73,7 @@ namespace NSaga.SqlServer
                 return null;
             }
 
-            var sagaInstance = sagaFactory.Resolve<TSaga>();
+            var sagaInstance = sagaFactory.ResolveSaga<TSaga>();
             var sagaDataType = Reflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
             var sagaData = messageSerialiser.Deserialise(persistedData.BlobData, sagaDataType);
 
@@ -96,7 +96,7 @@ namespace NSaga.SqlServer
         /// </summary>
         /// <typeparam name="TSaga">Type of saga</typeparam>
         /// <param name="saga">Saga instance</param>
-        public void Save<TSaga>(TSaga saga) where TSaga : class
+        public void Save<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
             Guard.ArgumentIsNotNull(saga, nameof(saga));
 
@@ -155,7 +155,7 @@ namespace NSaga.SqlServer
         /// </summary>
         /// <typeparam name="TSaga">Type of saga</typeparam>
         /// <param name="saga">Saga to be deleted</param>
-        public void Complete<TSaga>(TSaga saga) where TSaga : class
+        public void Complete<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
             Guard.ArgumentIsNotNull(saga, nameof(saga));
 

@@ -12,39 +12,19 @@ namespace Tests.SimpleInjector
         public SimpleInjectorSagaFactoryTests()
         {
             var container = new Container();
-            container.Register<IMyService, MyService>();
+            container.RegisterNSagaComponents();
             sut = new SimpleInjectorSagaFactory(container);
         }
 
         [Fact]
-        public void Resolve_Resolves_Instance()
+        public void Resolve_Saga_Resolved()
         {
-            var result = sut.Resolve<IMyService>();
-
-            result.Should().BeOfType<MyService>();
-        }
+            //Arrange
 
 
-        [Fact]
-        public void ResolveByType_Resolves_Instance()
-        {
-            var result = sut.Resolve(typeof(IMyService));
+            // Act
 
-            result.Should().BeOfType<MyService>();
-        }
-
-
-        public interface IMyService
-        {
-            void DoSomething();
-        }
-
-        public class MyService : IMyService
-        {
-            public void DoSomething()
-            {
-                // nothing
-            }
+            // Assert
         }
     }
 }

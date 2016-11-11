@@ -20,7 +20,7 @@ namespace NSaga
         }
 
 
-        public TSaga Find<TSaga>(Guid correlationId) where TSaga : class
+        public TSaga Find<TSaga>(Guid correlationId) where TSaga : class, IAccessibleSaga
         {
             string dataSerialised;
 
@@ -40,7 +40,7 @@ namespace NSaga
 
             var dataObject = messageSerialiser.Deserialise(dataSerialised, sagaDataType);
 
-            var saga = sagaFactory.Resolve<TSaga>();
+            var saga = sagaFactory.ResolveSaga<TSaga>();
             Reflection.Set(saga, "SagaData", dataObject);
             Reflection.Set(saga, "CorrelationId", correlationId);
             Reflection.Set(saga, "Headers", headers);
@@ -49,7 +49,7 @@ namespace NSaga
         }
 
 
-        public void Save<TSaga>(TSaga saga) where TSaga : class
+        public void Save<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
             var sagaData = Reflection.Get(saga, "SagaData");
             var correlationId = (Guid)Reflection.Get(saga, "CorrelationId");
@@ -63,7 +63,7 @@ namespace NSaga
         }
 
 
-        public void Complete<TSaga>(TSaga saga) where TSaga : class
+        public void Complete<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
             var correlationId = (Guid)Reflection.Get(saga, "CorrelationId");
 

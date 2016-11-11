@@ -134,17 +134,17 @@ namespace Tests
                 Spy = spy ?? new RepositorySpy();
             }
 
-            public TSaga Find<TSaga>(Guid correlationId) where TSaga : class
+            public TSaga Find<TSaga>(Guid correlationId) where TSaga : class, IAccessibleSaga
             {
                 Spy.Find = correlationId;
                 return null;
             }
 
-            public void Save<TSaga>(TSaga saga) where TSaga : class
+            public void Save<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
             {
             }
 
-            public void Complete<TSaga>(TSaga saga) where TSaga : class
+            public void Complete<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
             {
             }
 

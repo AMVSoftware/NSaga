@@ -74,6 +74,33 @@ namespace Tests.Composition
         }
 
 
+        [Fact]
+        public void SagaFactory_CanResolve_ByInitiatedInterface()
+        {
+            var builder = Wireup.UseInternalContainer(container).RegisterComponents();
+            var sagaFactory = builder.Container.Resolve<ISagaFactory>();
+
+            // Act
+            var result = sagaFactory.ResolveSagaInititatedBy(new MySagaInitiatingMessage(Guid.NewGuid()));
+
+            // Assert
+            result.Should().NotBeNull().And.BeOfType<MySaga>();
+        }
+
+
+
+        [Fact]
+        public void SagaFactory_CanResolve_ByConsumedInterface()
+        {
+            var builder = Wireup.UseInternalContainer(container).RegisterComponents();
+            var sagaFactory = builder.Container.Resolve<ISagaFactory>();
+
+            // Act
+            var result = sagaFactory.ResolveSagaConsumedBy(new MySagaConsumingMessage(Guid.NewGuid()));
+
+            // Assert
+            result.Should().NotBeNull().And.BeOfType<MySaga>();
+        }
 
         private static void ValidatePrivateProperty(ISagaMediator sagaMediator, string propertyName, Type expectedType)
         {
