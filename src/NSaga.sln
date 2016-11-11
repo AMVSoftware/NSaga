@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSaga.SimpleInjector", "NSa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSaga.Autofac", "NSaga.Autofac\NSaga.Autofac.csproj", "{5B7A00DC-75C7-4C94-820B-B449C427CD93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarking", "Benchmarking\Benchmarking.csproj", "{7E5DAAC9-EDCD-48EA-99EF-8C5541F38BB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{5B7A00DC-75C7-4C94-820B-B449C427CD93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B7A00DC-75C7-4C94-820B-B449C427CD93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B7A00DC-75C7-4C94-820B-B449C427CD93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E5DAAC9-EDCD-48EA-99EF-8C5541F38BB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E5DAAC9-EDCD-48EA-99EF-8C5541F38BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E5DAAC9-EDCD-48EA-99EF-8C5541F38BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E5DAAC9-EDCD-48EA-99EF-8C5541F38BB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
