@@ -44,6 +44,9 @@
     <Compile Include="..\NSaga\Guard.cs">
       <Link>Guard.cs</Link>
     </Compile>
+    <Compile Include="..\NSaga\Reflection.cs">
+      <Link>Reflection.cs</Link>
+    </Compile>
     <Compile Include="IConnectionFactory.cs" />
     <Compile Include="SqlServerWireup.cs" />
     <Compile Include="Models\PetaPoco.cs" />

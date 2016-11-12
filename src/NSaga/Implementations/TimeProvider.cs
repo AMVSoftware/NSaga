@@ -5,7 +5,7 @@ namespace NSaga
     /// <summary>
     /// Ambient context for providing current DateTime. 
     /// </summary>
-    public abstract class TimeProvider
+    internal abstract class TimeProvider
     {
         private static TimeProvider current;
 
@@ -39,8 +39,7 @@ namespace NSaga
     }
 
 
-
-    public class DefaultTimeProvider : TimeProvider
+    internal class DefaultTimeProvider : TimeProvider
     {
         public override DateTime UtcNow => DateTime.UtcNow;
 
@@ -49,7 +48,7 @@ namespace NSaga
 
 
 
-    public class StubTimeProvider : TimeProvider
+    internal class StubTimeProvider : TimeProvider
     {
         private DateTime currentTime;
 

@@ -10,7 +10,7 @@ namespace NSaga
     /// Because of all the generics and the way .Net works with Generics,
     /// we have to use a metric ton of reflection
     /// </summary>
-    public static class Reflection
+    internal static class Reflection
     {
         public static void Set(object instance, string propertyName, object value)
         {

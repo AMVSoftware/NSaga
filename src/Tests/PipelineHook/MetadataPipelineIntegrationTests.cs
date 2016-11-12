@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Tests.PipelineHook
 {
-    public class MetadataPipelineIntegrationTests
+    public class MetadataPipelineIntegrationTests : IDisposable
     {
         private readonly DateTime initialisationTime;
         private readonly SagaMetadata sagaMetadata;
@@ -76,6 +76,11 @@ namespace Tests.PipelineHook
             var receivedMessage = sagaMetadata.ReceivedMessages.First();
 
             receivedMessage.SagaMessage.CorrelationId.Should().Be(correlationId);
+        }
+
+        public void Dispose()
+        {
+            TimeProvider.ResetToDefault();
         }
     }
 }
