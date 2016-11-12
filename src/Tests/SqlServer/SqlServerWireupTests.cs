@@ -81,7 +81,7 @@ namespace Tests.SqlServer
                                  .UseSqlServerConnectionStringName("TestingConnectionString")
                                  .ResolveMediator();
             // Act
-            var repository = Reflection.GetPrivate(mediator, "sagaRepository");
+            var repository = NSagaReflection.GetPrivate(mediator, "sagaRepository");
 
             // Assert
             repository.Should().BeOfType<SqlSagaRepository>();
@@ -89,6 +89,7 @@ namespace Tests.SqlServer
 
         public void Dispose()
         {
+            TinyIoCContainer.Current.Dispose();
             DatabaseHelpers.CleanUpData(database);
         }
     }

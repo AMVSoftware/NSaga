@@ -8,7 +8,7 @@ namespace NSaga
         {
             this.Message = message;
             this.AccessibleSaga = saga;
-            SagaData = Reflection.Get(saga, "SagaData");
+            SagaData = NSagaReflection.Get(saga, "SagaData");
             OperationResult = operationResult;
         }
 

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Tests.PipelineHook
 {
-    public class MetadataPipelineHookConsumingTests
+    public class MetadataPipelineHookConsumingTests : IDisposable
     {
         private readonly MetadataPipelineHook sut;
         private readonly MySaga saga;
@@ -101,6 +101,11 @@ namespace Tests.PipelineHook
 
             var sagaMessage = (MySagaConsumingMessage)receivedMessage.SagaMessage;
             sagaMessage.SomeRandomValue.Should().Be(consumingMessage.SomeRandomValue);
+        }
+
+        public void Dispose()
+        {
+            TimeProvider.ResetToDefault();
         }
     }
 }

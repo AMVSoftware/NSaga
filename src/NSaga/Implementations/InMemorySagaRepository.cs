@@ -36,14 +36,14 @@ namespace NSaga
                 headers = messageSerialiser.Deserialise<Dictionary<String, String>>(headersSerialised);
             }
 
-            var sagaDataType = Reflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
+            var sagaDataType = NSagaReflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
 
             var dataObject = messageSerialiser.Deserialise(dataSerialised, sagaDataType);
 
             var saga = sagaFactory.ResolveSaga<TSaga>();
-            Reflection.Set(saga, "SagaData", dataObject);
-            Reflection.Set(saga, "CorrelationId", correlationId);
-            Reflection.Set(saga, "Headers", headers);
+            NSagaReflection.Set(saga, "SagaData", dataObject);
+            NSagaReflection.Set(saga, "CorrelationId", correlationId);
+            NSagaReflection.Set(saga, "Headers", headers);
 
             return saga;
         }
@@ -51,9 +51,9 @@ namespace NSaga
 
         public void Save<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
-            var sagaData = Reflection.Get(saga, "SagaData");
-            var correlationId = (Guid)Reflection.Get(saga, "CorrelationId");
-            var headers = (Dictionary<String, String>) Reflection.Get(saga, "Headers");
+            var sagaData = NSagaReflection.Get(saga, "SagaData");
+            var correlationId = (Guid)NSagaReflection.Get(saga, "CorrelationId");
+            var headers = (Dictionary<String, String>) NSagaReflection.Get(saga, "Headers");
 
             var serialisedData = messageSerialiser.Serialise(sagaData);
             var serialisedHeaders = messageSerialiser.Serialise(headers);
@@ -65,7 +65,7 @@ namespace NSaga
 
         public void Complete<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
-            var correlationId = (Guid)Reflection.Get(saga, "CorrelationId");
+            var correlationId = (Guid)NSagaReflection.Get(saga, "CorrelationId");
 
             Complete(correlationId);
         }

@@ -26,7 +26,7 @@ namespace Benchmarking
             }
 
             var saga = sagaFactory.ResolveSaga<TSaga>();
-            Reflection.Set(saga, "CorrelationId", correlationId);
+            NSagaReflection.Set(saga, "CorrelationId", correlationId);
 
             return saga;
         }

@@ -5,7 +5,7 @@ using PetaPoco;
 
 namespace Tests.SqlServer
 {
-    public static class DatabaseHelpers
+    internal static class DatabaseHelpers
     {
         public static SagaData GetSagaData(Database database, Guid correlationId)
         {

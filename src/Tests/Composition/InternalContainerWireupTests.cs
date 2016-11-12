@@ -41,8 +41,8 @@ namespace Tests.Composition
             var mediator = Wireup.UseInternalContainer()
                                  .AddPiplineHook<NullPipelineHook>()
                                  .ResolveMediator();
-            var composite = Reflection.GetPrivate(mediator, "pipelineHook");
-            var hooks = (List<IPipelineHook>)Reflection.GetPrivate(composite, "hooks");
+            var composite = NSagaReflection.GetPrivate(mediator, "pipelineHook");
+            var hooks = (List<IPipelineHook>)NSagaReflection.GetPrivate(composite, "hooks");
 
             // Assert
             hooks.Should().HaveCount(2);
@@ -95,7 +95,7 @@ namespace Tests.Composition
 
         private static void ValidatePrivateProperty(ISagaMediator sagaMediator, string propertyName, Type expectedType)
         {
-            var propertyValue = Reflection.GetPrivate(sagaMediator, propertyName);
+            var propertyValue = NSagaReflection.GetPrivate(sagaMediator, propertyName);
 
             propertyValue.Should().BeOfType(expectedType);
         }

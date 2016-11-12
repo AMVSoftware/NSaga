@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 
 namespace NSaga
@@ -32,7 +31,7 @@ namespace NSaga
             var sagaType = resolvedSaga.GetType();
 
             // try to find sagas that already exist
-            var existingSaga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, initiatingMessage.CorrelationId);
+            var existingSaga = NSagaReflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, initiatingMessage.CorrelationId);
             if (existingSaga != null)
             {
                 throw new ArgumentException($"Trying to initiate the same saga twice. {initiatingMessage.GetType().Name} is Initiating Message, but saga of type {sagaType.Name} with CorrelationId {initiatingMessage.CorrelationId} already exists");
@@ -40,26 +39,26 @@ namespace NSaga
 
             // now create an instance of saga and persist the data
             var saga = sagaFactory.ResolveSaga(sagaType);
-            Reflection.Set(saga, "CorrelationId", initiatingMessage.CorrelationId);
+            NSagaReflection.Set(saga, "CorrelationId", initiatingMessage.CorrelationId);
 
             // if SagaData is null - create an instance of the object and assign to saga
-            var sagaData = Reflection.Get(saga, "SagaData");
+            var sagaData = NSagaReflection.Get(saga, "SagaData");
             if (sagaData == null)
             {
-                var sagaDataType = Reflection.GetInterfaceGenericType(saga, typeof(ISaga<>));
+                var sagaDataType = NSagaReflection.GetInterfaceGenericType(saga, typeof(ISaga<>));
                 var newSagaData = Activator.CreateInstance(sagaDataType);
-                Reflection.Set(saga, "SagaData", newSagaData);
+                NSagaReflection.Set(saga, "SagaData", newSagaData);
             }
 
-            var sagaHeaders = Reflection.Get(saga, "Headers");
+            var sagaHeaders = NSagaReflection.Get(saga, "Headers");
             if (sagaHeaders == null)
             {
-                Reflection.Set(saga, "Headers", new Dictionary<String, String>());
+                NSagaReflection.Set(saga, "Headers", new Dictionary<String, String>());
             }
 
             pipelineHook.BeforeInitialisation(new PipelineContext(initiatingMessage, (IAccessibleSaga)saga));
 
-            var errors = (OperationResult)Reflection.InvokeMethod(saga, "Initiate", initiatingMessage);
+            var errors = (OperationResult)NSagaReflection.InvokeMethod(saga, "Initiate", initiatingMessage);
 
             pipelineHook.AfterInitialisation(new PipelineContext(initiatingMessage, (IAccessibleSaga)saga, errors));
 
@@ -79,7 +78,7 @@ namespace NSaga
             var resolvedSaga = sagaFactory.ResolveSagaConsumedBy(sagaMessage);
             var sagaType = resolvedSaga.GetType();
 
-            var saga = Reflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, sagaMessage.CorrelationId);
+            var saga = NSagaReflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, sagaMessage.CorrelationId);
             if (saga == null)
             {
                 throw new ArgumentException($"Saga with this CorrelationId does not exist. Please initiate a saga with IInitiatingMessage.");
@@ -87,7 +86,7 @@ namespace NSaga
 
             pipelineHook.BeforeConsuming(new PipelineContext(sagaMessage, (IAccessibleSaga)saga));
 
-            var errors = (OperationResult)Reflection.InvokeMethod(saga, "Consume", sagaMessage);
+            var errors = (OperationResult)NSagaReflection.InvokeMethod(saga, "Consume", sagaMessage);
 
             pipelineHook.AfterConsuming(new PipelineContext(sagaMessage, (IAccessibleSaga)saga, errors));
 

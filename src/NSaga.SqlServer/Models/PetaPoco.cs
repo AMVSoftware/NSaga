@@ -37,7 +37,7 @@ namespace PetaPoco
     /// <summary>
     ///     The main PetaPoco Database class.  You can either use this class directly, or derive from it.
     /// </summary>
-    public class Database : IDatabase
+    internal class Database : IDatabase
     {
         #region IDisposable
 
@@ -2538,7 +2538,7 @@ namespace PetaPoco
     /// <summary>
     ///     A helper class which enables fluent configuration.
     /// </summary>
-    public class DatabaseConfiguration : IDatabaseBuildConfiguration, IBuildConfigurationSettings, IHideObjectMethods
+    internal class DatabaseConfiguration : IDatabaseBuildConfiguration, IBuildConfigurationSettings, IHideObjectMethods
     {
         private readonly IDictionary<string, object> _settings = new Dictionary<string, object>();
 
@@ -2572,7 +2572,7 @@ namespace PetaPoco
         ///     Starts a new PetaPoco build configuration.
         /// </summary>
         /// <returns>An instance of <see cref="IDatabaseBuildConfiguration" /> to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration Build()
+        internal static IDatabaseBuildConfiguration Build()
         {
             return new DatabaseConfiguration();
         }
@@ -2582,7 +2582,7 @@ namespace PetaPoco
     /// <summary>
     ///     A static helper class where extensions for <see cref="IDatabaseBuildConfiguration" /> are placed.
     /// </summary>
-    public static class DatabaseConfigurationExtensions
+    internal static class DatabaseConfigurationExtensions
     {
         internal const string CommandTimeout = "CommandTimeout";
 
@@ -2612,7 +2612,7 @@ namespace PetaPoco
         /// <param name="seconds">The timeout in seconds.</param>
         /// <exception cref="ArgumentException">Thrown when seconds is less than 1.</exception>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingCommandTimeout(this IDatabaseBuildConfiguration source, int seconds)
+        internal static IDatabaseBuildConfiguration UsingCommandTimeout(this IDatabaseBuildConfiguration source, int seconds)
         {
             if (seconds < 1)
                 throw new ArgumentException("Timeout value must be greater than zero.");
@@ -2625,7 +2625,7 @@ namespace PetaPoco
         /// </summary>
         /// <param name="source">The configuration source.</param>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration WithNamedParams(this IDatabaseBuildConfiguration source)
+        internal static IDatabaseBuildConfiguration WithNamedParams(this IDatabaseBuildConfiguration source)
         {
             source.SetSetting(EnableNamedParams, true);
             return source;
@@ -2636,7 +2636,7 @@ namespace PetaPoco
         /// </summary>
         /// <param name="source">The configuration source.</param>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration WithoutNamedParams(this IDatabaseBuildConfiguration source)
+        internal static IDatabaseBuildConfiguration WithoutNamedParams(this IDatabaseBuildConfiguration source)
         {
             source.SetSetting(EnableNamedParams, false);
             return source;
@@ -2649,7 +2649,7 @@ namespace PetaPoco
         /// <param name="provider">The provider to use.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="provider" /> is null.</exception>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingProvider<T>(this IDatabaseBuildConfiguration source, T provider)
+        internal static IDatabaseBuildConfiguration UsingProvider<T>(this IDatabaseBuildConfiguration source, T provider)
             where T : class, IProvider
         {
             if (provider == null)
@@ -2667,7 +2667,7 @@ namespace PetaPoco
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="provider" /> is null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="configure" /> is null.</exception>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingProvider<T>(this IDatabaseBuildConfiguration source, T provider, Action<T> configure)
+        internal static IDatabaseBuildConfiguration UsingProvider<T>(this IDatabaseBuildConfiguration source, T provider, Action<T> configure)
             where T : class, IProvider
         {
             if (provider == null)
@@ -2684,7 +2684,7 @@ namespace PetaPoco
         /// <param name="source">The configuration source.</param>
         /// <typeparam name="T">The provider type.</typeparam>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingProvider<T>(this IDatabaseBuildConfiguration source)
+        internal static IDatabaseBuildConfiguration UsingProvider<T>(this IDatabaseBuildConfiguration source)
             where T : class, IProvider, new()
         {
             source.SetSetting(Provider, new T());
@@ -2699,7 +2699,7 @@ namespace PetaPoco
         /// <typeparam name="T">The provider type.</typeparam>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="configure" /> is null.</exception>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingProvider<T>(this IDatabaseBuildConfiguration source, Action<T> configure)
+        internal static IDatabaseBuildConfiguration UsingProvider<T>(this IDatabaseBuildConfiguration source, Action<T> configure)
             where T : class, IProvider, new()
         {
             if (configure == null)
@@ -2715,7 +2715,7 @@ namespace PetaPoco
         /// </summary>
         /// <param name="source">The configuration source.</param>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration WithAutoSelect(this IDatabaseBuildConfiguration source)
+        internal static IDatabaseBuildConfiguration WithAutoSelect(this IDatabaseBuildConfiguration source)
         {
             source.SetSetting("EnableAutoSelect", true);
             return source;
@@ -2726,7 +2726,7 @@ namespace PetaPoco
         /// </summary>
         /// <param name="source">The configuration source.</param>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration WithoutAutoSelect(this IDatabaseBuildConfiguration source)
+        internal static IDatabaseBuildConfiguration WithoutAutoSelect(this IDatabaseBuildConfiguration source)
         {
             source.SetSetting("EnableAutoSelect", false);
             return source;
@@ -2739,7 +2739,7 @@ namespace PetaPoco
         /// <param name="connectionString">The connection string.</param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="connectionString" /> is null or empty.</exception>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingConnectionString(this IDatabaseBuildConfiguration source, string connectionString)
+        internal static IDatabaseBuildConfiguration UsingConnectionString(this IDatabaseBuildConfiguration source, string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException("Argument is null or empty", "connectionString");
@@ -2754,7 +2754,7 @@ namespace PetaPoco
         /// <param name="connectionStringName">The connection string name.</param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="connectionStringName" /> is null or empty.</exception>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingConnectionStringName(this IDatabaseBuildConfiguration source, string connectionStringName)
+        internal static IDatabaseBuildConfiguration UsingConnectionStringName(this IDatabaseBuildConfiguration source, string connectionStringName)
         {
             if (string.IsNullOrEmpty(connectionStringName))
                 throw new ArgumentException("Argument is null or empty", "connectionStringName");
@@ -2769,7 +2769,7 @@ namespace PetaPoco
         /// <param name="mapper">The mapper to use as the default.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="mapper" /> is null.</exception>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingDefaultMapper<T>(this IDatabaseBuildConfiguration source, T mapper)
+        internal static IDatabaseBuildConfiguration UsingDefaultMapper<T>(this IDatabaseBuildConfiguration source, T mapper)
             where T : class, IMapper
         {
             if (mapper == null)
@@ -2787,7 +2787,7 @@ namespace PetaPoco
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="mapper" /> is null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="configure" /> is null.</exception>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingDefaultMapper<T>(this IDatabaseBuildConfiguration source, T mapper, Action<T> configure)
+        internal static IDatabaseBuildConfiguration UsingDefaultMapper<T>(this IDatabaseBuildConfiguration source, T mapper, Action<T> configure)
             where T : class, IMapper
         {
             if (mapper == null)
@@ -2805,7 +2805,7 @@ namespace PetaPoco
         /// <param name="source">The configuration source.</param>
         /// <typeparam name="T">The mapper type.</typeparam>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingDefaultMapper<T>(this IDatabaseBuildConfiguration source)
+        internal static IDatabaseBuildConfiguration UsingDefaultMapper<T>(this IDatabaseBuildConfiguration source)
             where T : class, IMapper, new()
         {
             source.SetSetting(DefaultMapper, new T());
@@ -2820,7 +2820,7 @@ namespace PetaPoco
         /// <typeparam name="T">The mapper type.</typeparam>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="configure" /> is null.</exception>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingDefaultMapper<T>(this IDatabaseBuildConfiguration source, Action<T> configure)
+        internal static IDatabaseBuildConfiguration UsingDefaultMapper<T>(this IDatabaseBuildConfiguration source, Action<T> configure)
             where T : class, IMapper, new()
         {
             if (configure == null)
@@ -2838,7 +2838,7 @@ namespace PetaPoco
         /// <param name="source">The configuration source.</param>
         /// <param name="isolationLevel"></param>
         /// <returns>The configuration source to form a fluent interface.</returns>
-        public static IDatabaseBuildConfiguration UsingIsolationLevel(this IDatabaseBuildConfiguration source, IsolationLevel isolationLevel)
+        internal static IDatabaseBuildConfiguration UsingIsolationLevel(this IDatabaseBuildConfiguration source, IsolationLevel isolationLevel)
         {
             source.SetSetting(IsolationLevel, isolationLevel);
             return source;
@@ -2849,14 +2849,14 @@ namespace PetaPoco
         /// </summary>
         /// <param name="source">The configuration source used to create and configure an instance of PetaPoco.</param>
         /// <returns>An instance of PetaPoco.</returns>
-        public static IDatabase Create(this IDatabaseBuildConfiguration source)
+        internal static IDatabase Create(this IDatabaseBuildConfiguration source)
         {
             return new Database(source);
         }
     }
 
 
-    public interface IAlterPoco
+    internal interface IAlterPoco
     {
         /// <summary>
         ///     Performs an SQL Insert.
@@ -3089,7 +3089,7 @@ namespace PetaPoco
     /// <summary>
     ///     Represents the build configuration settings contract.
     /// </summary>
-    public interface IBuildConfigurationSettings
+    internal interface IBuildConfigurationSettings
     {
         /// <summary>
         ///     Sets the setting against the specified key.
@@ -3112,7 +3112,7 @@ namespace PetaPoco
     /// <summary>
     ///     Specifies the database contract.
     /// </summary>
-    public interface IDatabase : IDisposable, IQuery, IAlterPoco, IExecute, ITransactionAccessor
+    internal interface IDatabase : IDisposable, IQuery, IAlterPoco, IExecute, ITransactionAccessor
     {
         /// <summary>
         ///     Gets the default mapper. (Default is <see cref="ConventionMapper" />)
@@ -3260,13 +3260,13 @@ namespace PetaPoco
     /// <summary>
     ///     A helper interface which enables fluent configuration extension methods.
     /// </summary>
-    public interface IDatabaseBuildConfiguration
+    internal interface IDatabaseBuildConfiguration
     {
 
     }
 
 
-    public interface IExecute
+    internal interface IExecute
     {
         /// <summary>
         ///     Executes a non-query command
@@ -3311,7 +3311,7 @@ namespace PetaPoco
     ///     Source: https://github.com/TrevorPilley/MicroLite/blob/develop/MicroLite/IHideObjectMethods.cs
     /// </remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IHideObjectMethods
+    internal interface IHideObjectMethods
     {
         /// <summary>
         ///     Determines whether the specified <see cref="System.Object" /> is equal to this instance.
@@ -3354,7 +3354,7 @@ namespace PetaPoco
     }
 
 
-    public interface IQuery
+    internal interface IQuery
     {
         /// <summary>
         ///     Runs an SQL query, returning the results as an IEnumerable collection
@@ -3944,7 +3944,7 @@ namespace PetaPoco
     /// <summary>
     ///     Represents a contract which exposes the current <see cref="IDbTransaction" /> instance.
     /// </summary>
-    public interface ITransactionAccessor
+    internal interface ITransactionAccessor
     {
         /// <summary>
         ///     Gets the current transaction instance.
@@ -3991,7 +3991,7 @@ namespace PetaPoco
 
 	 */
 
-    public class OracleProvider : DbProviderFactory
+    internal class OracleProvider : DbProviderFactory
     {
         private const string _assemblyName = "Oracle.DataAccess";
         private const string _connectionTypeName = "Oracle.DataAccess.Client.OracleConnection";
@@ -4000,7 +4000,7 @@ namespace PetaPoco
         private static Type _commandType;
 
         // Required for DbProviderFactories.GetFactory() to work.
-        public static OracleProvider Instance = new OracleProvider();
+        internal static OracleProvider Instance = new OracleProvider();
 
         public OracleProvider()
         {
@@ -4025,7 +4025,7 @@ namespace PetaPoco
             return command;
         }
 
-        public static Type TypeFromAssembly(string typeName, string assemblyName)
+        internal static Type TypeFromAssembly(string typeName, string assemblyName)
         {
             try
             {
@@ -4073,7 +4073,7 @@ namespace PetaPoco
     ///     supply the DB column name.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ColumnAttribute : Attribute
+    internal class ColumnAttribute : Attribute
     {
         /// <summary>
         ///     The SQL name of the column
@@ -4126,7 +4126,7 @@ namespace PetaPoco
     ///     <seealso cref="ColumnAttribute" /> or <seealso cref="ResultColumnAttribute" />.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class ExplicitColumnsAttribute : Attribute
+    internal class ExplicitColumnsAttribute : Attribute
     {
     }
 
@@ -4136,7 +4136,7 @@ namespace PetaPoco
     ///     ignores the column.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class IgnoreAttribute : Attribute
+    internal class IgnoreAttribute : Attribute
     {
     }
 
@@ -4146,7 +4146,7 @@ namespace PetaPoco
     ///     the column is auto incrementing and the optional sequence name for Oracle sequence columns.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class PrimaryKeyAttribute : Attribute
+    internal class PrimaryKeyAttribute : Attribute
     {
         /// <summary>
         ///     The column name.
@@ -4189,7 +4189,7 @@ namespace PetaPoco
     ///     column that is only populated in queries and is not used for updates or inserts operations.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ResultColumnAttribute : ColumnAttribute
+    internal class ResultColumnAttribute : ColumnAttribute
     {
         /// <summary>
         ///     Constructs a new instance of the <seealso cref="ResultColumnAttribute" />.
@@ -4213,7 +4213,7 @@ namespace PetaPoco
     ///     Represents an attribute, which when applied to a Poco class, specifies the the DB table name which it maps to
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class TableNameAttribute : Attribute
+    internal class TableNameAttribute : Attribute
     {
         /// <summary>
         ///     The table nane of the database that this entity maps to.
@@ -4237,7 +4237,7 @@ namespace PetaPoco
     /// <summary>
     ///     Wrap strings in an instance of this class to force use of DBType.AnsiString
     /// </summary>
-    public class AnsiString
+    internal class AnsiString
     {
         /// <summary>
         ///     The string value
@@ -4262,7 +4262,7 @@ namespace PetaPoco
     ///     Typically ColumnInfo is automatically populated from the attributes on a POCO object and it's properties. It can
     ///     however also be returned from the IMapper interface to provide your owning bindings between the DB and your POCOs.
     /// </remarks>
-    public class ColumnInfo
+    internal class ColumnInfo
     {
         /// <summary>
         ///     The SQL name of the column
@@ -4301,7 +4301,7 @@ namespace PetaPoco
         /// </summary>
         /// <param name="propertyInfo">The property whose column info is required</param>
         /// <returns>A ColumnInfo instance</returns>
-        public static ColumnInfo FromProperty(PropertyInfo propertyInfo)
+        internal static ColumnInfo FromProperty(PropertyInfo propertyInfo)
         {
             // Check if declaring poco has [Explicit] attribute
             var explicitColumns =
@@ -4352,7 +4352,7 @@ namespace PetaPoco
     ///     By default this mapper replaces <see cref="StandardMapper" /> without change, which means backwards compatibility
     ///     is kept.
     /// </remarks>
-    public class ConventionMapper : IMapper
+    internal class ConventionMapper : IMapper
     {
         /// <summary>
         ///     Gets or sets the get sequence name logic.
@@ -4551,7 +4551,7 @@ namespace PetaPoco
     /// <summary>
     ///     Base class for DatabaseType handlers - provides default/common handling for different database engines
     /// </summary>
-    public abstract class DatabaseProvider : IProvider
+    internal abstract class DatabaseProvider : IProvider
     {
         /// <summary>
         ///     Gets the DbProviderFactory for this database provider.
@@ -4828,7 +4828,7 @@ namespace PetaPoco
     }
 
 
-    public class GridReader : IGridReader
+    internal class GridReader : IGridReader
     {
         private IDataReader _reader;
         private IDbCommand _command;
@@ -5108,7 +5108,7 @@ namespace PetaPoco
     }
 
 
-    public interface IGridReader : IDisposable
+    internal interface IGridReader : IDisposable
     {
         /// <summary>
         /// Reads from a GridReader, returning the results as an IEnumerable collection
@@ -5187,7 +5187,7 @@ namespace PetaPoco
     ///     To use this functionality, instantiate a class that implements IMapper and then pass it to
     ///     PetaPoco through the static method Mappers.Register()
     /// </remarks>
-    public interface IMapper
+    internal interface IMapper
     {
         /// <summary>
         ///     Get information about the table associated with a POCO class
@@ -5235,7 +5235,7 @@ namespace PetaPoco
     /// <summary>
     ///     Represents a contract for a database type provider.
     /// </summary>
-    public interface IProvider
+    internal interface IProvider
     {
         /// <summary>
         ///     Gets the <seealso cref="IPagingHelper" /> this provider supplies.
@@ -5336,7 +5336,7 @@ namespace PetaPoco
     /// <remarks>
     ///     A PetaPoco helper to support transactions using the using syntax.
     /// </remarks>
-    public interface ITransaction : IDisposable, IHideObjectMethods
+    internal interface ITransaction : IDisposable, IHideObjectMethods
     {
         /// <summary>
         ///     Completes the transaction. Not calling complete will cause the transaction to rollback on dispose.
@@ -5348,7 +5348,7 @@ namespace PetaPoco
     /// <summary>
     ///     This static manages registation of IMapper instances with PetaPoco
     /// </summary>
-    public static class Mappers
+    internal static class Mappers
     {
         private static Dictionary<object, IMapper> _mappers = new Dictionary<object, IMapper>();
         private static ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
@@ -5358,7 +5358,7 @@ namespace PetaPoco
         /// </summary>
         /// <param name="assembly">The assembly whose types are to be managed by this mapper</param>
         /// <param name="mapper">The IMapper implementation</param>
-        public static void Register(Assembly assembly, IMapper mapper)
+        internal static void Register(Assembly assembly, IMapper mapper)
         {
             RegisterInternal(assembly, mapper);
         }
@@ -5368,7 +5368,7 @@ namespace PetaPoco
         /// </summary>
         /// <param name="type">The type to be managed by this mapper</param>
         /// <param name="mapper">The IMapper implementation</param>
-        public static void Register(Type type, IMapper mapper)
+        internal static void Register(Type type, IMapper mapper)
         {
             RegisterInternal(type, mapper);
         }
@@ -5377,7 +5377,7 @@ namespace PetaPoco
         ///     Remove all mappers for all types in a specific assembly
         /// </summary>
         /// <param name="assembly">The assembly whose mappers are to be revoked</param>
-        public static void Revoke(Assembly assembly)
+        internal static void Revoke(Assembly assembly)
         {
             RevokeInternal(assembly);
         }
@@ -5386,7 +5386,7 @@ namespace PetaPoco
         ///     Remove the mapper for a specific type
         /// </summary>
         /// <param name="type">The type whose mapper is to be removed</param>
-        public static void Revoke(Type type)
+        internal static void Revoke(Type type)
         {
             RevokeInternal(type);
         }
@@ -5395,7 +5395,7 @@ namespace PetaPoco
         ///     Revoke an instance of a mapper
         /// </summary>
         /// <param name="mapper">The IMapper to be revkoed</param>
-        public static void Revoke(IMapper mapper)
+        internal static void Revoke(IMapper mapper)
         {
             _lock.EnterWriteLock();
             try
@@ -5413,7 +5413,7 @@ namespace PetaPoco
         /// <summary>
         ///     Revokes all registered mappers.
         /// </summary>
-        public static void RevokeAll()
+        internal static void RevokeAll()
         {
             _lock.EnterWriteLock();
             try
@@ -5433,7 +5433,7 @@ namespace PetaPoco
         /// <param name="entityType">The entity type to get the mapper for.</param>
         /// <param name="defaultMapper">The default mapper to use when non is registered for the type.</param>
         /// <returns>The mapper for the given type.</returns>
-        public static IMapper GetMapper(Type entityType, IMapper defaultMapper)
+        internal static IMapper GetMapper(Type entityType, IMapper defaultMapper)
         {
             _lock.EnterReadLock();
             try
@@ -5506,7 +5506,7 @@ namespace PetaPoco
         }
 
         // Automagically guess the property relationships between various POCOs and create a delegate that will set them up
-        public static object GetAutoMapper(Type[] types)
+        internal static object GetAutoMapper(Type[] types)
         {
             // Build a key
             var key = new ArrayKey<Type>(types);
@@ -5622,7 +5622,7 @@ namespace PetaPoco
         }
 
         // Get (or create) the multi-poco factory for a query
-        public static Func<IDataReader, object, TRet> GetFactory<TRet>(Type[] types, string connectionString, string sql, IDataReader r, IMapper defaultMapper)
+        internal static Func<IDataReader, object, TRet> GetFactory<TRet>(Type[] types, string connectionString, string sql, IDataReader r, IMapper defaultMapper)
         {
             var key = Tuple.Create(typeof(TRet), new ArrayKey<Type>(types), connectionString, sql);
 
@@ -5636,7 +5636,7 @@ namespace PetaPoco
     ///     Holds the results of a paged request.
     /// </summary>
     /// <typeparam name="T">The type of Poco in the returned result set</typeparam>
-    public class Page<T>
+    internal class Page<T>
     {
         /// <summary>
         ///     The current page number contained in this page of result set
@@ -5670,7 +5670,7 @@ namespace PetaPoco
     }
 
 
-    public class PocoColumn
+    internal class PocoColumn
     {
         public string ColumnName;
         public bool ForceToUtc;
@@ -5700,7 +5700,7 @@ namespace PetaPoco
     }
 
 
-    public class PocoData
+    internal class PocoData
     {
         private static Cache<Type, PocoData> _pocoDatas = new Cache<Type, PocoData>();
         private static List<Func<object, object>> _converters = new List<Func<object, object>>();
@@ -5760,7 +5760,7 @@ namespace PetaPoco
             QueryColumns = (from c in Columns where !c.Value.ResultColumn select c.Key).ToArray();
         }
 
-        public static PocoData ForObject(object obj, string primaryKeyName, IMapper defaultMapper)
+        internal static PocoData ForObject(object obj, string primaryKeyName, IMapper defaultMapper)
         {
             var t = obj.GetType();
             if (t == typeof(System.Dynamic.ExpandoObject))
@@ -5781,7 +5781,7 @@ namespace PetaPoco
             return ForType(t, defaultMapper);
         }
 
-        public static PocoData ForType(Type type, IMapper defaultMapper)
+        internal static PocoData ForType(Type type, IMapper defaultMapper)
         {
             if (type == typeof(System.Dynamic.ExpandoObject))
                 throw new InvalidOperationException("Can't use dynamic types with this method");
@@ -6093,7 +6093,7 @@ namespace PetaPoco
     /// <summary>
     ///     A simple helper class for build SQL statements
     /// </summary>
-    public class Sql
+    internal class Sql
     {
         private object[] _args;
         private object[] _argsFinal;
@@ -6107,7 +6107,7 @@ namespace PetaPoco
         ///     for more elegantly readable fluent style construction of SQL Statements
         ///     eg: db.Query(Sql.Builder.Append(....))
         /// </summary>
-        public static Sql Builder
+        internal static Sql Builder
         {
             get { return new Sql(); }
         }
@@ -6329,7 +6329,7 @@ namespace PetaPoco
         /// <summary>
         ///     The SqlJoinClause is a simple helper class used in the construction of SQL JOIN statements with the SQL builder
         /// </summary>
-        public class SqlJoinClause
+        internal class SqlJoinClause
         {
             private readonly Sql _sql;
 
@@ -6355,7 +6355,7 @@ namespace PetaPoco
     /// <summary>
     ///     StandardMapper is the default implementation of IMapper used by PetaPoco
     /// </summary>
-    public class StandardMapper : IMapper
+    internal class StandardMapper : IMapper
     {
         /// <summary>
         ///     Get information about the table associated with a POCO class
@@ -6415,7 +6415,7 @@ namespace PetaPoco
     /// <summary>
     ///     Use by IMapper to override table bindings for an object
     /// </summary>
-    public class TableInfo
+    internal class TableInfo
     {
         /// <summary>
         ///     The database table name
@@ -6442,7 +6442,7 @@ namespace PetaPoco
         /// </summary>
         /// <param name="t">The POCO type</param>
         /// <returns>A TableInfo instance</returns>
-        public static TableInfo FromPoco(Type t)
+        internal static TableInfo FromPoco(Type t)
         {
             TableInfo ti = new TableInfo();
 
@@ -6484,7 +6484,7 @@ namespace PetaPoco
     /// <summary>
     ///     Transaction object helps maintain transaction depth counts
     /// </summary>
-    public class Transaction : ITransaction
+    internal class Transaction : ITransaction
     {
         private Database _db;
 
@@ -6512,7 +6512,7 @@ namespace PetaPoco
     ///     Author: Originally written (I believe) by Andrew Peters
     ///     Source: Scott Kirkland (https://github.com/srkirkland/Inflector)
     /// </summary>
-    public class EnglishInflector : IInflector
+    internal class EnglishInflector : IInflector
     {
         private static readonly List<Rule> Plurals = new List<Rule>();
 
@@ -6874,7 +6874,7 @@ namespace PetaPoco
     /// <summary>
     ///     Specifies the inflection contract.
     /// </summary>
-    public interface IInflector
+    internal interface IInflector
     {
         /// <summary>
         ///     Pluralises a word.
@@ -7045,7 +7045,7 @@ namespace PetaPoco
     /// <summary>
     ///     Static inflection helper
     /// </summary>
-    public static class Inflector
+    internal static class Inflector
     {
         private static IInflector _inflector;
 
@@ -7062,7 +7062,7 @@ namespace PetaPoco
         /// <returns>
         ///     The currently set <see cref="IInflector" /> instance.
         /// </returns>
-        public static IInflector Instance
+        internal static IInflector Instance
         {
             get { return _inflector; }
             set { _inflector = value ?? new EnglishInflector(); }
@@ -7075,7 +7075,7 @@ namespace PetaPoco
     }
 
 
-    public class FirebirdDbDatabaseProvider : DatabaseProvider
+    internal class FirebirdDbDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7107,7 +7107,7 @@ namespace PetaPoco
     }
 
 
-    public class MariaDbDatabaseProvider : DatabaseProvider
+    internal class MariaDbDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7135,7 +7135,7 @@ namespace PetaPoco
     }
 
 
-    public class MsAccessDbDatabaseProvider : DatabaseProvider
+    internal class MsAccessDbDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7156,7 +7156,7 @@ namespace PetaPoco
     }
 
 
-    public class MySqlDatabaseProvider : DatabaseProvider
+    internal class MySqlDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7183,7 +7183,7 @@ namespace PetaPoco
     }
 
 
-    public class OracleDatabaseProvider : DatabaseProvider
+    internal class OracleDatabaseProvider : DatabaseProvider
     {
         public override string GetParameterPrefix(string connectionString)
         {
@@ -7246,7 +7246,7 @@ namespace PetaPoco
     }
 
 
-    public class PostgreSQLDatabaseProvider : DatabaseProvider
+    internal class PostgreSQLDatabaseProvider : DatabaseProvider
     {
         public override bool HasNativeGuidSupport
         {
@@ -7293,7 +7293,7 @@ namespace PetaPoco
     }
 
 
-    public class SQLiteDatabaseProvider : DatabaseProvider
+    internal class SQLiteDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7329,7 +7329,7 @@ namespace PetaPoco
     }
 
 
-    public class SqlServerCEDatabaseProviders : DatabaseProvider
+    internal class SqlServerCEDatabaseProviders : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7353,7 +7353,7 @@ namespace PetaPoco
     }
 
 
-    public class SqlServerDatabaseProvider : DatabaseProvider
+    internal class SqlServerDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7455,7 +7455,7 @@ namespace PetaPoco
         private static Regex rxFrom = new Regex(@"\A\s*FROM\s",
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-        public static string AddSelectClause<T>(IProvider provider, string sql, IMapper defaultMapper)
+        internal static string AddSelectClause<T>(IProvider provider, string sql, IMapper defaultMapper)
         {
             if (sql.StartsWith(";"))
                 return sql.Substring(1);
@@ -7545,7 +7545,7 @@ namespace PetaPoco
     {
         private static Cache<Type, Dictionary<string, object>> _types = new Cache<Type, Dictionary<string, object>>();
 
-        public static object EnumFromString(Type enumType, string value)
+        internal static object EnumFromString(Type enumType, string value)
         {
             Dictionary<string, object> map = _types.Get(enumType, () =>
             {
@@ -7569,7 +7569,7 @@ namespace PetaPoco
     /// <summary>
     ///     Represents the contract for a paging helper.
     /// </summary>
-    public interface IPagingHelper
+    internal interface IPagingHelper
     {
         /// <summary>
         ///     Splits the given <paramref name="sql" /> into <paramref name="parts" />;
@@ -7581,7 +7581,7 @@ namespace PetaPoco
     }
 
 
-    public class PagingHelper : IPagingHelper
+    internal class PagingHelper : IPagingHelper
     {
         public Regex RegexColumns = new Regex(@"\A\s*SELECT\s+((?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|.)*?)(?<!,\s+)\bFROM\b",
             RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
@@ -7594,7 +7594,7 @@ namespace PetaPoco
                 @"\bORDER\s+BY\s+(?!.*?(?:\)|\s+)AS\s)(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\[\]`""\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\[\]`""\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*",
                 RegexOptions.RightToLeft | RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        public static IPagingHelper Instance { get; private set; }
+        internal static IPagingHelper Instance { get; private set; }
 
         static PagingHelper()
         {
@@ -7646,7 +7646,7 @@ namespace PetaPoco
     {
         private static Regex rxParams = new Regex(@"(?<!@)@\w+", RegexOptions.Compiled);
         // Helper to handle named parameters from object properties
-        public static string ProcessParams(string sql, object[] args_src, List<object> args_dest)
+        internal static string ProcessParams(string sql, object[] args_src, List<object> args_dest)
         {
             return rxParams.Replace(sql, m =>
             {
@@ -7710,7 +7710,7 @@ namespace PetaPoco
 
     internal static class Singleton<T> where T : new()
     {
-        public static T Instance = new T();
+        internal static T Instance = new T();
     }
 
 

@@ -58,16 +58,16 @@ namespace NSaga.SqlServer
                 }
 
                 var sagaInstance = sagaFactory.ResolveSaga<TSaga>();
-                var sagaDataType = Reflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
+                var sagaDataType = NSagaReflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
                 var sagaData = messageSerialiser.Deserialise(persistedData.BlobData, sagaDataType);
 
                 var headersSql = Sql.Builder.Where("correlationId = @0", correlationId);
                 var headersPersisted = database.Query<SagaHeaders>(headersSql);
                 var headers = headersPersisted.ToDictionary(k => k.Key, v => v.Value);
 
-                Reflection.Set(sagaInstance, "CorrelationId", correlationId);
-                Reflection.Set(sagaInstance, "SagaData", sagaData);
-                Reflection.Set(sagaInstance, "Headers", headers);
+                NSagaReflection.Set(sagaInstance, "CorrelationId", correlationId);
+                NSagaReflection.Set(sagaInstance, "SagaData", sagaData);
+                NSagaReflection.Set(sagaInstance, "Headers", headers);
 
                 return sagaInstance;
             }
@@ -85,9 +85,9 @@ namespace NSaga.SqlServer
         {
             Guard.ArgumentIsNotNull(saga, nameof(saga));
 
-            var sagaData = Reflection.Get(saga, "SagaData");
-            var sagaHeaders = (Dictionary<String, String>)Reflection.Get(saga, "Headers");
-            var correlationId = (Guid)Reflection.Get(saga, "CorrelationId");
+            var sagaData = NSagaReflection.Get(saga, "SagaData");
+            var sagaHeaders = (Dictionary<String, String>)NSagaReflection.Get(saga, "Headers");
+            var correlationId = (Guid)NSagaReflection.Get(saga, "CorrelationId");
 
             var serialisedData = messageSerialiser.Serialise(sagaData);
 
@@ -146,7 +146,7 @@ namespace NSaga.SqlServer
         {
             Guard.ArgumentIsNotNull(saga, nameof(saga));
 
-            var correlationId = (Guid)Reflection.Get(saga, "CorrelationId");
+            var correlationId = (Guid)NSagaReflection.Get(saga, "CorrelationId");
             Complete(correlationId);
         }
 

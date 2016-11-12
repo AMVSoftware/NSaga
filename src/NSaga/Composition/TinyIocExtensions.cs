@@ -13,7 +13,7 @@ namespace NSaga
 
         internal static void RegisterSagas(this TinyIoCContainer container, IEnumerable<Assembly> assembliesToScan)
         {
-            var sagaTypePairs = SagaReflection.GetAllSagasInterfaces(assembliesToScan);
+            var sagaTypePairs = NSagaReflection.GetAllSagasInterfaces(assembliesToScan);
             foreach (var sagaTypePair in sagaTypePairs)
             {
                 container.Register(sagaTypePair.Value, sagaTypePair.Key);

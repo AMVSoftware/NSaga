@@ -76,8 +76,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\NSaga\Reflection.cs">
-      <Link>Reflection.cs</Link>
+    <Compile Include="..\NSaga\NSagaReflection.cs">
+      <Link>NSagaReflection.cs</Link>
     </Compile>
     <Compile Include="FastSagaRepository.cs" />
     <Compile Include="Program.cs" />
