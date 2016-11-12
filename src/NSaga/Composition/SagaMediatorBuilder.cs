@@ -50,7 +50,7 @@ namespace NSaga
             assembliesToScan.Add(assembly);
             return this;
         }
-        
+
         public SagaMediatorBuilder AddAssembliesToScan(IEnumerable<Assembly> assemblies)
         {
             assembliesToScan.AddRange(assemblies);
@@ -102,7 +102,7 @@ namespace NSaga
             return this;
         }
 
-        
+
         public SagaMediatorBuilder AddPiplineHook<TPipelineHook>() where TPipelineHook : IPipelineHook
         {
             pipelineHooks.Add(typeof(TPipelineHook));
@@ -123,6 +123,20 @@ namespace NSaga
             return this;
         }
 
+        public SagaMediatorBuilder Register(Type @interface, Type implementation)
+        {
+            Container.Register(@interface, implementation);
+
+            return this;
+        }
+
+
+        public SagaMediatorBuilder Register(Type registerType, object instance)
+        {
+            Container.Register(registerType, instance);
+
+            return this;
+        }
 
         public SagaMediatorBuilder RegisterComponents()
         {

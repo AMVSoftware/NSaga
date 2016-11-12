@@ -11,7 +11,7 @@ namespace Samples
 
         public void Run()
         {
-            var builder = Wireup.UseInternalContainer().UseSqlServerStorage("NSagaDatabase");
+            var builder = Wireup.UseInternalContainer().UseSqlServerConnectionStringName("NSagaDatabase");
 
             sagaMediator = builder.ResolveMediator();
 

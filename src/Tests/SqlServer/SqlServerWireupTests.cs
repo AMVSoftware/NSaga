@@ -28,7 +28,7 @@ namespace Tests.SqlServer
         {
             //Arrange
             var mediatorBuilder = Wireup.UseInternalContainer(container)
-                .UseSqlServerStorage("TestingConnectionString");
+                .UseSqlServerConnectionStringName("TestingConnectionString");
 
             // Act
             var repository = mediatorBuilder.Container.Resolve<ISagaRepository>();
@@ -43,7 +43,7 @@ namespace Tests.SqlServer
         {
             //Arrange
             var mediator = Wireup.UseInternalContainer(container)
-                                 .UseSqlServerStorage("TestingConnectionString")
+                                 .UseSqlServerConnectionStringName("TestingConnectionString")
                                  .ResolveMediator();
             var correlationId = Guid.NewGuid();
 
@@ -62,7 +62,7 @@ namespace Tests.SqlServer
         {
             //Arrange
             var mediator = Wireup.UseInternalContainer(container)
-                                 .UseSqlServerStorage(@"Server=(localdb)\v12.0;Database=NSaga-Testing", "System.Data.SqlClient")
+                                 .UseSqlServerConnectionString(@"Server=(localdb)\v12.0;Database=NSaga-Testing")
                                  .ResolveMediator();
             var correlationId = Guid.NewGuid();
 
@@ -81,7 +81,7 @@ namespace Tests.SqlServer
         {
             //Arrange
             var mediator = Wireup.UseInternalContainer(container)
-                                 .UseSqlServerStorage("TestingConnectionString")
+                                 .UseSqlServerConnectionStringName("TestingConnectionString")
                                  .ResolveMediator();
             // Act
             var repository = Reflection.GetPrivate(mediator, "sagaRepository");

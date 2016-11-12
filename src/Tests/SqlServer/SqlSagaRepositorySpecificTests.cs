@@ -20,7 +20,7 @@ namespace Tests.SqlServer
 
         public SqlSagaRepositorySpecificTests()
         {
-            sut = new SqlSagaRepository("TestingConnectionString", new DumbSagaFactory(), new JsonNetSerialiser());
+            sut = new SqlSagaRepository(ConnectionFactory.FromConnectionStringName("TestingConnectionString"), new DumbSagaFactory(), new JsonNetSerialiser());
             database = new Database("TestingConnectionString");
         }
 
