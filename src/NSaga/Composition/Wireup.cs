@@ -4,14 +4,7 @@
     {
         public static SagaMediatorBuilder UseInternalContainer()
         {
-            var builder = new SagaMediatorBuilder(TinyIoCContainer.Current);
-
-            return builder;
-        }
-
-        public static SagaMediatorBuilder UseInternalContainer(TinyIoCContainer container)
-        {
-            var builder = new SagaMediatorBuilder(container);
+            var builder = new SagaMediatorBuilder();
 
             return builder;
         }

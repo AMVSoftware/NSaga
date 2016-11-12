@@ -1,10 +1,9 @@
 ﻿using System;
-using NSaga;
 
 
 namespace NSaga
 {
-    public class TinyIocSagaFactory : ISagaFactory
+    internal class TinyIocSagaFactory : ISagaFactory
     {
         private readonly TinyIoCContainer container;
 

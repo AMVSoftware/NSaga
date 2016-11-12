@@ -8,22 +8,15 @@ using Xunit;
 
 namespace Tests.Composition
 {
-    public class InternalContainerWireupTests : IDisposable
+    public class InternalContainerWireupTests
     {
-        private readonly TinyIoCContainer container;
-
-        public InternalContainerWireupTests()
-        {
-            container = new TinyIoCContainer();
-        }
-
         [Theory]
         [InlineData("sagaRepository", typeof(InMemorySagaRepository))]
         [InlineData("sagaFactory", typeof(TinyIocSagaFactory))]
         [InlineData("pipelineHook", typeof(CompositePipelineHook))]
         public void Default_Provides_InMemoryRepository(string propertyName, Type expectedType)
         {
-            var sagaMediator = Wireup.UseInternalContainer(container).ResolveMediator();
+            var sagaMediator = Wireup.UseInternalContainer().ResolveMediator();
 
             ValidatePrivateProperty(sagaMediator, propertyName, expectedType);
         }
@@ -31,7 +24,7 @@ namespace Tests.Composition
         [Fact]
         public void NullObjects_Can_Be_Resolved()
         {
-            var mediator = Wireup.UseInternalContainer(container)
+            var mediator = Wireup.UseInternalContainer()
                                  .UseSagaFactory<NullSagaFactory>()
                                  .UseRepository<NullSagaRepository>()
                                  .ResolveMediator();
@@ -45,7 +38,7 @@ namespace Tests.Composition
         public void AddingPipeline_Adds_ToCollection()
         {
             //Arrange
-            var mediator = Wireup.UseInternalContainer(container)
+            var mediator = Wireup.UseInternalContainer()
                                  .AddPiplineHook<NullPipelineHook>()
                                  .ResolveMediator();
             var composite = Reflection.GetPrivate(mediator, "pipelineHook");
@@ -62,7 +55,7 @@ namespace Tests.Composition
         {
             //Arrange
             var correlationId = Guid.NewGuid();
-            var sagaMediator = Wireup.UseInternalContainer(container).ResolveMediator();
+            var sagaMediator = Wireup.UseInternalContainer().ResolveMediator();
 
             // Act
             var result = sagaMediator.Consume(new MySagaInitiatingMessage(correlationId));
@@ -75,8 +68,8 @@ namespace Tests.Composition
         [Fact]
         public void SagaFactory_CanResolve_ByInitiatedInterface()
         {
-            var builder = Wireup.UseInternalContainer(container).RegisterComponents();
-            var sagaFactory = builder.Container.Resolve<ISagaFactory>();
+            var builder = Wireup.UseInternalContainer().RegisterComponents();
+            var sagaFactory = builder.Resolve<ISagaFactory>();
 
             // Act
             var result = sagaFactory.ResolveSagaInititatedBy(new MySagaInitiatingMessage(Guid.NewGuid()));
@@ -90,8 +83,8 @@ namespace Tests.Composition
         [Fact]
         public void SagaFactory_CanResolve_ByConsumedInterface()
         {
-            var builder = Wireup.UseInternalContainer(container).RegisterComponents();
-            var sagaFactory = builder.Container.Resolve<ISagaFactory>();
+            var builder = Wireup.UseInternalContainer().RegisterComponents();
+            var sagaFactory = builder.Resolve<ISagaFactory>();
 
             // Act
             var result = sagaFactory.ResolveSagaConsumedBy(new MySagaConsumingMessage(Guid.NewGuid()));
@@ -105,12 +98,6 @@ namespace Tests.Composition
             var propertyValue = Reflection.GetPrivate(sagaMediator, propertyName);
 
             propertyValue.Should().BeOfType(expectedType);
-        }
-
-        public void Dispose()
-        {
-            TinyIoCContainer.Current.Dispose();
-            container.Dispose();
         }
     }
 }

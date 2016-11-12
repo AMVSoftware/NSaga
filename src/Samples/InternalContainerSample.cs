@@ -15,7 +15,7 @@ namespace Samples
 
             sagaMediator = builder.ResolveMediator();
 
-            sagaRepository = builder.Container.Resolve<ISagaRepository>();
+            sagaRepository = builder.ResolveRepository();
 
             var correlationId = Guid.NewGuid();
 

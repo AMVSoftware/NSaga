@@ -10,11 +10,11 @@ namespace NSaga
         private readonly List<Type> pipelineHooks;
         private List<Assembly> assembliesToScan;
         private bool areComponentsRegistered;
-        public TinyIoCContainer Container { get; private set; }
+        private TinyIoCContainer Container { get; set; }
 
-        public SagaMediatorBuilder(TinyIoCContainer container)
+        public SagaMediatorBuilder()
         {
-            Container = container;
+            Container = TinyIoCContainer.Current;
             pipelineHooks = new List<Type>();
             this.assembliesToScan = AppDomain.CurrentDomain.GetAssemblies().ToList();
             areComponentsRegistered = false;
@@ -135,6 +135,7 @@ namespace NSaga
             return this;
         }
 
+
         public SagaMediatorBuilder RegisterComponents()
         {
             if (areComponentsRegistered)
@@ -150,7 +151,6 @@ namespace NSaga
             return this;
         }
 
-
         public ISagaMediator ResolveMediator()
         {
             if (!areComponentsRegistered)
@@ -160,6 +160,26 @@ namespace NSaga
 
             var mediator = Container.Resolve<ISagaMediator>();
             return mediator;
+        }
+
+        public ISagaRepository ResolveRepository()
+        {
+            if (!areComponentsRegistered)
+            {
+                RegisterComponents();
+            }
+
+            return Container.Resolve<ISagaRepository>();
+        }
+
+        public T Resolve<T>() where T : class
+        {
+            if (!areComponentsRegistered)
+            {
+                RegisterComponents();
+            }
+
+            return Container.Resolve<T>();
         }
     }
 }

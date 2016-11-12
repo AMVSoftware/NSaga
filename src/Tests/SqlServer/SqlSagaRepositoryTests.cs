@@ -1,10 +1,12 @@
 using NSaga;
 using NSaga.SqlServer;
+using Xunit;
 
 
 namespace Tests.SqlServer
 {
     [AutoRollback]
+    [Collection("Sql Tests")]
     public class SqlSagaRepositoryTests : SagaRepositoryTestsTemplate
     {
         public SqlSagaRepositoryTests()
