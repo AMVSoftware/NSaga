@@ -9,7 +9,7 @@ namespace Tests.SqlServer
     {
         public SqlSagaRepositoryTests()
         {
-            this.Sut = new SqlSagaRepository("TestingConnectionString", new DumbSagaFactory(), new JsonNetSerialiser());
+            this.Sut = new SqlSagaRepository(ConnectionFactory.FromConnectionStringName("TestingConnectionString"), new DumbSagaFactory(), new JsonNetSerialiser());
         }
     }
 }

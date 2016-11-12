@@ -93,7 +93,9 @@ namespace Tests.SimpleInjector
             //Arrange
             var container = new Container();
             container.RegisterNSagaComponents()
-                     .UseSagaRepository(() => new SqlSagaRepository("TestingConnectionString", container.GetInstance<ISagaFactory>(), container.GetInstance<IMessageSerialiser>()));
+                     .UseSagaRepository<SqlSagaRepository>();
+
+            container.Register<IConnectionFactory>(() => ConnectionFactory.FromConnectionStringName("TestingConnectionString"));
 
             // Act
             var repository = container.GetInstance<ISagaRepository>();

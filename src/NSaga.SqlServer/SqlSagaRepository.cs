@@ -11,44 +11,25 @@ namespace NSaga.SqlServer
         public const string HeadersTableName = "NSaga.Headers";
 
         private readonly ISagaFactory sagaFactory;
-        private readonly Database database;
         private readonly IMessageSerialiser messageSerialiser;
+        private readonly IConnectionFactory connectionFactory;
 
         /// <summary>
         /// Initiates an instance of <see cref="SqlSagaRepository"/> with a connection string name.
         /// Actual connection string is taken from your app.config or web.config
         /// </summary>
-        /// <param name="connectionStringName">Name of a connection string to use from your config file</param>
+        /// <param name="connectionFactory">An insantance implementing <see cref="IConnectionFactory"/></param>
         /// <param name="sagaFactory">An instance implementing <see cref="ISagaFactory"/></param>
         /// <param name="messageSerialiser">An instance implementing <see cref="IMessageSerialiser"/></param>
-        public SqlSagaRepository(string connectionStringName, ISagaFactory sagaFactory, IMessageSerialiser messageSerialiser)
+        public SqlSagaRepository(IConnectionFactory connectionFactory, ISagaFactory sagaFactory, IMessageSerialiser messageSerialiser)
         {
-            Guard.ArgumentIsNotNull(connectionStringName, nameof(connectionStringName));
+            Guard.ArgumentIsNotNull(connectionFactory, nameof(connectionFactory));
             Guard.ArgumentIsNotNull(sagaFactory, nameof(sagaFactory));
             Guard.ArgumentIsNotNull(messageSerialiser, nameof(messageSerialiser));
 
             this.messageSerialiser = messageSerialiser;
             this.sagaFactory = sagaFactory;
-            this.database = new Database(connectionStringName);
-        }
-
-        /// <summary>
-        /// Initiates an instance of <see cref="SqlSagaRepository"/> with a connection string and a connection provider name
-        /// </summary>
-        /// <param name="connectionString">String containing a connection string</param>
-        /// <param name="providerName">A provider name for the connection</param>
-        /// <param name="sagaFactory">An instance implementing <see cref="ISagaFactory"/></param>
-        /// <param name="messageSerialiser">An instance implementing <see cref="IMessageSerialiser"/></param>
-        public SqlSagaRepository(string connectionString, string providerName, ISagaFactory sagaFactory, IMessageSerialiser messageSerialiser)
-        {
-            Guard.ArgumentIsNotNull(connectionString, nameof(connectionString));
-            Guard.ArgumentIsNotNull(providerName, nameof(providerName));
-            Guard.ArgumentIsNotNull(sagaFactory, nameof(sagaFactory));
-            Guard.ArgumentIsNotNull(messageSerialiser, nameof(messageSerialiser));
-
-            this.messageSerialiser = messageSerialiser;
-            this.sagaFactory = sagaFactory;
-            this.database = new Database(connectionString, providerName);
+            this.connectionFactory = connectionFactory;
         }
 
 
@@ -65,27 +46,31 @@ namespace NSaga.SqlServer
         {
             Guard.ArgumentIsNotNull(correlationId, nameof(correlationId));
 
-            var sql = Sql.Builder.Where("correlationId = @0", correlationId);
-            var persistedData = database.SingleOrDefault<SagaData>(sql);
-
-            if (persistedData == null)
+            using(var connection = connectionFactory.GetConnection())
+            using (var database = new Database(connection))
             {
-                return null;
+                var sql = Sql.Builder.Where("correlationId = @0", correlationId);
+                var persistedData = database.SingleOrDefault<SagaData>(sql);
+
+                if (persistedData == null)
+                {
+                    return null;
+                }
+
+                var sagaInstance = sagaFactory.ResolveSaga<TSaga>();
+                var sagaDataType = Reflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
+                var sagaData = messageSerialiser.Deserialise(persistedData.BlobData, sagaDataType);
+
+                var headersSql = Sql.Builder.Where("correlationId = @0", correlationId);
+                var headersPersisted = database.Query<SagaHeaders>(headersSql);
+                var headers = headersPersisted.ToDictionary(k => k.Key, v => v.Value);
+
+                Reflection.Set(sagaInstance, "CorrelationId", correlationId);
+                Reflection.Set(sagaInstance, "SagaData", sagaData);
+                Reflection.Set(sagaInstance, "Headers", headers);
+
+                return sagaInstance;
             }
-
-            var sagaInstance = sagaFactory.ResolveSaga<TSaga>();
-            var sagaDataType = Reflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
-            var sagaData = messageSerialiser.Deserialise(persistedData.BlobData, sagaDataType);
-
-            var headersSql = Sql.Builder.Where("correlationId = @0", correlationId);
-            var headersPersisted = database.Query<SagaHeaders>(headersSql);
-            var headers = headersPersisted.ToDictionary(k => k.Key, v => v.Value);
-
-            Reflection.Set(sagaInstance, "CorrelationId", correlationId);
-            Reflection.Set(sagaInstance, "SagaData", sagaData);
-            Reflection.Set(sagaInstance, "Headers", headers);
-
-            return sagaInstance;
         }
 
 
@@ -112,6 +97,8 @@ namespace NSaga.SqlServer
                 BlobData = serialisedData,
             };
 
+            using (var connection = connectionFactory.GetConnection())
+            using (var database = new Database(connection))
             using (var transaction = database.GetTransaction())
             {
                 try
@@ -171,6 +158,8 @@ namespace NSaga.SqlServer
         {
             Guard.ArgumentIsNotNull(correlationId, nameof(correlationId));
 
+            using (var connection = connectionFactory.GetConnection())
+            using (var database = new Database(connection))
             using (var transaction = database.GetTransaction())
             {
                 try

@@ -2,24 +2,23 @@
 {
     public static class SqlServerWireup
     {
-        public static SagaMediatorBuilder UseSqlServerStorage(this SagaMediatorBuilder builder, string connectionStringName)
+        public static SagaMediatorBuilder UseSqlServerConnectionStringName(this SagaMediatorBuilder builder, string connectionStringName)
         {
-            builder.UseRepository(new SqlSagaRepository(
-                                        connectionStringName, 
-                                        builder.Container.Resolve<ISagaFactory>(),
-                                        builder.Container.Resolve<IMessageSerialiser>()));
+            builder.Register(typeof(IConnectionFactory), ConnectionFactory.FromConnectionStringName(connectionStringName));
+
+            builder.UseRepository<SqlSagaRepository>();
+
             return builder;
         }
 
-        public static SagaMediatorBuilder UseSqlServerStorage(this SagaMediatorBuilder builder, string connectionString, string providerName)
+
+        public static SagaMediatorBuilder UseSqlServerConnectionString(this SagaMediatorBuilder builder, string connectionString)
         {
-            builder.UseRepository(new SqlSagaRepository(
-                                        connectionString,
-                                        providerName,
-                                        builder.Container.Resolve<ISagaFactory>(),
-                                        builder.Container.Resolve<IMessageSerialiser>()));
+            builder.Register(typeof(IConnectionFactory), new ConnectionFactory(connectionString));
+
+            builder.UseRepository<SqlSagaRepository>();
+
             return builder;
         }
-
     }
 }
