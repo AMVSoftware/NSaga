@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Tests
 {
-    public class SagaMediatorConsumingTests
+    public class SagaMediatorConsumingTests : IDisposable
     {
         private readonly InMemorySagaRepository repository;
         private readonly SagaMediator sut;
@@ -112,6 +112,11 @@ namespace Tests
             var saga = repository.Find<SagaWithErrors>(correlationId);
             saga.SagaData.IsConsumed.Should().BeFalse();
 
+        }
+
+        public void Dispose()
+        {
+            InMemorySagaRepository.ResetStorage();
         }
     }
 }

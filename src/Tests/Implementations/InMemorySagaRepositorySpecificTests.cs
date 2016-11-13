@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Tests.Implementations
 {
-    public class InMemorySagaRepositorySpecificTests
+    public class InMemorySagaRepositorySpecificTests : IDisposable
     {
         private readonly InMemorySagaRepository sut;
 
@@ -40,7 +40,7 @@ namespace Tests.Implementations
             sut.Save(saga);
 
             // Assert
-            sut.DataDictionary.Should().NotBeNull()
+            InMemorySagaRepository.DataDictionary.Should().NotBeNull()
                                        .And.HaveCount(1)
                                        .And.ContainKey(correlationId);
         }
@@ -56,7 +56,7 @@ namespace Tests.Implementations
             sut.Save(saga);
 
             // Assert
-            sut.HeadersDictionary.Should().NotBeNull()
+            InMemorySagaRepository.HeadersDictionary.Should().NotBeNull()
                                        .And.HaveCount(1)
                                        .And.ContainKey(correlationId);
         }
@@ -69,7 +69,7 @@ namespace Tests.Implementations
             var correlationId = Guid.NewGuid();
             var expectedGuid = Guid.NewGuid();
             var sagaData = new MySagaData() { SomeGuid = expectedGuid };
-            sut.DataDictionary[correlationId] = JsonConvert.SerializeObject(sagaData);
+            InMemorySagaRepository.DataDictionary[correlationId] = JsonConvert.SerializeObject(sagaData);
 
             // Act
             var saga = sut.Find<MySaga>(correlationId);
@@ -88,8 +88,8 @@ namespace Tests.Implementations
             var expectedGuid = Guid.NewGuid();
             var sagaData = new MySagaData() { SomeGuid = expectedGuid };
 
-            sut.DataDictionary[correlationId] = JsonConvert.SerializeObject(sagaData);
-            sut.HeadersDictionary[correlationId] = JsonConvert.SerializeObject(new Dictionary<String, String>() { { expectedGuid.ToString(), expectedGuid.ToString() } });
+            InMemorySagaRepository.DataDictionary[correlationId] = JsonConvert.SerializeObject(sagaData);
+            InMemorySagaRepository.HeadersDictionary[correlationId] = JsonConvert.SerializeObject(new Dictionary<String, String>() { { expectedGuid.ToString(), expectedGuid.ToString() } });
 
             // Act
             var saga = sut.Find<MySaga>(correlationId);
@@ -115,7 +115,7 @@ namespace Tests.Implementations
             sut.Complete(saga);
 
             // Assert
-            sut.DataDictionary.Should().NotContainKey(correlationId);
+            InMemorySagaRepository.DataDictionary.Should().NotContainKey(correlationId);
         }
 
 
@@ -132,7 +132,12 @@ namespace Tests.Implementations
             sut.Complete(saga);
 
             // Assert
-            sut.HeadersDictionary.Should().NotContainKey(correlationId);
+            InMemorySagaRepository.HeadersDictionary.Should().NotContainKey(correlationId);
+        }
+
+        public void Dispose()
+        {
+            InMemorySagaRepository.ResetStorage();
         }
     }
 }

@@ -8,15 +8,16 @@ namespace NSaga
     {
         private readonly IMessageSerialiser messageSerialiser;
         private readonly ISagaFactory sagaFactory;
-        public Dictionary<Guid, String> DataDictionary { get; }
-        public Dictionary<Guid, String> HeadersDictionary { get; }
+        public static Dictionary<Guid, String> DataDictionary { get; private set; }
+        public static Dictionary<Guid, String> HeadersDictionary { get; private set; }
 
         public InMemorySagaRepository(IMessageSerialiser messageSerialiser, ISagaFactory sagaFactory)
         {
             this.messageSerialiser = messageSerialiser;
             this.sagaFactory = sagaFactory;
-            DataDictionary = new Dictionary<Guid, string>();
-            HeadersDictionary = new Dictionary<Guid, string>();
+
+            DataDictionary = DataDictionary ?? new Dictionary<Guid, string>();
+            HeadersDictionary = HeadersDictionary ?? new Dictionary<Guid, string>();
         }
 
 
@@ -75,6 +76,12 @@ namespace NSaga
         {
             DataDictionary.Remove(correlationId);
             HeadersDictionary.Remove(correlationId);
+        }
+
+        public static void ResetStorage()
+        {
+            DataDictionary = new Dictionary<Guid, string>();
+            HeadersDictionary = new Dictionary<Guid, string>();
         }
     }
 }

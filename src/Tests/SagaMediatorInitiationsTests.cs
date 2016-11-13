@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Tests
 {
-    public class SagaMediatorInitiationsTests
+    public class SagaMediatorInitiationsTests : IDisposable
     {
         private readonly InMemorySagaRepository repository;
         private readonly SagaMediator sut;
@@ -77,7 +77,7 @@ namespace Tests
             sut.Consume(initiatingMessage);
 
             // Assert
-            repository.DataDictionary.Should().HaveCount(1);
+            InMemorySagaRepository.DataDictionary.Should().HaveCount(1);
             var saga = repository.Find<MySaga>(correlationId);
             saga.CorrelationId.Should().Be(correlationId);
         }
@@ -165,6 +165,11 @@ namespace Tests
             saga.SagaData.IsInitialised.Should().BeFalse();
             saga.SagaData.IsAdditionalInitialiserCalled.Should().BeTrue();
             saga.CorrelationId.Should().Be(correlationId);
+        }
+
+        public void Dispose()
+        {
+            InMemorySagaRepository.ResetStorage();
         }
     }
 }

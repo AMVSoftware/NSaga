@@ -5,9 +5,9 @@ namespace NSaga.Autofac
 {
     public class AutofacSagaFactory : ISagaFactory
     {
-        private readonly IContainer container;
+        private readonly ILifetimeScope container;
 
-        public AutofacSagaFactory(IContainer container)
+        public AutofacSagaFactory(ILifetimeScope container)
         {
             this.container = container;
         }
@@ -24,12 +24,14 @@ namespace NSaga.Autofac
 
         public IAccessibleSaga ResolveSagaInititatedBy(IInitiatingSagaMessage message)
         {
-            throw new NotImplementedException();
+            var interfaceType = typeof(InitiatedBy<>).MakeGenericType(message.GetType());
+            return (IAccessibleSaga) container.Resolve(interfaceType);
         }
 
         public IAccessibleSaga ResolveSagaConsumedBy(ISagaMessage message)
         {
-            throw new NotImplementedException();
+            var interfaceType = typeof(ConsumerOf<>).MakeGenericType(message.GetType());
+            return (IAccessibleSaga)container.Resolve(interfaceType);
         }
     }
 }
