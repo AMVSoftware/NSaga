@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 
@@ -8,16 +9,13 @@ namespace NSaga
     {
         private readonly IMessageSerialiser messageSerialiser;
         private readonly ISagaFactory sagaFactory;
-        public static Dictionary<Guid, String> DataDictionary { get; private set; }
-        public static Dictionary<Guid, String> HeadersDictionary { get; private set; }
+        private static readonly ConcurrentDictionary<Guid, String> DataDictionary = new ConcurrentDictionary<Guid, string>();
+        private static readonly ConcurrentDictionary<Guid, String> HeadersDictionary = new ConcurrentDictionary<Guid, string>();
 
         public InMemorySagaRepository(IMessageSerialiser messageSerialiser, ISagaFactory sagaFactory)
         {
             this.messageSerialiser = messageSerialiser;
             this.sagaFactory = sagaFactory;
-
-            DataDictionary = DataDictionary ?? new Dictionary<Guid, string>();
-            HeadersDictionary = HeadersDictionary ?? new Dictionary<Guid, string>();
         }
 
 
@@ -74,14 +72,15 @@ namespace NSaga
 
         public void Complete(Guid correlationId)
         {
-            DataDictionary.Remove(correlationId);
-            HeadersDictionary.Remove(correlationId);
+            String value;
+            DataDictionary.TryRemove(correlationId, out value);
+            HeadersDictionary.TryRemove(correlationId, out value);
         }
 
         public static void ResetStorage()
         {
-            DataDictionary = new Dictionary<Guid, string>();
-            HeadersDictionary = new Dictionary<Guid, string>();
+            DataDictionary.Clear();
+            HeadersDictionary.Clear();
         }
     }
 }

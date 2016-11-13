@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -40,7 +41,8 @@ namespace Tests.Implementations
             sut.Save(saga);
 
             // Assert
-            InMemorySagaRepository.DataDictionary.Should().NotBeNull()
+            var dataDictionary = GetDataDictionary();
+            dataDictionary.Should().NotBeNull()
                                        .And.HaveCount(1)
                                        .And.ContainKey(correlationId);
         }
@@ -56,7 +58,8 @@ namespace Tests.Implementations
             sut.Save(saga);
 
             // Assert
-            InMemorySagaRepository.HeadersDictionary.Should().NotBeNull()
+            var headersDictionary = GetHeadersDictionary();
+            headersDictionary.Should().NotBeNull()
                                        .And.HaveCount(1)
                                        .And.ContainKey(correlationId);
         }
@@ -69,7 +72,7 @@ namespace Tests.Implementations
             var correlationId = Guid.NewGuid();
             var expectedGuid = Guid.NewGuid();
             var sagaData = new MySagaData() { SomeGuid = expectedGuid };
-            InMemorySagaRepository.DataDictionary[correlationId] = JsonConvert.SerializeObject(sagaData);
+            GetDataDictionary()[correlationId] = JsonConvert.SerializeObject(sagaData);
 
             // Act
             var saga = sut.Find<MySaga>(correlationId);
@@ -88,8 +91,8 @@ namespace Tests.Implementations
             var expectedGuid = Guid.NewGuid();
             var sagaData = new MySagaData() { SomeGuid = expectedGuid };
 
-            InMemorySagaRepository.DataDictionary[correlationId] = JsonConvert.SerializeObject(sagaData);
-            InMemorySagaRepository.HeadersDictionary[correlationId] = JsonConvert.SerializeObject(new Dictionary<String, String>() { { expectedGuid.ToString(), expectedGuid.ToString() } });
+            GetDataDictionary()[correlationId] = JsonConvert.SerializeObject(sagaData);
+            GetHeadersDictionary()[correlationId] = JsonConvert.SerializeObject(new Dictionary<String, String>() { { expectedGuid.ToString(), expectedGuid.ToString() } });
 
             // Act
             var saga = sut.Find<MySaga>(correlationId);
@@ -115,7 +118,7 @@ namespace Tests.Implementations
             sut.Complete(saga);
 
             // Assert
-            InMemorySagaRepository.DataDictionary.Should().NotContainKey(correlationId);
+            GetDataDictionary().Should().NotContainKey(correlationId);
         }
 
 
@@ -132,7 +135,56 @@ namespace Tests.Implementations
             sut.Complete(saga);
 
             // Assert
-            InMemorySagaRepository.HeadersDictionary.Should().NotContainKey(correlationId);
+            var concurrentDictionary = GetHeadersDictionary();
+            concurrentDictionary.Should().NotContainKey(correlationId);
+        }
+
+
+        [Fact]
+        public void MultipleRepo_Instances_ShareDataStorage()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var expected = Guid.NewGuid();
+            var saga = new MySaga { CorrelationId = correlationId, SagaData = new MySagaData() { SomeGuid = expected } };
+            sut.Save(saga);
+
+            // Act
+            var anotherInstance = new InMemorySagaRepository(new JsonNetSerialiser(), new DumbSagaFactory());
+            var restoredSaga = anotherInstance.Find<MySaga>(correlationId);
+
+            // Assert
+            restoredSaga.SagaData.SomeGuid.Should().Be(expected);
+        }
+
+
+        [Fact]
+        public void ClearData_Removes_Data()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var expected = Guid.NewGuid();
+            var saga = new MySaga { CorrelationId = correlationId };
+            sut.Save(saga);
+
+            // Act
+            InMemorySagaRepository.ResetStorage();
+
+            // Assert
+            var deletedSaga = sut.Find<MySaga>(correlationId);
+            deletedSaga.Should().BeNull();
+        }
+
+
+
+        private ConcurrentDictionary<Guid, string> GetDataDictionary()
+        {
+            return (ConcurrentDictionary<Guid, String>)NSagaReflection.GetPrivate(sut, "DataDictionary");
+        }
+
+        private ConcurrentDictionary<Guid, string> GetHeadersDictionary()
+        {
+            return (ConcurrentDictionary<Guid, String>)NSagaReflection.GetPrivate(sut, "HeadersDictionary");
         }
 
         public void Dispose()

@@ -40,7 +40,7 @@ namespace NSaga
         public static object GetPrivate(object instance, string propertyName)
         {
             Type type = instance.GetType();
-            FieldInfo property = type.GetField(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo property = type.GetField(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             if (property == null)
             {
                 return null;

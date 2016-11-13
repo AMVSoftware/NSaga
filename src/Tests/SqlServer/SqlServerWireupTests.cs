@@ -89,6 +89,7 @@ namespace Tests.SqlServer
 
         public void Dispose()
         {
+            database.Dispose();
             TinyIoCContainer.Current.Dispose();
             DatabaseHelpers.CleanUpData(database);
         }

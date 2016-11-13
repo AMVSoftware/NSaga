@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using FluentAssertions;
 using NSaga;
 using Xunit;
@@ -18,7 +19,7 @@ namespace Tests
 
             var serviceLocator = new TinyIocSagaFactory(container);
             repository = new InMemorySagaRepository(new JsonNetSerialiser(), serviceLocator);
-            sut = new SagaMediator(repository, serviceLocator, new [] { new NullPipelineHook()});
+            sut = new SagaMediator(repository, serviceLocator, new[] { new NullPipelineHook() });
         }
 
 
@@ -72,12 +73,13 @@ namespace Tests
             //Arrange
             var correlationId = Guid.NewGuid();
             var initiatingMessage = new MySagaInitiatingMessage(correlationId);
-            
+
             // Act
             sut.Consume(initiatingMessage);
 
             // Assert
-            InMemorySagaRepository.DataDictionary.Should().HaveCount(1);
+            var data = (ConcurrentDictionary<Guid, String>)NSagaReflection.GetPrivate(repository, "DataDictionary");
+            data.Should().HaveCount(1);
             var saga = repository.Find<MySaga>(correlationId);
             saga.CorrelationId.Should().Be(correlationId);
         }
