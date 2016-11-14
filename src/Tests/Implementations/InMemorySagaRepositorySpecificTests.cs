@@ -44,7 +44,6 @@ namespace Tests.Implementations
             // Assert
             var dataDictionary = GetDataDictionary();
             dataDictionary.Should().NotBeNull()
-                                       .And.HaveCount(1)
                                        .And.ContainKey(correlationId);
         }
 
@@ -61,7 +60,6 @@ namespace Tests.Implementations
             // Assert
             var headersDictionary = GetHeadersDictionary();
             headersDictionary.Should().NotBeNull()
-                                       .And.HaveCount(1)
                                        .And.ContainKey(correlationId);
         }
 
@@ -100,7 +98,7 @@ namespace Tests.Implementations
 
             // Assert
             saga.Should().NotBeNull();
-            saga.Headers.Should().HaveCount(1).And.ContainKey(expectedGuid.ToString());
+            saga.Headers.Should().ContainKey(expectedGuid.ToString());
             saga.Headers[expectedGuid.ToString()].Should().Be(expectedGuid.ToString());
         }
 
