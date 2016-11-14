@@ -71,9 +71,9 @@ namespace Tests.SimpleInjector
             //Arrange
             var container = new Container()
                                 .RegisterNSagaComponents()
+                                .UseSqlServer()
+                                .WithConnectionStringName("TestingConnectionString")
                                 .UseSagaRepository<SqlSagaRepository>();
-
-            container.Register<IConnectionFactory>(() => ConnectionFactory.FromConnectionStringName("TestingConnectionString"));
 
             // Act
             var repository = container.GetInstance<ISagaRepository>();
@@ -89,9 +89,8 @@ namespace Tests.SimpleInjector
             //Arrange
             var container = new Container()
                                 .RegisterNSagaComponents()
-                                .UseSagaRepository<SqlSagaRepository>();
-
-            container.Register<IConnectionFactory>(() => new ConnectionFactory(@"Server=(localdb)\v12.0;Database=NSaga-Testing"));
+                                .UseSqlServer()
+                                .WithConnectionString(@"Server=(localdb)\v12.0;Database=NSaga-Testing");
 
             // Act
             var repository = container.GetInstance<ISagaRepository>();
