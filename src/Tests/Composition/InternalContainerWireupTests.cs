@@ -11,15 +11,27 @@ namespace Tests.Composition
     public class InternalContainerWireupTests
     {
         [Theory]
-        [InlineData("sagaRepository", typeof(InMemorySagaRepository))]
-        [InlineData("sagaFactory", typeof(TinyIocSagaFactory))]
-        [InlineData("pipelineHook", typeof(CompositePipelineHook))]
-        public void Default_Provides_InMemoryRepository(string propertyName, Type expectedType)
+        [InlineData(typeof(ISagaMediator), typeof(SagaMediator))]
+        [InlineData(typeof(ISagaRepository), typeof(InMemorySagaRepository))]
+        [InlineData(typeof(ISagaFactory), typeof(TinyIocSagaFactory))]
+        [InlineData(typeof(IMessageSerialiser), typeof(JsonNetSerialiser))]
+        [InlineData(typeof(ISaga<MySagaData>), typeof(MySaga))]
+        [InlineData(typeof(InitiatedBy<MySagaInitiatingMessage>), typeof(MySaga))]
+        [InlineData(typeof(ConsumerOf<MySagaConsumingMessage>), typeof(MySaga))]
+        [InlineData(typeof(InitiatedBy<MySagaAdditionalInitialser>), typeof(MySaga))]
+        public void DefaultRegistration_Resolves_DefaultComponents(Type requestedType, Type expectedImplementation)
         {
-            var sagaMediator = Wireup.UseInternalContainer().ResolveMediator();
+            //Arrange
+            var builder = Wireup.UseInternalContainer();
 
-            ValidatePrivateProperty(sagaMediator, propertyName, expectedType);
+            // Act
+            var result = builder.Resolve(requestedType);
+
+            // Assert
+            result.Should().NotBeNull()
+                       .And.BeOfType(expectedImplementation);
         }
+        
 
         [Fact]
         public void NullObjects_Can_Be_Resolved()

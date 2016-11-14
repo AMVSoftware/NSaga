@@ -44,8 +44,7 @@ namespace NSaga.SimpleInjector
         }
 
 
-        public static Container AddSagaPipelineHook<TPipelineHook>(this Container container)
-            where TPipelineHook : IPipelineHook
+        public static Container AddSagaPipelineHook<TPipelineHook>(this Container container) where TPipelineHook : IPipelineHook
         {
             container.AppendToCollection(typeof(IPipelineHook), typeof(TPipelineHook));
 

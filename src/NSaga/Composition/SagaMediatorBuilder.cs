@@ -181,5 +181,16 @@ namespace NSaga
 
             return Container.Resolve<T>();
         }
+
+        public object Resolve(Type objectType)
+        {
+            if (!areComponentsRegistered)
+            {
+                RegisterComponents();
+            }
+
+            return Container.Resolve(objectType);
+        }
+
     }
 }
