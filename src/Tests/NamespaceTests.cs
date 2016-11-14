@@ -53,5 +53,21 @@ namespace Tests
         {
             typeof(Database).IsPublic.Should().BeFalse();
         }
+
+
+        [Fact]
+        public void AllPublicClasses_Are_Sealed()
+        {
+            //Arrange
+            var unsealedTypes = typeof(SagaMediator).Assembly.GetTypes()
+                            .Where(t => t.IsClass)
+                            .Where(t => t.IsPublic)
+                            .Where(t => !t.IsAbstract)
+                            .Where(t => !t.IsSealed)
+                            .ToList();
+
+            var message = $"No public classes should be unsealed. Found unsealed: {String.Join(", ", unsealedTypes)}";
+            unsealedTypes.Should().BeEmpty(message);
+        }
     }
 }

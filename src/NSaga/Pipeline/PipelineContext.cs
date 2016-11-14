@@ -2,7 +2,7 @@
 
 namespace NSaga
 {
-    public class PipelineContext
+    public sealed class PipelineContext
     {
         public PipelineContext(ISagaMessage message, IAccessibleSaga saga, OperationResult operationResult = null)
         {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace NSaga
 {
-    public class InMemorySagaRepository : ISagaRepository
+    public sealed class InMemorySagaRepository : ISagaRepository
     {
         private readonly IMessageSerialiser messageSerialiser;
         private readonly ISagaFactory sagaFactory;

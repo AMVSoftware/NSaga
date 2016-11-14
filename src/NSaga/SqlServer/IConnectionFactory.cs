@@ -11,7 +11,7 @@ namespace NSaga
         IDbConnection GetConnection();
     }
 
-    public class ConnectionFactory : IConnectionFactory
+    public sealed class ConnectionFactory : IConnectionFactory
     {
         private readonly String connectionString;
 

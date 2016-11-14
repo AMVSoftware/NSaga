@@ -3,12 +3,14 @@ using Autofac;
 
 namespace NSaga.Autofac
 {
-    public class SqlRepositoryBuilder
+    public sealed class SqlRepositoryBuilder
     {
         private readonly ContainerBuilder container;
 
         public SqlRepositoryBuilder(ContainerBuilder container)
         {
+            Guard.ArgumentIsNotNull(container, nameof(container));
+
             this.container = container;
         }
 

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace NSaga
 {
-    public class SagaMediator : ISagaMediator
+    public sealed class SagaMediator : ISagaMediator
     {
         private readonly ISagaRepository sagaRepository;
         private readonly ISagaFactory sagaFactory;

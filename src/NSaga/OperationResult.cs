@@ -9,7 +9,7 @@ namespace NSaga
     /// Every Saga operation retuns some result. Sometimes the validation inside the saga does not pass and the whole operation is not valid.
     /// For that add error messages to OperationResult class.
     /// </summary>
-    public class OperationResult
+    public sealed class OperationResult
     {
         /// <summary>
         /// Creates an instance of <see cref="OperationResult"/>

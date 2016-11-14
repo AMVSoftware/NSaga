@@ -1,6 +1,6 @@
 ﻿namespace NSaga
 {
-    public class Wireup
+    public sealed class Wireup
     {
         public static SagaMediatorBuilder UseInternalContainer()
         {

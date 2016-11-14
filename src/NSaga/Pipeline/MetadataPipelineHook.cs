@@ -2,7 +2,7 @@
 
 namespace NSaga
 {
-    public class MetadataPipelineHook : BasePipelineHook, IPipelineHook
+    public sealed class MetadataPipelineHook : BasePipelineHook, IPipelineHook
     {
         private readonly IMessageSerialiser serialiser;
         public const string MetadataKeyName = "SagaMetadataKey";

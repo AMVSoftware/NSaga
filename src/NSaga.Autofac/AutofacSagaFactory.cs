@@ -3,12 +3,14 @@ using Autofac;
 
 namespace NSaga.Autofac
 {
-    public class AutofacSagaFactory : ISagaFactory
+    public sealed class AutofacSagaFactory : ISagaFactory
     {
         private readonly ILifetimeScope container;
 
         public AutofacSagaFactory(ILifetimeScope container)
         {
+            Guard.ArgumentIsNotNull(container, nameof(container));
+
             this.container = container;
         }
 

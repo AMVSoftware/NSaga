@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace NSaga
 {
-    public class CompositePipelineHook : IPipelineHook
+    public sealed class CompositePipelineHook : IPipelineHook
     {
         private readonly IList<IPipelineHook> hooks;
 

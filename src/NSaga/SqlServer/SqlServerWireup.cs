@@ -10,7 +10,7 @@ namespace NSaga
         }
     }
 
-    public class SqlServerBuilderExtension
+    public sealed class SqlServerBuilderExtension
     {
         private readonly SagaMediatorBuilder builder;
 

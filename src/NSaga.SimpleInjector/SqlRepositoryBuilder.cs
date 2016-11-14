@@ -3,12 +3,14 @@ using SimpleInjector;
 
 namespace NSaga.SimpleInjector
 {
-    public class SqlRepositoryBuilder
+    public sealed class SqlRepositoryBuilder
     {
         private readonly Container container;
 
         public SqlRepositoryBuilder(Container container)
         {
+            Guard.ArgumentIsNotNull(container, nameof(container));
+
             this.container = container;
         }
 

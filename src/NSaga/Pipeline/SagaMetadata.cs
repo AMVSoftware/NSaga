@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NSaga
 {
-    public class SagaMetadata
+    public sealed class SagaMetadata
     {
         public SagaMetadata()
         {
@@ -15,7 +15,7 @@ namespace NSaga
     }
 
 
-    public class ReceivedMessage
+    public sealed class ReceivedMessage
     {
         internal ReceivedMessage()
         {

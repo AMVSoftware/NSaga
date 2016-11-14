@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace NSaga
 {
-    public class JsonNetSerialiser : IMessageSerialiser
+    public sealed class JsonNetSerialiser : IMessageSerialiser
     {
         private static JsonSerializerSettings settings = new JsonSerializerSettings
         {

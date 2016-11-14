@@ -3,7 +3,7 @@ using SimpleInjector;
 
 namespace NSaga.SimpleInjector
 {
-    public class SimpleInjectorSagaFactory : ISagaFactory
+    public sealed class SimpleInjectorSagaFactory : ISagaFactory
     {
         private readonly Container container;
 

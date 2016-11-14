@@ -5,7 +5,7 @@ using PetaPoco;
 
 namespace NSaga
 {
-    public class SqlSagaRepository : ISagaRepository
+    public sealed class SqlSagaRepository : ISagaRepository
     {
         public const string SagaDataTableName = "NSaga.Sagas";
         public const string HeadersTableName = "NSaga.Headers";

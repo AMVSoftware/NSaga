@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace NSaga
 {
-    public class SagaMediatorBuilder
+    public sealed class SagaMediatorBuilder
     {
         private readonly List<Type> pipelineHooks;
         private List<Assembly> assembliesToScan;
