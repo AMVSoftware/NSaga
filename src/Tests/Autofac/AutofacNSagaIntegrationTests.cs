@@ -22,9 +22,7 @@ namespace Tests.Autofac
         public void DefaultRegistration_Resolves_DefaultComponents(Type requestedType, Type expectedImplementation)
         {
             //Arrange
-            var builder = new ContainerBuilder();
-            builder.RegisterNSagaComponents();
-            var container = builder.Build();
+            var container = new ContainerBuilder().RegisterNSagaComponents().Build();
 
             // Act
             var result = container.Resolve(requestedType);
@@ -39,9 +37,9 @@ namespace Tests.Autofac
         public void DefaultRegistration_ResolvePipline_ResolvesMetadataHook()
         {
             //Arrange
-            var builder = new ContainerBuilder();
-            builder.RegisterNSagaComponents();
-            var container = builder.Build();
+            var container = new ContainerBuilder()
+                                .RegisterNSagaComponents()
+                                .Build();
             
             // Act
             var result = container.Resolve<IEnumerable<IPipelineHook>>();
@@ -57,10 +55,9 @@ namespace Tests.Autofac
         public void AddPipeline_Resolves_AdditionalHooks()
         {
             //Arrange
-            var builder = new ContainerBuilder();
-            builder.RegisterNSagaComponents()
-                .AddSagaPipelineHook<NullPipelineHook>();
-            var container = builder.Build();
+            var container = new ContainerBuilder()
+                                .RegisterNSagaComponents()
+                                .AddSagaPipelineHook<NullPipelineHook>().Build();
 
             // Act
             var result = container.Resolve<IEnumerable<IPipelineHook>>();
@@ -76,16 +73,30 @@ namespace Tests.Autofac
         public void OverrideRepository_Resolves_OverridenRepository()
         {
             //Arrange
-            var builder = new ContainerBuilder();
-            builder.RegisterNSagaComponents()
-                   .UseSagaRepository<NullSagaRepository>();
-            var container = builder.Build();
+            var container = new ContainerBuilder()
+                                .RegisterNSagaComponents()
+                                .UseSagaRepository<NullSagaRepository>()
+                                .Build();
 
             // Act
             var result = container.Resolve<ISagaRepository>();
 
             // Assert
             result.Should().NotBeNull().And.BeOfType<NullSagaRepository>();
+        }
+
+        [Fact]
+        public void Default_Can_Initialise_Saga()
+        {
+            //Arrange
+            var container = new ContainerBuilder().RegisterNSagaComponents().Build();
+            var sagaMediator = container.Resolve<ISagaMediator>();
+
+            // Act
+            var result = sagaMediator.Consume(new MySagaInitiatingMessage(Guid.NewGuid()));
+
+            // Assert
+            result.IsSuccessful.Should().BeTrue();
         }
     }
 }
