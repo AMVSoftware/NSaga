@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using FluentAssertions;
 using NSaga;
+using Tests.Stubs;
 using Xunit;
 
 
@@ -79,7 +80,7 @@ namespace Tests
             sut.Consume(initiatingMessage);
 
             // Assert
-            var data = (ConcurrentDictionary<Guid, String>)NSagaReflection.GetPrivate(repository, "DataDictionary");
+            var data = InMemorySagaRepository.DataDictionary;
             data.Should().HaveCount(1);
             var saga = repository.Find<MySaga>(correlationId);
             saga.CorrelationId.Should().Be(correlationId);

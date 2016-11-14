@@ -50,6 +50,7 @@
     <Compile Include="Composition\TinyIocExtensions.cs" />
     <Compile Include="Composition\Wireup.cs" />
     <Compile Include="Composition\TinyIocSagaFactory.cs" />
+    <Compile Include="Diagnostic\NSagaConfigurationValidator.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IMessageSerialiser.cs" />
     <Compile Include="Implementations\InMemorySagaRepository.cs" />

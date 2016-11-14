@@ -9,8 +9,8 @@ namespace NSaga
     {
         private readonly IMessageSerialiser messageSerialiser;
         private readonly ISagaFactory sagaFactory;
-        private static readonly ConcurrentDictionary<Guid, String> DataDictionary = new ConcurrentDictionary<Guid, string>();
-        private static readonly ConcurrentDictionary<Guid, String> HeadersDictionary = new ConcurrentDictionary<Guid, string>();
+        internal static readonly ConcurrentDictionary<Guid, String> DataDictionary = new ConcurrentDictionary<Guid, string>();
+        internal static readonly ConcurrentDictionary<Guid, String> HeadersDictionary = new ConcurrentDictionary<Guid, string>();
 
         public InMemorySagaRepository(IMessageSerialiser messageSerialiser, ISagaFactory sagaFactory)
         {

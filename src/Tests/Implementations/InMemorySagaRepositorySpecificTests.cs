@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -42,8 +41,7 @@ namespace Tests.Implementations
             sut.Save(saga);
 
             // Assert
-            var dataDictionary = GetDataDictionary();
-            dataDictionary.Should().NotBeNull()
+            InMemorySagaRepository.DataDictionary.Should().NotBeNull()
                                        .And.ContainKey(correlationId);
         }
 
@@ -58,8 +56,7 @@ namespace Tests.Implementations
             sut.Save(saga);
 
             // Assert
-            var headersDictionary = GetHeadersDictionary();
-            headersDictionary.Should().NotBeNull()
+            InMemorySagaRepository.HeadersDictionary.Should().NotBeNull()
                                        .And.ContainKey(correlationId);
         }
 
@@ -71,7 +68,7 @@ namespace Tests.Implementations
             var correlationId = Guid.NewGuid();
             var expectedGuid = Guid.NewGuid();
             var sagaData = new MySagaData() { SomeGuid = expectedGuid };
-            GetDataDictionary()[correlationId] = JsonConvert.SerializeObject(sagaData);
+            InMemorySagaRepository.DataDictionary[correlationId] = JsonConvert.SerializeObject(sagaData);
 
             // Act
             var saga = sut.Find<MySaga>(correlationId);
@@ -90,8 +87,8 @@ namespace Tests.Implementations
             var expectedGuid = Guid.NewGuid();
             var sagaData = new MySagaData() { SomeGuid = expectedGuid };
 
-            GetDataDictionary()[correlationId] = JsonConvert.SerializeObject(sagaData);
-            GetHeadersDictionary()[correlationId] = JsonConvert.SerializeObject(new Dictionary<String, String>() { { expectedGuid.ToString(), expectedGuid.ToString() } });
+            InMemorySagaRepository.DataDictionary[correlationId] = JsonConvert.SerializeObject(sagaData);
+            InMemorySagaRepository.HeadersDictionary[correlationId] = JsonConvert.SerializeObject(new Dictionary<String, String>() { { expectedGuid.ToString(), expectedGuid.ToString() } });
 
             // Act
             var saga = sut.Find<MySaga>(correlationId);
@@ -117,7 +114,7 @@ namespace Tests.Implementations
             sut.Complete(saga);
 
             // Assert
-            GetDataDictionary().Should().NotContainKey(correlationId);
+            InMemorySagaRepository.DataDictionary.Should().NotContainKey(correlationId);
         }
 
 
@@ -134,8 +131,7 @@ namespace Tests.Implementations
             sut.Complete(saga);
 
             // Assert
-            var concurrentDictionary = GetHeadersDictionary();
-            concurrentDictionary.Should().NotContainKey(correlationId);
+            InMemorySagaRepository.HeadersDictionary.Should().NotContainKey(correlationId);
         }
 
 
@@ -172,18 +168,6 @@ namespace Tests.Implementations
             // Assert
             var deletedSaga = sut.Find<MySaga>(correlationId);
             deletedSaga.Should().BeNull();
-        }
-
-
-
-        private ConcurrentDictionary<Guid, string> GetDataDictionary()
-        {
-            return (ConcurrentDictionary<Guid, String>)NSagaReflection.GetPrivate(sut, "DataDictionary");
-        }
-
-        private ConcurrentDictionary<Guid, string> GetHeadersDictionary()
-        {
-            return (ConcurrentDictionary<Guid, String>)NSagaReflection.GetPrivate(sut, "HeadersDictionary");
         }
 
         public void Dispose()
