@@ -90,6 +90,7 @@
     <Compile Include="Autofac\AutofacSagaFactoryTests.cs" />
     <Compile Include="AutoRollbackAttribute.cs" />
     <Compile Include="Composition\TinyIocSagaFactoryTests.cs" />
+    <Compile Include="Diagnostic\NSagaConfigurationValidatorTests.cs" />
     <Compile Include="Implementations\SagaFactoryTestsTemplate.cs" />
     <Compile Include="NamespaceTests.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorNSagaIntegrationTests.cs" />

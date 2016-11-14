@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace NSaga
 {
     public sealed class NSagaConfigurationValidator
     {
         private readonly IEnumerable<Assembly> assemblies;
+        private IEnumerable<Type> sagaTypes;
 
         public NSagaConfigurationValidator(IEnumerable<Assembly> assemblies)
         {
@@ -21,30 +21,102 @@ namespace NSaga
         {
             var allExceptions = new List<NSagaDiagnosticException>();
 
-            var sagaTypes = NSagaReflection.GetAllSagaTypes(assemblies);
+            sagaTypes = NSagaReflection.GetAllSagaTypes(assemblies);
+
+            allExceptions.AddRange(AllSagasHaveInitialiser());
+
+            allExceptions.AddRange(InitiatorMessagesAreNotShared());
+
+            allExceptions.AddRange(ConsumerMessagesAreNotShared());
+            
+
+            if (allExceptions.Any())
+            {
+                throw new AggregateException(allExceptions);
+            }
+        }
 
 
+
+        /// <summary>
+        /// All sagas must have an Initialiser
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<NSagaDiagnosticException> AllSagasHaveInitialiser()
+        {
             foreach (var sagaType in sagaTypes)
             {
-                //all sagas have Initialiser
-                var initInterface = sagaType.GetInterfaces().Where(i => i.IsGenericType && i == typeof(InitiatedBy<>));
-                if (!initInterface.Any())
+                var initInterfaces = sagaType.GetInterfaces()
+                                             .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(InitiatedBy<>))
+                                             .ToList();
+                if (!initInterfaces.Any())
                 {
-                    allExceptions.Add(new NSagaDiagnosticException($"Saga of type {sagaType.FullName} does not have an initialiser interface applied. Add 'InitiatedBy<>' to the Saga class"));
-                    continue;
+                    yield return 
+                        new NSagaDiagnosticException(
+                            $"Saga of type {sagaType.FullName} does not have an initialiser interface applied. Add 'InitiatedBy<>' to the Saga class");
                 }
-                //all messages that initialise should be IInitiliseMessage
-                //var initInterfaceGenericType = initInterface.
             }
+        }
 
-            foreach (var sagaType in sagaTypes)
+
+        private IEnumerable<NSagaDiagnosticException> InitiatorMessagesAreNotShared()
+        {
+            var initiatingMessageTypes = assemblies.SelectMany(a => a.GetTypes())
+                                                   .Where(t => t.IsClass)
+                                                   .Where(t => typeof(IInitiatingSagaMessage).IsAssignableFrom(t))
+                                                   .ToList();
+
+            foreach (var messageType in initiatingMessageTypes)
             {
-                
+                var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(messageType);
+
+                var initiatedSagaTypes = sagaTypes.Where(t => initiatingInterfaceType.IsAssignableFrom(t)).ToList();
+
+                if (initiatedSagaTypes.Count() > 1)
+                {
+                    var sagaTypesCsv = String.Join(", ", initiatedSagaTypes.Select(t => t.Name));
+                    yield return
+                        new NSagaDiagnosticException(
+                            $"Message of type {messageType.Name} initiates more than one saga: {sagaTypesCsv}. Any message can be consumed only by a single Saga");
+                }
+                else if (initiatedSagaTypes.Count() == 0)
+                {
+                    yield return
+                        new NSagaDiagnosticException(
+                            $"Message of type {messageType.Name} does not initiate any sagas. Have you forgotten to apply 'InitiatedBy<{messageType.Name}> to your Saga?'");
+                }
             }
+        }
 
 
-            //TODO no message sharing between different sagas
-            //TODO all saga messages should be applied
+        private IEnumerable<NSagaDiagnosticException> ConsumerMessagesAreNotShared()
+        {
+            var consumerMessageTypes = assemblies.SelectMany(a => a.GetTypes())
+                                                   .Where(t => t.IsClass)
+                                                   .Where(t => typeof(ISagaMessage).IsAssignableFrom(t))
+                                                   .Where(t => !typeof(IInitiatingSagaMessage).IsAssignableFrom(t))
+                                                   .ToList();
+
+            foreach (var messageType in consumerMessageTypes)
+            {
+                var consumerInterfaceType = typeof(ConsumerOf<>).MakeGenericType(messageType);
+
+                var consumerSagaTypes = sagaTypes.Where(t => consumerInterfaceType.IsAssignableFrom(t)).ToList();
+
+                if (consumerSagaTypes.Count() > 1)
+                {
+                    var sagaTypesCsv = String.Join(", ", consumerSagaTypes.Select(t => t.Name));
+                    yield return
+                        new NSagaDiagnosticException(
+                            $"Message of type {messageType.Name} is consumed by more than one saga: {sagaTypesCsv}. Any message can be consumed only by a single Saga");
+                }
+                else if (consumerSagaTypes.Count() == 0)
+                {
+                    yield return
+                        new NSagaDiagnosticException(
+                            $"Message of type {messageType.Name} is not consumed by any sagas. Have you forgotten to apply 'ConsumerOf<{messageType.Name}> to your Saga?'");
+                }
+            }
         }
     }
 
@@ -52,13 +124,7 @@ namespace NSaga
     {
         public NSagaDiagnosticException(String message) : base(message)
         {
-            // nothing
+            // nothing here so far
         }
-        // nothing here so far
     }
-
-    //internal interface IAssemblyValidator
-    //{
-    //    void ValidateConfiguration(IEnumerable<Assembly> assemblies);
-    //}
 }

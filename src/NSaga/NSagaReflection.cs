@@ -164,6 +164,7 @@ namespace NSaga
         {
             var allSagaTypes = assemblies.SelectMany(a => a.GetTypes())
                                 .Where(t => NSagaReflection.TypeImplementsInterface(t, typeof(ISaga<>)))
+                                .Where(t => t.IsClass)
                                 .ToList();
 
             return allSagaTypes;
