@@ -39,5 +39,11 @@ namespace Tests
 
             petapocoTypes.Should().BeEmpty();
         }
+
+        [Fact]
+        public void TinyIoc_Stays_Internal()
+        {
+            typeof(TinyIoCContainer).IsPublic.Should().BeFalse();
+        }
     }
 }
