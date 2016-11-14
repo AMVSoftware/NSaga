@@ -77,11 +77,10 @@ namespace Tests.SqlServer
         public void UseSqlServer_SetsPrivate_ToSqlRepository()
         {
             //Arrange
-            var mediator = Wireup.UseInternalContainer()
-                                 .UseSqlServerConnectionStringName("TestingConnectionString")
-                                 .ResolveMediator();
+            var builder = Wireup.UseInternalContainer()
+                                 .UseSqlServerConnectionStringName("TestingConnectionString");
             // Act
-            var repository = NSagaReflection.GetPrivate(mediator, "sagaRepository");
+            var repository = builder.Resolve<ISagaRepository>();
 
             // Assert
             repository.Should().BeOfType<SqlSagaRepository>();
@@ -90,7 +89,6 @@ namespace Tests.SqlServer
         public void Dispose()
         {
             database.Dispose();
-            DatabaseHelpers.CleanUpData(database);
         }
     }
 }

@@ -20,13 +20,8 @@ namespace Tests.SqlServer
 
             return headers;
         }
-
-        public static void CleanUpData(Database database)
-        {
-            database.Execute($"delete from {SqlSagaRepository.HeadersTableName}");
-            database.Execute($"delete from {SqlSagaRepository.SagaDataTableName}");
-        }
     }
+
     [TableName("NSaga.Sagas")]
     [PrimaryKey("CorrelationId", AutoIncrement = false)]
     public class SagaData

@@ -4,6 +4,7 @@ using Autofac;
 using FluentAssertions;
 using NSaga;
 using NSaga.Autofac;
+using NSaga.SqlServer;
 using Xunit;
 
 namespace Tests.Autofac
@@ -97,6 +98,40 @@ namespace Tests.Autofac
 
             // Assert
             result.IsSuccessful.Should().BeTrue();
+        }
+
+
+        [Fact]
+        public void UseSqlServerRepository_Registers_AndResolves()
+        {
+            //Arrange
+            var builder = new ContainerBuilder().RegisterNSagaComponents();
+            builder.RegisterType<SqlSagaRepository>().As<ISagaRepository>();
+            builder.Register(c => ConnectionFactory.FromConnectionStringName("TestingConnectionString")).As<IConnectionFactory>();
+            var container = builder.Build();
+
+            // Act
+            var repository = container.Resolve<ISagaRepository>();
+
+            // Assert
+            repository.Should().NotBeNull().And.BeOfType<SqlSagaRepository>();
+        }
+
+
+        [Fact]
+        public void UseSqlServerRepository_RegistersByConnectionString_AndResolves()
+        {
+            //Arrange
+            var builder = new ContainerBuilder().RegisterNSagaComponents();
+            builder.RegisterType<SqlSagaRepository>().As<ISagaRepository>();
+            builder.Register(c => new ConnectionFactory(@"Server=(localdb)\v12.0;Database=NSaga-Testing")).As<IConnectionFactory>();
+            var container = builder.Build();
+
+            // Act
+            var repository = container.Resolve<ISagaRepository>();
+
+            // Assert
+            repository.Should().NotBeNull().And.BeOfType<SqlSagaRepository>();
         }
     }
 }

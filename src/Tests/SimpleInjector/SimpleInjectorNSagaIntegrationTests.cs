@@ -84,7 +84,23 @@ namespace Tests.SimpleInjector
                 .And.BeOfType<SqlSagaRepository>();
         }
 
+        [Fact]
+        public void RegisterSqlServer_ByConnectionString_Works()
+        {
+            //Arrange
+            var container = new Container()
+                                .RegisterNSagaComponents()
+                                .UseSagaRepository<SqlSagaRepository>();
 
+            container.Register<IConnectionFactory>(() => new ConnectionFactory(@"Server=(localdb)\v12.0;Database=NSaga-Testing"));
+
+            // Act
+            var repository = container.GetInstance<ISagaRepository>();
+
+            // Assert
+            repository.Should().NotBeNull()
+                .And.BeOfType<SqlSagaRepository>();
+        }
 
         [Fact]
         public void Default_ResolvePiplineHooks_ResolvesMetadataHook()
