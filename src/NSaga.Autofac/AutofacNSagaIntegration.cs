@@ -48,6 +48,12 @@ namespace NSaga.Autofac
         }
 
 
+        public static SqlRepositoryBuilder UseSqlServer(this ContainerBuilder builder)
+        {
+            return new SqlRepositoryBuilder(builder);
+        }
+
+
         public static ContainerBuilder AddSagaPipelineHook<TPipelineHook>(this ContainerBuilder builder) where TPipelineHook : IPipelineHook
         {
             builder.RegisterType<TPipelineHook>().As<IPipelineHook>();

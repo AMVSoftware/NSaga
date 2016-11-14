@@ -46,6 +46,7 @@
     <Compile Include="SimpleInjectorNSagaIntegration.cs" />
     <Compile Include="SimpleInjectorSagaFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlRepositoryBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NSaga\NSaga.csproj">

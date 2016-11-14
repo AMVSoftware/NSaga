@@ -104,10 +104,10 @@ namespace Tests.Autofac
         public void UseSqlServerRepository_Registers_AndResolves()
         {
             //Arrange
-            var builder = new ContainerBuilder().RegisterNSagaComponents();
-            builder.RegisterType<SqlSagaRepository>().As<ISagaRepository>();
-            builder.Register(c => ConnectionFactory.FromConnectionStringName("TestingConnectionString")).As<IConnectionFactory>();
-            var container = builder.Build();
+            var container = new ContainerBuilder().RegisterNSagaComponents()
+                    .UseSqlServer()
+                    .WithConnectionStringName("TestingConnectionString")
+                    .Build();
 
             // Act
             var repository = container.Resolve<ISagaRepository>();
@@ -121,10 +121,11 @@ namespace Tests.Autofac
         public void UseSqlServerRepository_RegistersByConnectionString_AndResolves()
         {
             //Arrange
-            var builder = new ContainerBuilder().RegisterNSagaComponents();
-            builder.RegisterType<SqlSagaRepository>().As<ISagaRepository>();
-            builder.Register(c => new ConnectionFactory(@"Server=(localdb)\v12.0;Database=NSaga-Testing")).As<IConnectionFactory>();
-            var container = builder.Build();
+            var container = new ContainerBuilder()
+                                .RegisterNSagaComponents()
+                                .UseSqlServer()
+                                .WithConnectionString(@"Server=(localdb)\v12.0;Database=NSaga-Testing")
+                                .Build();
 
             // Act
             var repository = container.Resolve<ISagaRepository>();

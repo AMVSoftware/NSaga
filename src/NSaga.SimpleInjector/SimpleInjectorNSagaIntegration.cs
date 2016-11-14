@@ -67,9 +67,9 @@ namespace NSaga.SimpleInjector
         }
 
 
-        public static SqlServerRepositoryBuilder UseSqlServer(this Container container)
+        public static SqlRepositoryBuilder UseSqlServer(this Container container)
         {
-            return new SqlServerRepositoryBuilder(container);
+            return new SqlRepositoryBuilder(container);
         }
 
 
@@ -81,34 +81,6 @@ namespace NSaga.SimpleInjector
             act.Invoke(container);
 
             container.Options.AllowOverridingRegistrations = oldValue;
-        }
-    }
-
-    public class SqlServerRepositoryBuilder
-    {
-        private readonly Container container;
-
-        public SqlServerRepositoryBuilder(Container container)
-        {
-            this.container = container;
-        }
-
-        public Container WithConnectionString(String connectionString)
-        {
-            container.Register(typeof(IConnectionFactory), () => new ConnectionFactory(connectionString));
-
-            container.UseSagaRepository<SqlSagaRepository>();
-
-            return container;
-        }
-
-        public Container WithConnectionStringName(String connectionStringName)
-        {
-            container.Register(typeof(IConnectionFactory), () => ConnectionFactory.FromConnectionStringName(connectionStringName));
-
-            container.UseSagaRepository<SqlSagaRepository>();
-
-            return container;
         }
     }
 }

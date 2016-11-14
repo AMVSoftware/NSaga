@@ -43,6 +43,7 @@
     <Compile Include="AutofacNSagaIntegration.cs" />
     <Compile Include="AutofacSagaFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlRepositoryBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NSaga\NSaga.csproj">
