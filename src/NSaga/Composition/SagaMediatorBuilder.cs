@@ -14,7 +14,7 @@ namespace NSaga
 
         public SagaMediatorBuilder()
         {
-            Container = TinyIoCContainer.Current;
+            Container = new TinyIoCContainer();
             pipelineHooks = new List<Type>();
             this.assembliesToScan = AppDomain.CurrentDomain.GetAssemblies().ToList();
             areComponentsRegistered = false;

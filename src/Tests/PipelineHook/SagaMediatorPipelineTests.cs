@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Tests.PipelineHook
 {
+    [Collection("InMemorySagaRepository")]
     public class SagaMediatorPipelineTests
     {
         private readonly InMemorySagaRepository repository;
@@ -14,7 +15,7 @@ namespace Tests.PipelineHook
 
         public SagaMediatorPipelineTests()
         {
-            var container = TinyIoCContainer.Current;
+            var container = new TinyIoCContainer();
             container.RegisterSagas(typeof(SagaMediatorPipelineTests).Assembly);
             var serviceLocator = new TinyIocSagaFactory(container);
 

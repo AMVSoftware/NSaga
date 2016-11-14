@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Tests.Implementations
 {
+    [Collection("InMemorySagaRepository")]
     public class InMemorySagaRepositorySpecificTests : IDisposable
     {
         private readonly InMemorySagaRepository sut;

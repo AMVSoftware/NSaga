@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Tests
 {
+    [Collection("InMemorySagaRepository")]
     public class SagaMediatorInitiationsTests : IDisposable
     {
         private readonly InMemorySagaRepository repository;
@@ -14,7 +15,7 @@ namespace Tests
 
         public SagaMediatorInitiationsTests()
         {
-            var container = TinyIoCContainer.Current;
+            var container = new TinyIoCContainer();
             container.RegisterSagas(typeof(SagaMediatorInitiationsTests).Assembly);
 
             var serviceLocator = new TinyIocSagaFactory(container);

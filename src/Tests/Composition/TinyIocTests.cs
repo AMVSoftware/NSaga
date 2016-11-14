@@ -13,7 +13,7 @@ namespace Tests.Composition
         public void Container_CanResolve_OpenGeneric()
         {
             //Arrange
-            var container = TinyIoCContainer.Current;
+            var container = new TinyIoCContainer();
             var assembly = typeof(TinyIocTests).Assembly;
 
             var sagaInterfaces = new List<Type>() { typeof(ISaga<>), typeof(InitiatedBy<>), typeof(ConsumerOf<>) };

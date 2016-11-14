@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Tests.Composition
 {
-    public class InternalContainerWireupTests : IDisposable
+    public class InternalContainerWireupTests
     {
         [Theory]
         [InlineData("sagaRepository", typeof(InMemorySagaRepository))]
@@ -98,11 +98,6 @@ namespace Tests.Composition
             var propertyValue = NSagaReflection.GetPrivate(sagaMediator, propertyName);
 
             propertyValue.Should().BeOfType(expectedType);
-        }
-
-        public void Dispose()
-        {
-            TinyIoCContainer.Current.Dispose();
         }
     }
 }

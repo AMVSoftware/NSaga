@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Tests.PipelineHook
 {
+    [Collection("InMemorySagaRepository")]
     public class MetadataPipelineIntegrationTests : IDisposable
     {
         private readonly DateTime initialisationTime;
@@ -19,7 +20,7 @@ namespace Tests.PipelineHook
             initialisationTime = new DateTime(1905, 9, 13);
             TimeProvider.Current = new StubTimeProvider(initialisationTime);
 
-            var container = TinyIoCContainer.Current;
+            var container = new TinyIoCContainer();
             container.RegisterSagas(typeof(MetadataPipelineIntegrationTests).Assembly);
             var serviceLocator = new TinyIocSagaFactory(container);
 

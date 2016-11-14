@@ -3342,13 +3342,13 @@ namespace NSaga
         /// <summary>
         /// Lazy created Singleton instance of the container for simple scenarios
         /// </summary>
-        public static TinyIoCContainer Current
-        {
-            get
-            {
-                return _Current;
-            }
-        }
+        //public static TinyIoCContainer Current
+        //{
+        //    get
+        //    {
+        //        return _Current;
+        //    }
+        //}
         #endregion
 
         #region Type Registrations

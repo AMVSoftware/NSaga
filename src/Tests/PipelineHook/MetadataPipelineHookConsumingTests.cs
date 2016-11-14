@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Tests.PipelineHook
 {
+    [Collection("TimeProvider")]
     public class MetadataPipelineHookConsumingTests : IDisposable
     {
         private readonly MetadataPipelineHook sut;
