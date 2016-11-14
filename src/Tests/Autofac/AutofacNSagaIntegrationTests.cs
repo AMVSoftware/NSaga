@@ -4,7 +4,6 @@ using Autofac;
 using FluentAssertions;
 using NSaga;
 using NSaga.Autofac;
-using NSaga.SqlServer;
 using Xunit;
 
 namespace Tests.Autofac

@@ -35,6 +35,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -69,11 +70,17 @@
     <Compile Include="NSagaReflection.cs" />
     <Compile Include="SagaMediator.cs" />
     <Compile Include="Pipeline\SagaMetadata.cs" />
+    <Compile Include="SqlServer\IConnectionFactory.cs" />
+    <Compile Include="SqlServer\PetaPoco.cs" />
+    <Compile Include="SqlServer\SqlSagaRepository.cs" />
+    <Compile Include="SqlServer\SqlServerWireup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="SqlServer\Install.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

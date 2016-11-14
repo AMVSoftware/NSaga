@@ -45,11 +45,7 @@
       <Link>Guard.cs</Link>
     </Compile>
     <Compile Include="AssemlbyAttributes.cs" />
-    <Compile Include="IConnectionFactory.cs" />
-    <Compile Include="SqlServerWireup.cs" />
-    <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlSagaRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NSaga\NSaga.csproj">
@@ -64,7 +60,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Install.sql" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

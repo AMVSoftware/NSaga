@@ -46,7 +46,7 @@ Task("Create-DB-And-Schema")
         var dbConnectionString = @"data source=(LocalDb)\v12.0;Database=NSaga-Testing";
 
         DropAndCreateDatabase(masterConnectionString, "NSaga-Testing");
-        ExecuteSqlFile(dbConnectionString, "./src/NSaga.SqlServer/Install.sql");
+        ExecuteSqlFile(dbConnectionString, "./src/NSaga/SqlServer/Install.sql");
     });
 
 

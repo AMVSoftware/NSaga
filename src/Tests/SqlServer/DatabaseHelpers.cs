@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NSaga.SqlServer;
+using NSaga;
 using PetaPoco;
 
 namespace Tests.SqlServer

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using FluentAssertions;
 using NSaga;
 using NSaga.SimpleInjector;
-using NSaga.SqlServer;
 using SimpleInjector;
 using Tests.Stubs;
 using Xunit;

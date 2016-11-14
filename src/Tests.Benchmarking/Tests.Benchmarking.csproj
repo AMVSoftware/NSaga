@@ -98,10 +98,6 @@
       <Project>{b8596ea9-b88b-4415-bc6f-cad0ebf07a70}</Project>
       <Name>NSaga.SimpleInjector</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NSaga.SqlServer\NSaga.SqlServer.csproj">
-      <Project>{98d2cbbc-a644-4c07-9c08-95c8e8efa710}</Project>
-      <Name>NSaga.SqlServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NSaga\NSaga.csproj">
       <Project>{e537d1bf-80a4-413b-a8f8-116c2a2382b1}</Project>
       <Name>NSaga</Name>

@@ -1,6 +1,5 @@
 ﻿using System;
 using NSaga;
-using NSaga.SqlServer;
 
 namespace Samples
 {

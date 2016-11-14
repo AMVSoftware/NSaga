@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentAssertions;
 using NSaga;
-using NSaga.SqlServer;
 using PetaPoco;
 using Xunit;
 

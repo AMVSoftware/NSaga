@@ -7717,7 +7717,7 @@ namespace PetaPoco
     /// <summary>
     ///     Presents the SQL parts.
     /// </summary>
-    public struct SQLParts
+    internal struct SQLParts
     {
         /// <summary>
         ///     The SQL.

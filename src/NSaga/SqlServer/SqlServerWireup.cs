@@ -1,4 +1,4 @@
-﻿namespace NSaga.SqlServer
+﻿namespace NSaga
 {
     public static class SqlServerWireup
     {

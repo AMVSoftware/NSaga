@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 
 
-namespace NSaga.SqlServer
+namespace NSaga
 {
     public interface IConnectionFactory
     {
