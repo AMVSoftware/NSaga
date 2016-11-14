@@ -1,20 +1,36 @@
-﻿namespace NSaga
+﻿using System;
+
+namespace NSaga
 {
     public static class SqlServerWireup
     {
-        public static SagaMediatorBuilder UseSqlServerConnectionStringName(this SagaMediatorBuilder builder, string connectionStringName)
+        public static SqlServerBuilderExtension UseSqlServer(this SagaMediatorBuilder builder)
         {
-            builder.Register(typeof(IConnectionFactory), ConnectionFactory.FromConnectionStringName(connectionStringName));
+            return new SqlServerBuilderExtension(builder);
+        }
+    }
+
+    public class SqlServerBuilderExtension
+    {
+        private readonly SagaMediatorBuilder builder;
+
+        public SqlServerBuilderExtension(SagaMediatorBuilder builder)
+        {
+            this.builder = builder;
+        }
+
+        public SagaMediatorBuilder WithConnectionString(String connectionString)
+        {
+            builder.Register(typeof(IConnectionFactory), new ConnectionFactory(connectionString));
 
             builder.UseRepository<SqlSagaRepository>();
 
             return builder;
         }
 
-
-        public static SagaMediatorBuilder UseSqlServerConnectionString(this SagaMediatorBuilder builder, string connectionString)
+        public SagaMediatorBuilder WithConnectionStringName(String connectionStringName)
         {
-            builder.Register(typeof(IConnectionFactory), new ConnectionFactory(connectionString));
+            builder.Register(typeof(IConnectionFactory), ConnectionFactory.FromConnectionStringName(connectionStringName));
 
             builder.UseRepository<SqlSagaRepository>();
 

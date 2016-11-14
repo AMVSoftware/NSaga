@@ -10,7 +10,10 @@ namespace Samples
 
         public void Run()
         {
-            var builder = Wireup.UseInternalContainer().UseSqlServerConnectionStringName("NSagaDatabase");
+            var builder = Wireup.UseInternalContainer()
+                                .UseSqlServer() 
+                                .WithConnectionStringName("NSagaDatabase")
+                                .UseMessageSerialiser<JsonNetSerialiser>();
 
             sagaMediator = builder.ResolveMediator();
 
