@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using NSaga;
+using PetaPoco;
 using Xunit;
 
 namespace Tests
@@ -27,7 +28,7 @@ namespace Tests
         }
 
         [Fact]
-        public void PetaPoco_Stays_Internal()
+        public void PetaPocoNamespace_Stays_Internal()
         {
             //Arrange
             var petapocoTypes = typeof(SqlSagaRepository).Assembly
@@ -44,6 +45,13 @@ namespace Tests
         public void TinyIoc_Stays_Internal()
         {
             typeof(TinyIoCContainer).IsPublic.Should().BeFalse();
+        }
+
+
+        [Fact]
+        public void PetaPoco_Stays_Internal()
+        {
+            typeof(Database).IsPublic.Should().BeFalse();
         }
     }
 }
