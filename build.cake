@@ -93,7 +93,7 @@ Task("Copy-Files")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 	{
-		EnsureDirectoryExists(parameters.ResultBinDir);
+		// EnsureDirectoryExists(parameters.ResultBinDir);
 		//EnsureDirectoryExists(BuildParameters.IntegrationTestsFolder);
 
 		// CopyFileToDirectory(parameters.BuildDir + "/NSaga.dll", parameters.ResultBinDir);
