@@ -1,6 +1,8 @@
 public class BuildParameters
 {
     public String Solution = "./src/NSaga.sln";
+    public string Artefacts = "./artefacts/";
+    public string ArtefactsBin = "./artefacts/bin/";
 
     public string NSagaBinDir { get; private set; }
     public string AutofacBinDir { get; private set; }
@@ -17,8 +19,6 @@ public class BuildParameters
     public string Version { get; private set; }
     public string SemVersion { get; private set; }
 
-    public string Artefacts = "./artefacts/";
-    public string ArtefactsBin = "./artefacts/bin/";
 
     public void Initialize(ICakeContext context)
     {
@@ -69,7 +69,7 @@ public class BuildParameters
     {
         get
         {
-            return !IsLocalBuild && IsMasterBranch;
+            return !IsLocalBuild && IsMasterBranch && IsRunningOnAppVeyor;
         }
     }    
 }

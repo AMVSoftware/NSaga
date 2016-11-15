@@ -118,7 +118,7 @@ Task("Copy-Files")
 	});
 
 
-Task("Create-NuGet-Packages")
+Task("Package")
     .IsDependentOn("Copy-Files")
     .Does(() =>
 	{
@@ -140,6 +140,43 @@ Task("Create-NuGet-Packages")
 	});
 
 
+Task("Publish-MyGet")
+    .IsDependentOn("Package")
+    .WithCriteria(() => parameters.ShouldPublishToMyGet)
+    .Does(() =>
+	{
+		// Resolve the API key.
+		var apiKey = EnvironmentVariable("MYGET_API_KEY");
+		if(string.IsNullOrEmpty(apiKey)) {
+			throw new InvalidOperationException("Could not resolve MyGet API key.");
+		}
+
+		// Resolve the API url.
+		var apiUrl = EnvironmentVariable("MYGET_API_URL");
+		if(string.IsNullOrEmpty(apiUrl)) {
+			throw new InvalidOperationException("Could not resolve MyGet API url.");
+		}
+
+		// Push the Packages
+        var files = GetFiles(parameters.Artefacts + "*.nupkg");
+        foreach(var file in files)
+        {
+            Information("Found nupkg file: {0}", file);
+            
+            NuGetPush(file, new NuGetPushSettings {
+                Source = apiUrl,
+                ApiKey = apiKey
+            });
+        }
+
+	})
+	.OnError(exception =>
+	{
+		Information("Publish-MyGet Task failed, but continuing with next Task...");
+		// publishingError = true;
+	});    
+
+
 
 Task("SqlExpress")
     .Description("Create NSaga database on SqlExpress for local execution")
@@ -155,6 +192,6 @@ Task("SqlExpress")
     });
 
 Task("Default")
-    .IsDependentOn("Create-NuGet-Packages");
+    .IsDependentOn("Package");
     
 RunTarget(target);
