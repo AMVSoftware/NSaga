@@ -5,6 +5,7 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
+bool publishingError = false;
 
 BuildParameters parameters = BuildParameters.GetParameters(Context);
 
@@ -173,9 +174,33 @@ Task("Publish-MyGet")
 	.OnError(exception =>
 	{
 		Information("Publish-MyGet Task failed, but continuing with next Task...");
-		// publishingError = true;
+		publishingError = true;
 	});    
 
+
+Task("Upload-AppVeyor-Artifacts")
+    .IsDependentOn("Package")
+    .WithCriteria(() => parameters.IsRunningOnAppVeyor)
+    .Does(() =>
+	{
+        var files = GetFiles(parameters.Artefacts + "*.nupkg");
+        foreach(var file in files)
+        {
+    		AppVeyor.UploadArtifact(file);
+        }
+        
+	});
+
+Task("AppVeyor")
+    .IsDependentOn("Publish-MyGet")
+    .IsDependentOn("Upload-AppVeyor-Artifacts")
+    .Finally(() =>
+    {
+        if(publishingError)
+        {
+            throw new Exception("An error occurred during the publishing of Cake.  All publishing tasks have been attempted.");
+        }
+    });
 
 
 Task("SqlExpress")
@@ -190,6 +215,7 @@ Task("SqlExpress")
         
         Information("Created SQL Schema for NSaga database");
     });
+
 
 Task("Default")
     .IsDependentOn("Package");
