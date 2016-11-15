@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A30D447-9054-45CD-9FB6-A12779650349}"
 	ProjectSection(SolutionItems) = preProject
 		..\build.cake = ..\build.cake
+		..\SolutionInfo.cs = ..\SolutionInfo.cs
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSaga.SimpleInjector", "NSaga.SimpleInjector\NSaga.SimpleInjector.csproj", "{B8596EA9-B88B-4415-BC6F-CAD0EBF07A70}"

@@ -46,7 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemlbyAttributes.cs" />
+    <Compile Include="..\..\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="Composition\SagaMediatorBuilder.cs" />
     <Compile Include="Composition\TinyIocExtensions.cs" />
     <Compile Include="Composition\Wireup.cs" />
