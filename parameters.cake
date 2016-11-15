@@ -21,7 +21,7 @@ public class BuildParameters
     {
         context.Information("Executing GitVersion");
         var result = context.GitVersion(new GitVersionSettings{
-            UpdateAssemblyInfoFilePath = "**/properties/AssemblyInfo.cs",
+            UpdateAssemblyInfoFilePath = "./SolutionInfo.cs",
             UpdateAssemblyInfo = true,
         });
         Version = result.MajorMinorPatch ?? "0.1.0";
