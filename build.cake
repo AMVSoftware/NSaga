@@ -5,9 +5,6 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-// var buildDir = Directory("./src/NSaga/bin") + Directory(configuration);
-// var solution = "./src/NSaga.sln";
-
 
 BuildParameters parameters = BuildParameters.GetParameters(Context);
 
@@ -37,6 +34,19 @@ Task("Clean")
         CleanDirectories("./src/**/obj/"+configuration, exclude_vshost);
         CleanDirectories(parameters.Artefacts);
         CleanDirectories(parameters.ArtefactsBin);
+
+        CleanDirectories(new DirectoryPath[]{
+            Directory("./src/Tests/bin/"),
+            Directory("./src/Tests/obj/"),
+            Directory(parameters.Artefacts),
+            Directory(parameters.NSagaBinDir),
+            Directory(parameters.NSagaBinDir + "../../obj/"),
+            Directory(parameters.AutofacBinDir),
+            Directory(parameters.AutofacBinDir + "../../obj/"),
+            Directory(parameters.SimpleInjectorBinDir),
+            Directory(parameters.SimpleInjectorBinDir + "../../obj/"),
+        });
+
     });
 
 
@@ -80,7 +90,7 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Create-DB-And-Schema")
     .Does(() =>
     {
-        // XUnit2("./src/Tests/bin/" + configuration + "/Tests.dll");
+        XUnit2("./src/Tests/bin/" + configuration + "/Tests.dll");
     });
 
 
@@ -108,6 +118,28 @@ Task("Copy-Files")
 	});
 
 
+Task("Create-NuGet-Packages")
+    .IsDependentOn("Copy-Files")
+    .Does(() =>
+	{
+		var releaseNotes = ParseReleaseNotes("./ReleaseNotes.md");
+
+        var settings = new NuGetPackSettings
+		{
+			Version = parameters.Version,
+			ReleaseNotes = releaseNotes.Notes.ToArray(),
+			BasePath = parameters.ArtefactsBin,
+			OutputDirectory = parameters.Artefacts,
+			Symbols = false,
+			NoPackageAnalysis = true
+		};
+
+		NuGetPack("./src/NSaga/NSaga.nuspec", settings);
+		NuGetPack("./src/NSaga.Autofac/NSaga.Autofac.nuspec", settings);
+		NuGetPack("./src/NSaga.SimpleInjector/NSaga.SimpleInjector.nuspec", settings);
+	});
+
+
 
 Task("SqlExpress")
     .Description("Create NSaga database on SqlExpress for local execution")
@@ -123,6 +155,6 @@ Task("SqlExpress")
     });
 
 Task("Default")
-    .IsDependentOn("Copy-Files");
+    .IsDependentOn("Create-NuGet-Packages");
     
 RunTarget(target);

@@ -1,9 +1,6 @@
 public class BuildParameters
 {
     public String Solution = "./src/NSaga.sln";
-    // public String NSagaDir = "./src/NSaga/";
-    // public String AutofacDir = "./src/NSaga.Autofac/";
-    // public String SimpleInjectorDir = "./src/NSaga.SimpleInjector/";
 
     public string NSagaBinDir { get; private set; }
     public string AutofacBinDir { get; private set; }
@@ -67,32 +64,6 @@ public class BuildParameters
             SimpleInjectorBinDir = "./src/NSaga.SimpleInjector/bin/" + configuration + "/",
         };
     }
-
-    // public string BuildResultDir
-    // {
-    //     get 
-    //     {
-    //         return "./build-results/v" + SemVersion + "/";
-    //     }
-    // }
-
-    // public string ResultBinDir
-    // {
-    //     get 
-    //     {
-    //         return BuildResultDir + "bin";
-    //     }
-    // }
-
-
-    // public string ResultNugetPath
-    // {
-    //     get 
-    //     {
-    //         return BuildResultDir + "NSaga." + Version + ".nupkg";
-    //     }
-    // }
-
 
     public bool ShouldPublishToMyGet
     {
