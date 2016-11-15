@@ -15,15 +15,16 @@
     <releaseNotes>Initial Release</releaseNotes>
     <tags>NSaga, saga-management, SimpleInjector</tags>
     <dependencies>
+      <dependency id="NSaga" version="$version$" />
       <dependency id="Newtonsoft.Json" version="6.0.1" />
-      <package id="SimpleInjector" version="3.2.3" targetFramework="net452" />
+      <dependency id="SimpleInjector" version="3.0.0" />
     </dependencies>  
   </metadata>
 
   <files>
-    <file src="NSaga.SimpleInjector.dll" target="lib/net45" />
-    <file src="NSaga.SimpleInjector.pdb" target="lib/net45" />
-    <file src="NSaga.SimpleInjector.xml" target="lib/net45"/>
+    <file src="NSaga.SimpleInjector.dll" target="lib" />
+    <file src="NSaga.SimpleInjector.pdb" target="lib" />
+    <file src="NSaga.SimpleInjector.xml" target="lib"/>
     <file src="LICENSE" />
   </files>
 </package>

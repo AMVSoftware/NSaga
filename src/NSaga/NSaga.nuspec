@@ -20,9 +20,9 @@
   </metadata>
 
   <files>
-    <file src="NSaga.dll" target="lib/net45" />
-    <file src="NSaga.pdb" target="lib/net45" />
-    <file src="NSaga.xml" target="lib/net45"/>
+    <file src="NSaga.dll" target="lib" />
+    <file src="NSaga.pdb" target="lib" />
+    <file src="NSaga.xml" target="lib"/>
     <file src="LICENSE" />
   </files>
 </package>

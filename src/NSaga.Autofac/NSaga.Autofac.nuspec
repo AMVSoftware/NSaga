@@ -15,15 +15,16 @@
     <releaseNotes>Initial Release</releaseNotes>
     <tags>NSaga, saga-management, Autofac</tags>
     <dependencies>
+      <dependency id="NSaga" version="$version$" />
       <dependency id="Newtonsoft.Json" version="6.0.1" />
-      <package id="Autofac" version="4.1.1" targetFramework="net452" />
+      <dependency id="Autofac" version="3.0.0" />
     </dependencies>  
   </metadata>
 
   <files>
-    <file src="NSaga.Autofac.dll" target="lib/net45" />
-    <file src="NSaga.Autofac.pdb" target="lib/net45" />
-    <file src="NSaga.Autofac.xml" target="lib/net45"/>
+    <file src="NSaga.Autofac.dll" target="lib" />
+    <file src="NSaga.Autofac.pdb" target="lib" />
+    <file src="NSaga.Autofac.xml" target="lib"/>
     <file src="LICENSE" />
   </files>
 </package>
