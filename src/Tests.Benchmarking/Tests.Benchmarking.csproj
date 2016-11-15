@@ -76,9 +76,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\NSaga\NSagaReflection.cs">
-      <Link>NSagaReflection.cs</Link>
-    </Compile>
     <Compile Include="FastSagaRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
