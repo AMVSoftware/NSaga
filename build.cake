@@ -28,14 +28,6 @@ Task("debug")
 Task("Clean")
     .Does(() =>
     {
-        // if built locally, VS locks Samples.vshost.exe file - prevents this tak from failing
-        Func<IFileSystemInfo, bool> exclude_vshost = fileSystemInfo => fileSystemInfo.Path.FullPath.EndsWith(".vshost.exe", StringComparison.OrdinalIgnoreCase);
-
-        CleanDirectories("./src/**/bin/"+configuration, exclude_vshost);
-        CleanDirectories("./src/**/obj/"+configuration, exclude_vshost);
-        CleanDirectories(parameters.Artefacts);
-        CleanDirectories(parameters.ArtefactsBin);
-
         CleanDirectories(new DirectoryPath[]{
             Directory("./src/Tests/bin/"),
             Directory("./src/Tests/obj/"),

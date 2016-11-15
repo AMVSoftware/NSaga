@@ -69,7 +69,7 @@ public class BuildParameters
     {
         get
         {
-            return !IsLocalBuild && IsMasterBranch && IsRunningOnAppVeyor;
+            return IsMasterBranch && IsRunningOnAppVeyor;
         }
     }    
 }
