@@ -1,6 +1,13 @@
 public class BuildParameters
 {
     public String Solution = "./src/NSaga.sln";
+    // public String NSagaDir = "./src/NSaga/";
+    // public String AutofacDir = "./src/NSaga.Autofac/";
+    // public String SimpleInjectorDir = "./src/NSaga.SimpleInjector/";
+
+    public string NSagaBinDir { get; private set; }
+    public string AutofacBinDir { get; private set; }
+    public string SimpleInjectorBinDir { get; private set; }
 
     public string Target { get; private set; }
     public string Configuration { get; private set; }
@@ -13,6 +20,8 @@ public class BuildParameters
     public string Version { get; private set; }
     public string SemVersion { get; private set; }
 
+    public string Artefacts = "./artefacts/";
+    public string ArtefactsBin = "./artefacts/bin/";
 
     public void Initialize(ICakeContext context)
     {
@@ -52,6 +61,10 @@ public class BuildParameters
             IsRunningOnAppVeyor = buildSystem.AppVeyor.IsRunningOnAppVeyor,
             IsMasterBranch = isMaster,
             ReleaseNotes = context.ParseReleaseNotes("./ReleaseNotes.md"),
+
+            NSagaBinDir = "./src/NSaga/bin/" + configuration + "/",
+            AutofacBinDir = "./src/NSaga.Autofac/bin/" + configuration + "/",
+            SimpleInjectorBinDir = "./src/NSaga.SimpleInjector/bin/" + configuration + "/",
         };
     }
 

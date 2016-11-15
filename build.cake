@@ -35,12 +35,8 @@ Task("Clean")
 
         CleanDirectories("./src/**/bin/"+configuration, exclude_vshost);
         CleanDirectories("./src/**/obj/"+configuration, exclude_vshost);
-
-        // CleanDirectories(new DirectoryPath[]{
-        //     parameters.BuildDir,
-        //     parameters.BuildResultDir,
-        // });
-
+        CleanDirectories(parameters.Artefacts);
+        CleanDirectories(parameters.ArtefactsBin);
     });
 
 
@@ -84,7 +80,7 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Create-DB-And-Schema")
     .Does(() =>
     {
-        XUnit2("./src/Tests/bin/" + configuration + "/Tests.dll");
+        // XUnit2("./src/Tests/bin/" + configuration + "/Tests.dll");
     });
 
 
@@ -93,16 +89,22 @@ Task("Copy-Files")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 	{
-		// EnsureDirectoryExists(parameters.ResultBinDir);
-		//EnsureDirectoryExists(BuildParameters.IntegrationTestsFolder);
+		EnsureDirectoryExists(parameters.Artefacts);
+		EnsureDirectoryExists(parameters.ArtefactsBin);
 
-		// CopyFileToDirectory(parameters.BuildDir + "/NSaga.dll", parameters.ResultBinDir);
-		// CopyFileToDirectory(parameters.BuildDir + "/NSaga.pdb", parameters.ResultBinDir);
-		// CopyFileToDirectory(parameters.BuildDir + "/NSaga.xml", parameters.ResultBinDir);
-		// CopyFiles(new FilePath[] { "LICENSE", "README.md", "ReleaseNotes.md" }, parameters.ResultBinDir);
+		CopyFiles(new FilePath[] { "LICENSE", "README.md", "ReleaseNotes.md" }, parameters.ArtefactsBin);
 
+        CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.dll", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.pdb", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.xml", parameters.ArtefactsBin);
 
-		// CopyFileToDirectory(parameters.BuildDir + "/NSaga.dll", BuildParameters.IntegrationTestsFolder);
+        CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.dll", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.pdb", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.xml", parameters.ArtefactsBin);
+
+        CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.dll", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.pdb", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.xml", parameters.ArtefactsBin);
 	});
 
 
@@ -121,6 +123,6 @@ Task("SqlExpress")
     });
 
 Task("Default")
-    .IsDependentOn("Run-Unit-Tests");
+    .IsDependentOn("Copy-Files");
     
 RunTarget(target);
