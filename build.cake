@@ -84,7 +84,7 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Create-DB-And-Schema")
     .Does(() =>
     {
-        XUnit2("./src/**/bin/" + configuration + "/Tests.dll");
+        XUnit2("./src/Tests/bin/" + configuration + "/Tests.dll");
     });
 
 

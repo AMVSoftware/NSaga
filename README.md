@@ -1,2 +1,2 @@
 # NSaga
-Simple Saga Management library for .Net
+Lightweight Saga management framework for .Net
