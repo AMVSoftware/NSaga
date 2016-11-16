@@ -6,8 +6,16 @@ using SimpleInjector.Advanced;
 
 namespace NSaga.SimpleInjector
 {
+    /// <summary>
+    /// Adapter to integrate NSaga with SimpleInjector DI container
+    /// </summary>
     public static class SimpleInjectorNSagaIntegration
     {
+        /// <summary>
+        /// Registers all the saga classes and all default components
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <returns>Intance of the same container for fluent configuration.</returns>
         public static Container RegisterNSagaComponents(this Container container)
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
@@ -15,6 +23,22 @@ namespace NSaga.SimpleInjector
             return container.RegisterNSagaComponents(AppDomain.CurrentDomain.GetAssemblies());
         }
 
+        /// <summary>
+        /// Registers all the saga classes and all default components
+        /// <para>
+        /// Default registrations are:
+        /// <list type="bullet">
+        /// <item><description><see cref="JsonNetSerialiser"/> to serialise messages; </description></item> 
+        /// <item><description><see cref="InMemorySagaRepository"/> to store saga datas; </description></item> 
+        /// <item><description><see cref="SimpleInjectorSagaFactory"/> to resolve instances of Sagas;</description></item> 
+        /// <item><description><see cref="SagaMetadata"/> to work as the key component - SagaMediator;</description></item> 
+        /// <item><description><see cref="MetadataPipelineHook"/> added to the pipeline to preserve metadata about incoming messages.</description></item> 
+        /// </list>
+        /// </para>
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="assemblies">The assemblies.</param>
+        /// <returns>Intance of the same container for fluent configuration.</returns>
         public static Container RegisterNSagaComponents(this Container container, params Assembly[] assemblies)
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
@@ -33,6 +57,12 @@ namespace NSaga.SimpleInjector
             return container;
         }
 
+        /// <summary>
+        /// Override default ISagaRepository registration with the container.
+        /// </summary>
+        /// <typeparam name="TSagaRepository">The type of the saga repository.</typeparam>
+        /// <param name="container">The container.</param>
+        /// <returns>Intance of the same container for fluent configuration.</returns>
         public static Container UseSagaRepository<TSagaRepository>(this Container container) where TSagaRepository : ISagaRepository
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
@@ -43,6 +73,12 @@ namespace NSaga.SimpleInjector
         }
 
 
+        /// <summary>
+        /// Override default ISagaRepository registration with the container.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="repositoryFactory">The repository factory.</param>
+        /// <returns>Intance of the same container for fluent configuration.</returns>
         public static Container UseSagaRepository(this Container container, Func<ISagaRepository> repositoryFactory)
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
@@ -54,6 +90,12 @@ namespace NSaga.SimpleInjector
         }
 
 
+        /// <summary>
+        /// Adds another pipeline hook into the pipeline. <see cref="IPipelineHook"/> for description of possible interception points.
+        /// </summary>
+        /// <typeparam name="TPipelineHook">The type of the pipeline hook.</typeparam>
+        /// <param name="container">The container.</param>
+        /// <returns>Intance of the same container for fluent configuration.</returns>
         public static Container AddSagaPipelineHook<TPipelineHook>(this Container container) where TPipelineHook : IPipelineHook
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
@@ -64,6 +106,12 @@ namespace NSaga.SimpleInjector
         }
 
 
+        /// <summary>
+        /// Replaces the default implementation of <see cref="IMessageSerialiser"/>.
+        /// </summary>
+        /// <typeparam name="TMessageSerialiser">The type of the message serialiser.</typeparam>
+        /// <param name="container">The container.</param>
+        /// <returns>Intance of the same container for fluent configuration.</returns>
         public static Container UseMessageSerialiser<TMessageSerialiser>(this Container container) where TMessageSerialiser : IMessageSerialiser
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
@@ -73,6 +121,12 @@ namespace NSaga.SimpleInjector
             return container;
         }
 
+        /// <summary>
+        /// Replaces the default implementation of <see cref="IMessageSerialiser"/>.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="messageSerialiserFactory">The message serialiser factory.</param>
+        /// <returns>Intance of the same container for fluent configuration.</returns>
         public static Container UseMessageSerialiser(this Container container, Func<IMessageSerialiser> messageSerialiserFactory)
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
@@ -84,6 +138,11 @@ namespace NSaga.SimpleInjector
         }
 
 
+        /// <summary>
+        /// This chain is aiding with registering <see cref="SqlSagaRepository"/> as the storage mechanism. 
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <returns>Intance of the same container for fluent configuration.</returns>
         public static SqlRepositoryBuilder UseSqlServer(this Container container)
         {
             Guard.ArgumentIsNotNull(container, nameof(container));

@@ -18,8 +18,8 @@ namespace NSaga
     /// </summary>
     public sealed class SqlSagaRepository : ISagaRepository
     {
-        public const string SagaDataTableName = "NSaga.Sagas";
-        public const string HeadersTableName = "NSaga.Headers";
+        internal const string SagaDataTableName = "NSaga.Sagas";
+        internal const string HeadersTableName = "NSaga.Headers";
 
         private readonly ISagaFactory sagaFactory;
         private readonly IMessageSerialiser messageSerialiser;

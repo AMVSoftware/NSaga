@@ -7,6 +7,11 @@ namespace NSaga
     /// </summary>
     public static class SqlServerWireup
     {
+        /// <summary>
+        /// Starts the fluent chain to configure <see cref="SqlSagaRepository"/>
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
         public static SqlServerBuilderExtension UseSqlServer(this SagaMediatorBuilder builder)
         {
             return new SqlServerBuilderExtension(builder);
