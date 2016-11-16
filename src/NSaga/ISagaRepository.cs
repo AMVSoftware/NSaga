@@ -9,7 +9,7 @@ namespace NSaga
     {
         /// <summary>
         /// Finds and returns saga instance with the given correlation ID.
-        /// Actually creates an instance of saga from service locator, retrieves SagaData and Headers from the storage and populates the instance with these.
+        /// Actually creates an instance of saga from Saga factory, retrieves SagaData and Headers from the storage and populates the instance with these.
         /// </summary>
         /// <typeparam name="TSaga">Type of saga we are looking for</typeparam>
         /// <param name="correlationId">CorrelationId to identify the saga</param>

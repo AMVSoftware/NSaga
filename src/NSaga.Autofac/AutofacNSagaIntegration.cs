@@ -26,11 +26,14 @@ namespace NSaga.Autofac
         /// <summary>
         /// Extension method to execute default NSaga components registration in Autofac Container Builder.
         /// <para>
-        /// The default components are: <see cref="JsonNetSerialiser"/> to serialise messages; 
-        /// <see cref="InMemorySagaRepository"/> to store saga datas;
-        /// <see cref="AutofacSagaFactory"/> to resolve instances of Sagas;
-        /// <see cref="SagaMetadata"/> to work as the key component - SagaMediator;
-        /// <see cref="MetadataPipelineHook"/> added to the pipeline to preserve metadata about incoming messages.
+        /// Default registrations are:
+        /// <list type="bullet">
+        /// <item><description><see cref="JsonNetSerialiser"/> to serialise messages; </description></item> 
+        /// <item><description><see cref="InMemorySagaRepository"/> to store saga datas; </description></item> 
+        /// <item><description><see cref="AutofacSagaFactory"/> to resolve instances of Sagas;</description></item> 
+        /// <item><description><see cref="SagaMetadata"/> to work as the key component - SagaMediator;</description></item> 
+        /// <item><description><see cref="MetadataPipelineHook"/> added to the pipeline to preserve metadata about incoming messages.</description></item> 
+        /// </list>
         /// </para>
         /// </summary>
         /// <param name="builder">Container Builder to do the registration</param>
