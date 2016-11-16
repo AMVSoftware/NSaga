@@ -5,6 +5,17 @@ using PetaPoco;
 
 namespace NSaga
 {
+    /// <summary>
+    /// Implementation of <see cref="ISagaRepository"/> that uses SQL Server to store Saga data.
+    /// <para>
+    /// Before using you need to execute provided Install.Sql to create tables.
+    /// </para>
+    /// <para>
+    /// This implementation uses PetaPoco micro ORM internally. PetaPoco can work with multiple databases, not just SQL Server.
+    /// Though this implementation was tested with SQL Server, I'm pretty sure you will be able to use MySql, Postgress, etc.
+    /// To do that you'll have to provide your own <see cref="IConnectionFactory"/> that returns a connection to a required database.
+    /// </para>
+    /// </summary>
     public sealed class SqlSagaRepository : ISagaRepository
     {
         public const string SagaDataTableName = "NSaga.Sagas";
@@ -46,7 +57,7 @@ namespace NSaga
         {
             Guard.ArgumentIsNotNull(correlationId, nameof(correlationId));
 
-            using(var connection = connectionFactory.GetConnection())
+            using(var connection = connectionFactory.CreateOpenConnection())
             using (var database = new Database(connection))
             {
                 var sql = Sql.Builder.Where("correlationId = @0", correlationId);
@@ -97,7 +108,7 @@ namespace NSaga
                 BlobData = serialisedData,
             };
 
-            using (var connection = connectionFactory.GetConnection())
+            using (var connection = connectionFactory.CreateOpenConnection())
             using (var database = new Database(connection))
             using (var transaction = database.GetTransaction())
             {
@@ -158,7 +169,7 @@ namespace NSaga
         {
             Guard.ArgumentIsNotNull(correlationId, nameof(correlationId));
 
-            using (var connection = connectionFactory.GetConnection())
+            using (var connection = connectionFactory.CreateOpenConnection())
             using (var database = new Database(connection))
             using (var transaction = database.GetTransaction())
             {
@@ -181,7 +192,7 @@ namespace NSaga
 
     [TableName(SqlSagaRepository.SagaDataTableName)]
     [PrimaryKey("CorrelationId", AutoIncrement = false)]
-    class SagaData
+    internal class SagaData
     {
         public Guid CorrelationId { get; set; }
         public String BlobData { get; set; }
@@ -190,7 +201,7 @@ namespace NSaga
 
     [TableName(SqlSagaRepository.HeadersTableName)]
     [PrimaryKey("CorrelationId", AutoIncrement = false)]
-    class SagaHeaders
+    internal class SagaHeaders
     {
         public Guid CorrelationId { get; set; }
         public String Key { get; set; }

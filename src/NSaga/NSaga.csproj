@@ -80,6 +80,7 @@
     <Compile Include="SqlServer\SqlServerWireup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NSaga.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
