@@ -100,6 +100,7 @@ Task("Copy-Files")
         CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.dll", parameters.ArtefactsBin);
         CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.pdb", parameters.ArtefactsBin);
         CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.xml", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.NSagaBinDir + "SqlServer/Install.sql", parameters.ArtefactsBin);
 
         CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.dll", parameters.ArtefactsBin);
         CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.pdb", parameters.ArtefactsBin);

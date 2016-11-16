@@ -22,7 +22,8 @@
   <files>
     <file src="NSaga.dll" target="lib" />
     <file src="NSaga.pdb" target="lib" />
-    <file src="NSaga.xml" target="lib"/>
+    <file src="NSaga.xml" target="lib" />
+    <file src="Install.sql" target="lib" />
     <file src="LICENSE" />
   </files>
 </package>
