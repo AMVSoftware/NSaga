@@ -1,16 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 
 namespace NSaga
 {
+    /// <summary>
+    /// Core of the system - routes messages to a correct Saga, preserves saga data, resolves instances of sagas. Does all the magic
+    /// </summary>
+    /// <seealso cref="NSaga.ISagaMediator" />
     public sealed class SagaMediator : ISagaMediator
     {
         private readonly ISagaRepository sagaRepository;
         private readonly ISagaFactory sagaFactory;
         private readonly IPipelineHook pipelineHook;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SagaMediator"/> class.
+        /// </summary>
+        /// <param name="sagaRepository">The saga repository.</param>
+        /// <param name="sagaFactory">The saga factory.</param>
+        /// <param name="pipelineHooks">The pipeline hooks.</param>
         public SagaMediator(ISagaRepository sagaRepository, ISagaFactory sagaFactory, IEnumerable<IPipelineHook> pipelineHooks)
         {
             Guard.ArgumentIsNotNull(sagaRepository, nameof(sagaRepository));
@@ -23,6 +32,15 @@ namespace NSaga
         }
 
 
+        /// <summary>
+        /// Consumes the specified initiating message and creates a new instance of the correlating saga.
+        /// <para>Saga is not persisted if operation have failed</para>
+        /// </summary>
+        /// <param name="initiatingMessage">The initiating message.</param>
+        /// <returns>
+        /// Result of the operation
+        /// </returns>
+        /// <exception cref="System.ArgumentException"></exception>
         public OperationResult Consume(IInitiatingSagaMessage initiatingMessage)
         {
             Guard.CheckSagaMessage(initiatingMessage, nameof(initiatingMessage));
@@ -71,6 +89,14 @@ namespace NSaga
             return errors;
         }
 
+        /// <summary>
+        /// Consumes the specified saga message - finds the existing saga that can consume given message type and with matching CorrelationId.
+        /// </summary>
+        /// <param name="sagaMessage">The saga message.</param>
+        /// <returns>
+        /// Result of the operation
+        /// </returns>
+        /// <exception cref="System.ArgumentException"></exception>
         public OperationResult Consume(ISagaMessage sagaMessage)
         {
             Guard.CheckSagaMessage(sagaMessage, nameof(sagaMessage));
@@ -97,25 +123,6 @@ namespace NSaga
             }
 
             return errors;
-        }
-
-
-        private Type GetSingleSagaType(ISagaMessage sagaMessage, IEnumerable<Type> sagaTypes)
-        {
-            if (!sagaTypes.Any())
-            {
-                throw new ArgumentException(
-                    $"Message of type {sagaMessage.GetType().Name} is not initiating or consumed by any Sagas. Please add InitiatedBy<{sagaMessage.GetType().Name}> or ConsumedBy<{sagaMessage.GetType().Name}> to your Saga type");
-            }
-            if (sagaTypes.Count() > 1)
-            {
-                // can't have multiple sagas initiated by the same message - can't have 2 sagas of different types with the same CorrelationId
-                var sagaNames = String.Join(", ", sagaTypes.Select(t => t.Name));
-                throw new ArgumentException(
-                    $"Message of type {sagaMessage.GetType().Name} is initiating or consumed by more than one saga. Please make sure any single message is initiating only one saga. Affected sagas: {sagaNames}");
-            }
-
-            return sagaTypes.Single();
         }
     }
 }

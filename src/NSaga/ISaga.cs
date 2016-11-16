@@ -6,10 +6,16 @@ namespace NSaga
     /// <summary>
     /// Interface that does not contain generic TSagaData part.
     /// This is for ease of accessing of saga's headers and CorrelationId
-    /// If you are creating new Sagas, please use <see cref="ISaga{TSagaData}"/> interface.
+    /// <para><b>If you are creating new Sagas, please use <see cref="ISaga{TSagaData}"/> interface.</b></para>
     /// </summary>
     public interface IAccessibleSaga
     {
+        /// <summary>
+        /// Gets or sets the correlation identifier.
+        /// </summary>
+        /// <value>
+        /// The correlation identifier.
+        /// </value>
         Guid CorrelationId { get; set; }
 
 
@@ -26,6 +32,12 @@ namespace NSaga
     /// <typeparam name="TSagaData">Type of data that will be preserved</typeparam>
     public interface ISaga<TSagaData> : IAccessibleSaga
     {
+        /// <summary>
+        /// Gets or sets the saga data.
+        /// </summary>
+        /// <value>
+        /// The saga data - payload
+        /// </value>
         TSagaData SagaData { get; set; }
     }
     
@@ -35,6 +47,12 @@ namespace NSaga
     /// </summary>
     public interface ISagaMessage
     {
+        /// <summary>
+        /// Gets or sets the correlation identifier.
+        /// </summary>
+        /// <value>
+        /// The correlation identifier.
+        /// </value>
         Guid CorrelationId { get; set; }
     }
 
@@ -54,6 +72,11 @@ namespace NSaga
     /// <typeparam name="TMsg">What type of message to initiate the saga</typeparam>
     public interface InitiatedBy<TMsg> where TMsg : IInitiatingSagaMessage
     {
+        /// <summary>
+        /// Initiates the saga by a specified message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>Result of the operation</returns>
         OperationResult Initiate(TMsg message);
     }
 
@@ -63,6 +86,11 @@ namespace NSaga
     /// <typeparam name="TMsg">What type of message to be consumed</typeparam>
     public interface ConsumerOf<TMsg> where TMsg : ISagaMessage
     {
+        /// <summary>
+        /// Consumes the specified message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>Result of the operation</returns>
         OperationResult Consume(TMsg message);
     }
 }

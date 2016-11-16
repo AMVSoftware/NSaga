@@ -23,7 +23,7 @@ namespace NSaga
         /// <list type="bullet">
         /// <item><description><see cref="JsonNetSerialiser"/> to serialise messages; </description></item> 
         /// <item><description><see cref="InMemorySagaRepository"/> to store saga datas; </description></item> 
-        /// <item><description><see cref="TinyIoCContainer"/> to resolve instances of Sagas;</description></item> 
+        /// <item><description><see cref="TinyIocSagaFactory"/> to resolve instances of Sagas;</description></item> 
         /// <item><description><see cref="SagaMetadata"/> to work as the key component - SagaMediator;</description></item> 
         /// <item><description><see cref="MetadataPipelineHook"/> added to the pipeline to preserve metadata about incoming messages.</description></item> 
         /// <item><description>All currently loaded assemblies from AppDomain will be scanned for Saga classes</description></item>
