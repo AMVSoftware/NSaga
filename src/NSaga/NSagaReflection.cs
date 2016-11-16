@@ -7,12 +7,11 @@ using System.Reflection;
 namespace NSaga
 {
     /// <summary>
-    /// Because of all the generics and the way .Net works with Generics,
-    /// we have to use a metric ton of reflection
+    /// Provides some useful shortcuts when working with reflaction.
     /// </summary>
     public static class NSagaReflection
     {
-        public static void Set(object instance, string propertyName, object value)
+        internal static void Set(object instance, string propertyName, object value)
         {
             Type type = instance.GetType();
             PropertyInfo property = type.GetProperty(propertyName);
@@ -24,10 +23,10 @@ namespace NSaga
         }
 
 
-        public static object Get(object instance, string propertyName)
+        internal static object Get(object instance, string propertyName)
         {
-            Type type = instance.GetType();
-            PropertyInfo property = type.GetProperty(propertyName);
+            var type = instance.GetType();
+            var property = type.GetProperty(propertyName);
             if (property == null)
             {
                 return null;
@@ -36,7 +35,7 @@ namespace NSaga
             return property.GetValue(instance, null);
         }
 
-        public static Type GetInterfaceGenericType(object instance, Type interfaceType)
+        internal static Type GetInterfaceGenericType(object instance, Type interfaceType)
         {
             var instanceType = instance.GetType();
 
@@ -44,7 +43,7 @@ namespace NSaga
         }
 
 
-        public static Type GetInterfaceGenericType<TInstance>(Type interfaceType)
+        internal static Type GetInterfaceGenericType<TInstance>(Type interfaceType)
         {
             var instanceType = typeof(TInstance);
 
@@ -73,7 +72,7 @@ namespace NSaga
         /// <param name="message">Initialisation message to check for</param>
         /// <param name="assemblies">Assemblies to scan for sagas</param>
         /// <returns></returns>
-        public static IEnumerable<Type> GetSagaTypesInitiatedBy(IInitiatingSagaMessage message, params Assembly[] assemblies)
+        internal static IEnumerable<Type> GetSagaTypesInitiatedBy(IInitiatingSagaMessage message, params Assembly[] assemblies)
         {
             if (assemblies.Length == 0)
             {
@@ -97,7 +96,7 @@ namespace NSaga
         /// <param name="message">Initialisation message to check for</param>
         /// <param name="assemblies">Assemblies to scan for sagas</param>
         /// <returns></returns>
-        public static IEnumerable<Type> GetSagaTypesConsuming(ISagaMessage message, params Assembly[] assemblies)
+        internal static IEnumerable<Type> GetSagaTypesConsuming(ISagaMessage message, params Assembly[] assemblies)
         {
             if (assemblies.Length == 0)
             {
@@ -115,7 +114,7 @@ namespace NSaga
         }
 
 
-        public static object InvokeGenericMethod(object invocationTarget, string methodName, Type genericParameterType, params object[] parameters)
+        internal static object InvokeGenericMethod(object invocationTarget, string methodName, Type genericParameterType, params object[] parameters)
         {
             var invocationTargetType = invocationTarget.GetType();
             var methodInfo = invocationTargetType.GetMethod(methodName);
@@ -124,7 +123,7 @@ namespace NSaga
         }
 
 
-        public static object InvokeMethod(object invocationTarget, string methodName, object parameter)
+        internal static object InvokeMethod(object invocationTarget, string methodName, object parameter)
         {
             var invocationTargetType = invocationTarget.GetType();
             var methodInfo = invocationTargetType.GetMethods()
@@ -140,12 +139,12 @@ namespace NSaga
 
 
         /// <summary>
-        /// Checks if provided type implements a given interface. Also works with open generics. It will tell you if MyClass implements MyInterface<>
+        /// Checks if provided type implements a given interface. Also works with open generics. It will tell you if MyClass implements MyInterface
         /// </summary>
         /// <param name="type"></param>
         /// <param name="interface"></param>
         /// <returns></returns>
-        public static bool TypeImplementsInterface(Type type, Type @interface)
+        private static bool TypeImplementsInterface(Type type, Type @interface)
         {
             if (@interface.IsAssignableFrom(type))
             {
@@ -160,6 +159,11 @@ namespace NSaga
         }
 
 
+        /// <summary>
+        /// Returns a list of all the Saga classes in the provided assemblies.
+        /// </summary>
+        /// <param name="assemblies">The assemblies to scan</param>
+        /// <returns>List of Types that implement <see cref="ISaga{TSagaData}"/></returns>
         public static IEnumerable<Type> GetAllSagaTypes(IEnumerable<Assembly> assemblies)
         {
             var allSagaTypes = assemblies.SelectMany(a => a.GetTypes())
@@ -174,7 +178,7 @@ namespace NSaga
         /// <summary>
         /// Returns list of all pairs of SagaType -> implemented interface
         /// 
-        /// Saga Types will appear here multiple type - once for every interface related to NSaga (ISaga<>, InitiatedBy<>, ConsumedBy<>)
+        /// Saga Types will appear here multiple type - once for every interface related to NSaga (<see cref="ISaga{TSagaData}"/>, <see cref="InitiatedBy{TMsg}"/>, <see cref="ConsumerOf{TMsg}"/>)
         /// </summary>
         /// <param name="assemblies"></param>
         /// <returns></returns>

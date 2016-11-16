@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using NSaga;
 
 namespace Benchmarking
@@ -26,7 +27,7 @@ namespace Benchmarking
             }
 
             var saga = sagaFactory.ResolveSaga<TSaga>();
-            NSagaReflection.Set(saga, "CorrelationId", correlationId);
+            Set(saga, "CorrelationId", correlationId);
 
             return saga;
         }
@@ -44,6 +45,17 @@ namespace Benchmarking
         public void Complete(Guid correlationId)
         {
             // nothing
+        }
+
+        private static void Set(object instance, string propertyName, object value)
+        {
+            var type = instance.GetType();
+            var property = type.GetProperty(propertyName);
+            if (property == null || property.CanWrite == false)
+            {
+                return;
+            }
+            property.SetValue(instance, value, null);
         }
     }
 }
