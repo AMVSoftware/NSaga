@@ -73,14 +73,14 @@ namespace Tests.SimpleInjector
                                 .RegisterNSagaComponents()
                                 .UseSqlServer()
                                 .WithConnectionStringName("TestingConnectionString")
-                                .UseSagaRepository<SqlSagaRepository>();
+                                .UseSagaRepository<NullSagaRepository>();
 
             // Act
             var repository = container.GetInstance<ISagaRepository>();
 
             // Assert
             repository.Should().NotBeNull()
-                .And.BeOfType<SqlSagaRepository>();
+                .And.BeOfType<NullSagaRepository>();
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace Tests.SimpleInjector
             // Assert
             collection.Should().NotBeNull()
                                .And.HaveCount(1)
-                               .And.Contain(h => h.GetType() == typeof(MetadataPipelineHook));
+                               .And.Contain(h => h is MetadataPipelineHook);
         }
 
         [Fact]
@@ -128,7 +128,7 @@ namespace Tests.SimpleInjector
             // Assert
             collection.Should().NotBeNull()
                        .And.HaveCount(2)
-                       .And.Contain(h => h.GetType() == typeof(MetadataPipelineHook))
+                       .And.Contain(h => h is MetadataPipelineHook)
                        .And.Contain(h => h.GetType() == typeof(NullPipelineHook));
         }
 
