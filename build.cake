@@ -136,7 +136,7 @@ Task("Package")
 
 Task("Publish-MyGet")
     .IsDependentOn("Package")
-    .WithCriteria(() => parameters.ShouldPublishToMyGet)
+    .WithCriteria(() => parameters.IsRunningOnAppVeyor)
     .Does(() =>
 	{
 		// Resolve the API key.

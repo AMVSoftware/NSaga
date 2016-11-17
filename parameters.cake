@@ -64,13 +64,5 @@ public class BuildParameters
             SimpleInjectorBinDir = "./src/NSaga.SimpleInjector/bin/" + configuration + "/",
         };
     }
-
-    public bool ShouldPublishToMyGet
-    {
-        get
-        {
-            return IsMasterBranch && IsRunningOnAppVeyor;
-        }
-    }    
 }
 

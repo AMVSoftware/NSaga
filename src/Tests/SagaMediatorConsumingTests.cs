@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using FluentAssertions;
 using NSaga;
 using Xunit;
@@ -34,20 +33,6 @@ namespace Tests
 
             // Assert
             act.ShouldThrow<ArgumentException>().Which.Message.Contains("CorrelationId was not provided in the message");
-        }
-
-
-        [Fact(Skip = "Saga diagnostics should be done separately")]
-        public void Consume_MessageWithoutSaga_Throws()
-        {
-            //Arrange
-            var message = new MyFakeInitiatingMessage(Guid.NewGuid());
-
-            // Act
-            Action act = () => sut.Consume(message);
-
-            // Assert
-            act.ShouldThrow<ArgumentException>().Which.Message.Contains("is not consumed by any Sagas");
         }
 
 
