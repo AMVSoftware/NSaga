@@ -16,8 +16,7 @@
     <tags>NSaga, saga-management, SimpleInjector</tags>
     <dependencies>
       <dependency id="NSaga" version="$version$" />
-      <dependency id="Newtonsoft.Json" version="6.0.1" />
-      <dependency id="SimpleInjector" version="3.0.0" />
+      <dependency id="SimpleInjector" version="3.2.7" />
     </dependencies>  
   </metadata>
 
