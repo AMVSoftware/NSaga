@@ -107,5 +107,26 @@ namespace Tests.Composition
             // Assert
             result.IsSuccessful.Should().BeTrue();
         }
+
+        [Fact]
+        public void StaticReference_Always_ReturnsBuilder()
+        {
+            var value = SagaMediatorBuilder.Current;
+
+            value.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void StaticReference_CanBe_AssignedTo()
+        {
+            // Arrange
+            var sagaMediatorBuilder = new SagaMediatorBuilder();
+
+            // Act
+            SagaMediatorBuilder.Current = sagaMediatorBuilder;
+
+            // Assert
+            SagaMediatorBuilder.Current.Should().Be(sagaMediatorBuilder);
+        }
     }
 }

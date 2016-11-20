@@ -61,12 +61,16 @@
     <Compile Include="AccountCreation\AccountDetailsProvided.cs" />
     <Compile Include="AccountCreation\Person.cs" />
     <Compile Include="AccountCreation\PersonalDetailsVerification.cs" />
+    <Compile Include="BasicSaga\BasicSagaConsumeMessage.cs" />
+    <Compile Include="BasicSaga\BasicSagaStart.cs" />
+    <Compile Include="BasicSaga\MyBasicSaga.cs" />
     <Compile Include="InternalContainerSample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AccountCreation\VerificationCodeProvided.cs" />
     <Compile Include="AccountCreation\VerificationCodeRequest.cs" />
     <Compile Include="SimpleInjectorSample.cs" />
+    <Compile Include="StaticBuilderReference.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NSaga.Autofac\NSaga.Autofac.csproj">
