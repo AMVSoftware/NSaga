@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+
 namespace NSaga
 {
     /// <summary>
@@ -10,6 +11,25 @@ namespace NSaga
     /// </summary>
     public sealed class SagaMediatorBuilder
     {
+        private static SagaMediatorBuilder current;
+
+        /// <summary>
+        /// Global singleton reference for SagaMediatorBuilder
+        /// </summary>
+        public static SagaMediatorBuilder Current
+        {
+            get
+            {
+                // ReSharper disable once ConvertIfStatementToNullCoalescingExpression
+                if (current == null)
+                {
+                    current = new SagaMediatorBuilder();
+                }
+                return current;
+            }
+            set { current = value; }
+        }
+
         private readonly List<Type> pipelineHooks;
         private List<Assembly> assembliesToScan;
         private bool areComponentsRegistered;

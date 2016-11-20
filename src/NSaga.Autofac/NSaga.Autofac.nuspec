@@ -16,8 +16,7 @@
     <tags>NSaga, saga-management, Autofac</tags>
     <dependencies>
       <dependency id="NSaga" version="$version$" />
-      <dependency id="Newtonsoft.Json" version="6.0.1" />
-      <dependency id="Autofac" version="3.0.0" />
+      <dependency id="Autofac" version="4.2.0" />
     </dependencies>  
   </metadata>
 

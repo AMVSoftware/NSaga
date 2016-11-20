@@ -25,7 +25,7 @@ namespace NSaga
 
             if (sagaMessage.CorrelationId == default(Guid))
             {
-                throw new ArgumentException("CorrelationId was not provided in the message. Please make sure you assign CorrelationId before initiating your Saga");
+                throw new ArgumentException("CorrelationId was not provided in the message. Please make sure you assign CorrelationId before issuing it to your Saga");
             }
         }
     }

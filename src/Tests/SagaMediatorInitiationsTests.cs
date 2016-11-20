@@ -54,21 +54,7 @@ namespace Tests
             act.ShouldThrow<ArgumentException>().Which.Message.Contains("Trying to initiate the same saga twice");
         }
 
-
-        [Fact(Skip = "Check for sagas should be done separately")]
-        public void Initiate_NoSagaTypes_Throws()
-        {
-            // Arrange
-            var initiatingMessage = new MyFakeInitiatingMessage(Guid.NewGuid());
-
-            // Act
-            Action act = () => sut.Consume(initiatingMessage);
-
-            // Assert
-            act.ShouldThrow<ArgumentException>().Which.Message.Contains("is not initiating any Sagas");
-        }
-
-
+        
         [Fact]
         public void Initiate_Saves_IntoRepository()
         {
@@ -135,23 +121,6 @@ namespace Tests
             var saga = repository.Find<SagaWithErrors>(correlationId);
             saga.Should().BeNull();
         }
-
-
-        [Fact(Skip = "Check for sagas should be done separately")]
-        public void Initiate_MultipleInitiator_Throws()
-        {
-            //Arrange
-            var correlationId = Guid.NewGuid();
-            var message = new MultipleSagaInitiator(correlationId);
-
-            // Act
-            Action act = () => sut.Consume(message);
-
-            // Assert
-            act.ShouldThrow<ArgumentException>().Which.Message.Contains("initiating more than one saga");
-        }
-
-
 
 
         [Fact]

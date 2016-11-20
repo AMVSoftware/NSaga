@@ -32,10 +32,6 @@ namespace Samples
             var saga = sagaRepository.Find<AccountCreationSaga>(correlationId);
             var jamesName = saga.SagaData.Person.FullName;
             Console.WriteLine($"Taking information from SagaData; Person.FullName='{jamesName}'");
-
-
-            Console.WriteLine("Press Any Key");
-            Console.ReadKey();
         }
 
 

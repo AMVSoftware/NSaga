@@ -1,4 +1,6 @@
-﻿namespace Samples
+﻿using System;
+
+namespace Samples
 {
     static class Program
     {
@@ -6,9 +8,20 @@
         {
             var internalContainerSample = new InternalContainerSample();
             internalContainerSample.Run();
+            Console.WriteLine("Internal Container Demo is finished. Press Any Key to continue");
+            Console.ReadKey();
+
 
             var simpleInjectorSample = new SimpleInjectorSample();
             simpleInjectorSample.RunSample();
+            Console.WriteLine("Simple Injector Demo is finished. Press Any Key to continue");
+            Console.ReadKey();
+
+
+            var staticBuilderReference = new StaticBuilderReference();
+            staticBuilderReference.Run();
+            Console.WriteLine("Static Builder reference Demo is finished. Press Any Key to continue");
+            Console.ReadKey();
         }
     }
 }
