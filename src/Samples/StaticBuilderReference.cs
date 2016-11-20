@@ -9,9 +9,8 @@ namespace Samples
         public void Run()
         {
             SagaMediatorBuilder.Current
-                    .UseSqlServer()
-                    .WithConnectionStringName("NSagaDatabase")
-                    .UseMessageSerialiser<JsonNetSerialiser>();
+                               .UseSqlServer()
+                               .WithConnectionStringName("NSagaDatabase");
 
             var sagaMediator = SagaMediatorBuilder.Current.ResolveMediator();
 
