@@ -21,9 +21,9 @@
   </metadata>
 
   <files>
-    <file src="NSaga.Autofac.dll" target="lib" />
-    <file src="NSaga.Autofac.pdb" target="lib" />
-    <file src="NSaga.Autofac.xml" target="lib"/>
+    <file src="NSaga.Autofac.dll" target="lib/net45" />
+    <file src="NSaga.Autofac.pdb" target="lib/net45" />
+    <file src="NSaga.Autofac.xml" target="lib/net45"/>
     <file src="LICENSE" />
   </files>
 </package>

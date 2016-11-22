@@ -15,12 +15,6 @@ namespace Tests
         TransactionScope scope;
 
         /// <summary>
-        /// Gets or sets whether transaction flow across thread continuations is enabled for TransactionScope.
-        /// By default transaction flow across thread continuations is enabled.
-        /// </summary>
-        public TransactionScopeAsyncFlowOption AsyncFlowOption { get; set; } = TransactionScopeAsyncFlowOption.Enabled;
-
-        /// <summary>
         /// Gets or sets the isolation level of the transaction.
         /// Default value is <see cref="IsolationLevel"/>.Unspecified.
         /// </summary>
@@ -57,7 +51,7 @@ namespace Tests
                 options.Timeout = TimeSpan.FromMilliseconds(TimeoutInMS);
             }
 
-            scope = new TransactionScope(ScopeOption, options, AsyncFlowOption);
+            scope = new TransactionScope(ScopeOption, options);
         }
     }
 }

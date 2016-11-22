@@ -21,9 +21,9 @@
   </metadata>
 
   <files>
-    <file src="NSaga.SimpleInjector.dll" target="lib" />
-    <file src="NSaga.SimpleInjector.pdb" target="lib" />
-    <file src="NSaga.SimpleInjector.xml" target="lib"/>
+    <file src="NSaga.SimpleInjector.dll" target="lib/net45" />
+    <file src="NSaga.SimpleInjector.pdb" target="lib/net45" />
+    <file src="NSaga.SimpleInjector.xml" target="lib/net45"/>
     <file src="LICENSE" />
   </files>
 </package>

@@ -61,7 +61,7 @@ Task("Build")
             settings.SetPlatformTarget(PlatformTarget.MSIL)
                     .WithTarget("Build")
                     .SetConfiguration(configuration));
-    });
+   });
 
 Task("Create-DB-And-Schema")
     .Description("Creates database and installs schema")
