@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using PetaPoco;
 
 namespace NSaga
@@ -97,8 +98,8 @@ namespace NSaga
             Guard.ArgumentIsNotNull(saga, nameof(saga));
 
             var sagaData = NSagaReflection.Get(saga, "SagaData");
-            var sagaHeaders = (Dictionary<String, String>)NSagaReflection.Get(saga, "Headers");
-            var correlationId = (Guid)NSagaReflection.Get(saga, "CorrelationId");
+            var sagaHeaders = saga.Headers;
+            var correlationId = saga.CorrelationId;
 
             var serialisedData = messageSerialiser.Serialise(sagaData);
 

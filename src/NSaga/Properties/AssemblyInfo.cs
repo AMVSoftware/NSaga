@@ -23,3 +23,4 @@ using System.Runtime.InteropServices;
 
 
 [assembly: InternalsVisibleTo("Tests")]
+[assembly: InternalsVisibleTo("NSaga.AzureTables")]

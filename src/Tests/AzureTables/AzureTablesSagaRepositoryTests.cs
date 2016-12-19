@@ -11,7 +11,7 @@ namespace Tests.AzureTables
     {
         public AzureTablesSagaRepositoryTests()
         {
-            this.Sut = new AzureTablesSagaRepository();
+            //this.Sut = new AzureTablesSagaRepository();
         }
     }
 }
