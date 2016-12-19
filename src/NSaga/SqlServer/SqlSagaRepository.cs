@@ -77,9 +77,9 @@ namespace NSaga
                 var headersPersisted = database.Query<SagaHeaders>(headersSql);
                 var headers = headersPersisted.ToDictionary(k => k.Key, v => v.Value);
 
-                NSagaReflection.Set(sagaInstance, "CorrelationId", correlationId);
+                sagaInstance.CorrelationId = correlationId;
+                sagaInstance.Headers = headers;
                 NSagaReflection.Set(sagaInstance, "SagaData", sagaData);
-                NSagaReflection.Set(sagaInstance, "Headers", headers);
 
                 return sagaInstance;
             }

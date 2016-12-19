@@ -8,19 +8,47 @@ namespace NSaga.AzureTables
     {
         private readonly ITableClientFactory tableClientFactory;
         private readonly IMessageSerialiser messageSerialiser;
+        private readonly ISagaFactory sagaFactory;
+        private const string PartitionKey = "nsaga";
+        private const string TableName = "nsaga";
 
-        public AzureTablesSagaRepository(ITableClientFactory tableClientFactory, IMessageSerialiser messageSerialiser)
+        public AzureTablesSagaRepository(ITableClientFactory tableClientFactory, IMessageSerialiser messageSerialiser, ISagaFactory sagaFactory)
         {
+            Guard.ArgumentIsNotNull(tableClientFactory, nameof(tableClientFactory));
+            Guard.ArgumentIsNotNull(sagaFactory, nameof(sagaFactory));
+            Guard.ArgumentIsNotNull(messageSerialiser, nameof(messageSerialiser));
+
+
             this.tableClientFactory = tableClientFactory;
             this.messageSerialiser = messageSerialiser;
+            this.sagaFactory = sagaFactory;
         }
 
 
         public TSaga Find<TSaga>(Guid correlationId) where TSaga : class, IAccessibleSaga
         {
             var client = tableClientFactory.CreateTableClient();
+            var sagasTable = GetSagaTable(client);
 
-            throw new NotImplementedException();
+            var retrieveOperation = TableOperation.Retrieve<StorageModel>(PartitionKey, correlationId.ToString());
+
+            var retrieveResult = sagasTable.Execute(retrieveOperation);
+
+            if (retrieveResult.Result == null)
+            {
+                return null;
+            }
+
+            var storedModel = (StorageModel)retrieveResult.Result;
+            var sagaDataType = NSagaReflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
+            var sagaData = messageSerialiser.Deserialise(storedModel.JsonData, sagaDataType);
+
+            var sagaInstance = sagaFactory.ResolveSaga<TSaga>();
+            sagaInstance.CorrelationId = correlationId;
+            sagaInstance.Headers = storedModel.Headers;
+            NSagaReflection.Set(sagaInstance, "SagaData", sagaData);
+
+            return sagaInstance;
         }
 
         public void Save<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
@@ -37,29 +65,40 @@ namespace NSaga.AzureTables
                 CorrelationId = saga.CorrelationId,
                 JsonData = serialisedData,
                 RowKey = saga.CorrelationId.ToString(),
-                PartitionKey = "nsaga",
+                PartitionKey = PartitionKey,
             };
 
             var insertOperation = TableOperation.Insert(storageModel);
 
-            throw new NotImplementedException();
+            sagasTable.Execute(insertOperation);
         }
 
         public void Complete<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
-            throw new NotImplementedException();
+            Complete(saga.CorrelationId);
         }
 
         public void Complete(Guid correlationId)
         {
-            throw new NotImplementedException();
+            var client = tableClientFactory.CreateTableClient();
+            var sagasTable = GetSagaTable(client);
+            var retrieveOperation = TableOperation.Retrieve<StorageModel>(PartitionKey, correlationId.ToString());
+            var storedSaga = sagasTable.Execute(retrieveOperation);
+
+            if (storedSaga.Result == null)
+            {
+                throw new Exception($"Unable to find saga with correlationId {correlationId}");
+            }
+
+            var deleteOperation = TableOperation.Delete((StorageModel)storedSaga.Result);
+            sagasTable.Execute(deleteOperation);
         }
 
 
 
         private CloudTable GetSagaTable(CloudTableClient client)
         {
-            var table = client.GetTableReference("nsaga");
+            var table = client.GetTableReference(TableName);
             table.CreateIfNotExists();
 
             return table;
