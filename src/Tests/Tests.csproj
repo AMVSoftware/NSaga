@@ -91,6 +91,7 @@
     <Compile Include="Autofac\AutofacNSagaIntegrationTests.cs" />
     <Compile Include="Autofac\AutofacSagaFactoryTests.cs" />
     <Compile Include="AutoRollbackAttribute.cs" />
+    <Compile Include="AzureTables\AzureTablesSagaRepositoryTests.cs" />
     <Compile Include="Composition\TinyIocSagaFactoryTests.cs" />
     <Compile Include="Diagnostic\NSagaConfigurationValidatorTests.cs" />
     <Compile Include="Implementations\SagaFactoryTestsTemplate.cs" />
@@ -135,6 +136,10 @@
     <ProjectReference Include="..\NSaga.Autofac\NSaga.Autofac.csproj">
       <Project>{5b7a00dc-75c7-4c94-820b-b449c427cd93}</Project>
       <Name>NSaga.Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NSaga.AzureTables\NSaga.AzureTables.csproj">
+      <Project>{2a3bad16-35b7-41bb-964f-453360535d89}</Project>
+      <Name>NSaga.AzureTables</Name>
     </ProjectReference>
     <ProjectReference Include="..\NSaga.SimpleInjector\NSaga.SimpleInjector.csproj">
       <Project>{b8596ea9-b88b-4415-bc6f-cad0ebf07a70}</Project>

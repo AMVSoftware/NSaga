@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="AzureTablesSagaRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TableClientFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NSaga\NSaga.csproj">
