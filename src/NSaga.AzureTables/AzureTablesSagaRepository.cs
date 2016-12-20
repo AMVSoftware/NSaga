@@ -4,6 +4,10 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace NSaga.AzureTables
 {
+    /// <summary>
+    /// Implementation of <see cref="ISagaRepository"/> that uses Azure Tables to store Saga data.
+    /// </summary>
+    /// <seealso cref="NSaga.ISagaRepository" />
     public class AzureTablesSagaRepository : ISagaRepository
     {
         private readonly ITableClientFactory tableClientFactory;
@@ -12,6 +16,12 @@ namespace NSaga.AzureTables
         private const string PartitionKey = "nsaga";
         private const string TableName = "nsaga";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AzureTablesSagaRepository"/> class.
+        /// </summary>
+        /// <param name="tableClientFactory">The table client factory.</param>
+        /// <param name="messageSerialiser">The message serialiser.</param>
+        /// <param name="sagaFactory">The saga factory.</param>
         public AzureTablesSagaRepository(ITableClientFactory tableClientFactory, IMessageSerialiser messageSerialiser, ISagaFactory sagaFactory)
         {
             Guard.ArgumentIsNotNull(tableClientFactory, nameof(tableClientFactory));
@@ -25,6 +35,15 @@ namespace NSaga.AzureTables
         }
 
 
+        /// <summary>
+        /// Finds and returns saga instance with the given correlation ID.
+        /// Actually creates an instance of saga from Saga factory, retrieves SagaData and Headers from the storage and populates the instance with these.
+        /// </summary>
+        /// <typeparam name="TSaga">Type of saga we are looking for</typeparam>
+        /// <param name="correlationId">CorrelationId to identify the saga</param>
+        /// <returns>
+        /// An instance of the saga. Or Null if there is no saga with this ID.
+        /// </returns>
         public TSaga Find<TSaga>(Guid correlationId) where TSaga : class, IAccessibleSaga
         {
             var sagasTable = GetSagaTable();
@@ -50,6 +69,12 @@ namespace NSaga.AzureTables
             return sagaInstance;
         }
 
+        /// <summary>
+        /// Persists the instance of saga into the database storage.
+        /// Actually stores SagaData and Headers. All other variables in saga are not persisted
+        /// </summary>
+        /// <typeparam name="TSaga">Type of saga</typeparam>
+        /// <param name="saga">Saga instance</param>
         public void Save<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
             var sagasTable = GetSagaTable();
@@ -69,11 +94,21 @@ namespace NSaga.AzureTables
             sagasTable.Execute(insertOperation);
         }
 
+        /// <summary>
+        /// Deletes the saga instance from the storage
+        /// </summary>
+        /// <typeparam name="TSaga">Type of saga</typeparam>
+        /// <param name="saga">Saga to be deleted</param>
         public void Complete<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
             Complete(saga.CorrelationId);
         }
 
+        /// <summary>
+        /// Deletes the saga instance from the storage
+        /// </summary>
+        /// <param name="correlationId">Correlation Id for the saga</param>
+        /// <exception cref="System.Exception"></exception>
         public void Complete(Guid correlationId)
         {
             var sagasTable = GetSagaTable();
