@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NSaga;
 using NSaga.AzureTables;
 
 namespace Tests.AzureTables
@@ -11,7 +7,7 @@ namespace Tests.AzureTables
     {
         public AzureTablesSagaRepositoryTests()
         {
-            //this.Sut = new AzureTablesSagaRepository();
+            this.Sut = new AzureTablesSagaRepository(new TableClientFactory("UseDevelopmentStorage=true"), new JsonNetSerialiser(), new DumbSagaFactory());
         }
     }
 }

@@ -41,11 +41,11 @@ namespace NSaga.AzureTables
 
             var storedModel = (StorageModel)retrieveResult.Result;
             var sagaDataType = NSagaReflection.GetInterfaceGenericType<TSaga>(typeof(ISaga<>));
-            var sagaData = messageSerialiser.Deserialise(storedModel.JsonData, sagaDataType);
+            var sagaData = messageSerialiser.Deserialise(storedModel.BlobData, sagaDataType);
 
             var sagaInstance = sagaFactory.ResolveSaga<TSaga>();
             sagaInstance.CorrelationId = correlationId;
-            sagaInstance.Headers = storedModel.Headers;
+            sagaInstance.Headers = messageSerialiser.Deserialise<Dictionary<String, String>>(storedModel.Headers);
             NSagaReflection.Set(sagaInstance, "SagaData", sagaData);
 
             return sagaInstance;
@@ -61,9 +61,8 @@ namespace NSaga.AzureTables
 
             var storageModel = new StorageModel()
             {
-                Headers = saga.Headers,
-                CorrelationId = saga.CorrelationId,
-                JsonData = serialisedData,
+                Headers = messageSerialiser.Serialise(saga.Headers),
+                BlobData = serialisedData,
                 RowKey = saga.CorrelationId.ToString(),
                 PartitionKey = PartitionKey,
             };
@@ -106,11 +105,9 @@ namespace NSaga.AzureTables
 
         private class StorageModel : TableEntity
         {
-            public Dictionary<String, String> Headers { get; set; }
+            public String Headers { get; set; }
 
-            public String JsonData { get; set; }
-
-            public Guid CorrelationId { get; set; }
+            public String BlobData { get; set; }
         }
     }
 }
