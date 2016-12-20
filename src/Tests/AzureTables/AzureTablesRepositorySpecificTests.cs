@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Tests.AzureTables
 {
-    public class AzureTablesRepositorySpecificTests : IDisposable
+    public class AzureTablesRepositorySpecificTests 
     {
         private readonly AzureTablesSagaRepository sut;
         private readonly TableClientFactory tableClientFactory;
@@ -176,19 +176,6 @@ namespace Tests.AzureTables
             var table = client.GetTableReference("nsaga");
             table.CreateIfNotExists();
             return table;
-        }
-
-
-
-        public void Dispose()
-        {
-            var connectionString = AzureTablesHelper.GetConnectionString();
-
-            var tableClient = new TableClientFactory(connectionString).CreateTableClient();
-
-            var table = tableClient.GetTableReference("nsaga");
-
-            table.DeleteIfExists();
         }
     }
 }
