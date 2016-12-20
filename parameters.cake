@@ -7,6 +7,8 @@ public class BuildParameters
     public string NSagaBinDir { get; private set; }
     public string AutofacBinDir { get; private set; }
     public string SimpleInjectorBinDir { get; private set; }
+    public string AzureTablesBinDir { get; private set; }
+
 
     public string Target { get; private set; }
     public string Configuration { get; private set; }
@@ -62,6 +64,7 @@ public class BuildParameters
             NSagaBinDir = "./src/NSaga/bin/" + configuration + "/",
             AutofacBinDir = "./src/NSaga.Autofac/bin/" + configuration + "/",
             SimpleInjectorBinDir = "./src/NSaga.SimpleInjector/bin/" + configuration + "/",
+            AzureTablesBinDir = "./src/NSaga.AzureTables/bin/" + configuration + "/",
         };
     }
 }
