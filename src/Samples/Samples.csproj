@@ -62,6 +62,7 @@
     <Compile Include="AccountCreation\AccountDetailsProvided.cs" />
     <Compile Include="AccountCreation\Person.cs" />
     <Compile Include="AccountCreation\PersonalDetailsVerification.cs" />
+    <Compile Include="AzureTableStorageSample.cs" />
     <Compile Include="BasicSaga\BasicSagaConsumeMessage.cs" />
     <Compile Include="BasicSaga\BasicSagaStart.cs" />
     <Compile Include="BasicSaga\MyBasicSaga.cs" />
