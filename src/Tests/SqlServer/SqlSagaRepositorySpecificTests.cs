@@ -25,16 +25,6 @@ namespace Tests.SqlServer
 
 
         [Fact]
-        public void Find_NoSaga_ReturnsNull()
-        {
-            // Act
-            var result = sut.Find<MySaga>(Guid.NewGuid());
-
-            // Assert
-            result.Should().BeNull();
-        }
-
-        [Fact]
         public void Save_Persists_SagaData()
         {
             //Arrange

@@ -115,6 +115,8 @@
     <Compile Include="Autofac\AutofacNSagaIntegrationTests.cs" />
     <Compile Include="Autofac\AutofacSagaFactoryTests.cs" />
     <Compile Include="AutoRollbackAttribute.cs" />
+    <Compile Include="AzureTables\AzureTablesHelper.cs" />
+    <Compile Include="AzureTables\AzureTablesRepositorySpecificTests.cs" />
     <Compile Include="AzureTables\AzureTablesSagaRepositoryTests.cs" />
     <Compile Include="Composition\TinyIocSagaFactoryTests.cs" />
     <Compile Include="Diagnostic\NSagaConfigurationValidatorTests.cs" />

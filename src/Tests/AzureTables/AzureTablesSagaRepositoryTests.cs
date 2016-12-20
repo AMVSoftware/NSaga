@@ -8,16 +8,15 @@ namespace Tests.AzureTables
     {
         public AzureTablesSagaRepositoryTests()
         {
-            var connectionString = Environment.GetEnvironmentVariable("NSagaAzureTableStorage");// "UseDevelopmentStorage=true";
+            var connectionString = AzureTablesHelper.GetConnectionString();
 
             this.Sut = new AzureTablesSagaRepository(new TableClientFactory(connectionString), new JsonNetSerialiser(), new DumbSagaFactory());
         }
 
 
-
         public void Dispose()
         {
-            var connectionString = Environment.GetEnvironmentVariable("NSagaAzureTableStorage");
+            var connectionString = AzureTablesHelper.GetConnectionString();
 
             var tableClient = new TableClientFactory(connectionString).CreateTableClient();
 

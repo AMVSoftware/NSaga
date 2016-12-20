@@ -27,8 +27,7 @@ namespace NSaga.AzureTables
 
         public TSaga Find<TSaga>(Guid correlationId) where TSaga : class, IAccessibleSaga
         {
-            var client = tableClientFactory.CreateTableClient();
-            var sagasTable = GetSagaTable(client);
+            var sagasTable = GetSagaTable();
 
             var retrieveOperation = TableOperation.Retrieve<StorageModel>(PartitionKey, correlationId.ToString());
 
@@ -53,21 +52,19 @@ namespace NSaga.AzureTables
 
         public void Save<TSaga>(TSaga saga) where TSaga : class, IAccessibleSaga
         {
-            var client = tableClientFactory.CreateTableClient();
-            var sagasTable = GetSagaTable(client);
+            var sagasTable = GetSagaTable();
 
             var sagaData = NSagaReflection.Get(saga, "SagaData");
             var serialisedData = messageSerialiser.Serialise(sagaData);
 
             var storageModel = new StorageModel()
             {
+                RowKey = saga.CorrelationId.ToString(),
                 Headers = messageSerialiser.Serialise(saga.Headers),
                 BlobData = serialisedData,
-                RowKey = saga.CorrelationId.ToString(),
-                PartitionKey = PartitionKey,
             };
 
-            var insertOperation = TableOperation.Insert(storageModel);
+            var insertOperation = TableOperation.InsertOrReplace(storageModel);
 
             sagasTable.Execute(insertOperation);
         }
@@ -79,8 +76,7 @@ namespace NSaga.AzureTables
 
         public void Complete(Guid correlationId)
         {
-            var client = tableClientFactory.CreateTableClient();
-            var sagasTable = GetSagaTable(client);
+            var sagasTable = GetSagaTable();
             var retrieveOperation = TableOperation.Retrieve<StorageModel>(PartitionKey, correlationId.ToString());
             var storedSaga = sagasTable.Execute(retrieveOperation);
 
@@ -95,16 +91,22 @@ namespace NSaga.AzureTables
 
 
 
-        private CloudTable GetSagaTable(CloudTableClient client)
+        private CloudTable GetSagaTable()
         {
+            var client = tableClientFactory.CreateTableClient();
             var table = client.GetTableReference(TableName);
             table.CreateIfNotExists();
 
             return table;
         }
 
-        private class StorageModel : TableEntity
+        internal class StorageModel : TableEntity
         {
+            public StorageModel()
+            {
+                base.PartitionKey = AzureTablesSagaRepository.PartitionKey;
+            }
+
             public String Headers { get; set; }
 
             public String BlobData { get; set; }
