@@ -1,4 +1,5 @@
-﻿using NSaga;
+﻿using System;
+using NSaga;
 using NSaga.AzureTables;
 
 namespace Tests.AzureTables
@@ -7,7 +8,9 @@ namespace Tests.AzureTables
     {
         public AzureTablesSagaRepositoryTests()
         {
-            this.Sut = new AzureTablesSagaRepository(new TableClientFactory("UseDevelopmentStorage=true"), new JsonNetSerialiser(), new DumbSagaFactory());
+            var connectionString = Environment.GetEnvironmentVariable("NSagaAzureTableStorage");// "UseDevelopmentStorage=true";
+
+            this.Sut = new AzureTablesSagaRepository(new TableClientFactory(connectionString), new JsonNetSerialiser(), new DumbSagaFactory());
         }
     }
 }

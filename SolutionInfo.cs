@@ -1,5 +1,5 @@
 using System.Reflection;
 
-[assembly: AssemblyVersion("1.1.1.0")]
-[assembly: AssemblyFileVersion("1.1.1.0")]
-[assembly: AssemblyInformationalVersion("1.1.1+2.Branch.master.Sha.25d0abd7591766e152a1b7c418fb8e9a395eea03")]
+[assembly: AssemblyVersion("1.1.2.0")]
+[assembly: AssemblyFileVersion("1.1.2.0")]
+[assembly: AssemblyInformationalVersion("1.1.2-AzureTables.1+5.Branch.AzureTables.Sha.2c3dc306bcfff046def6af9fb1899f7f28bbad02")]
