@@ -92,6 +92,64 @@ namespace Tests.AzureTables
         }
 
 
+
+        [Fact]
+        public void Save_Updates_ExistingHeaders()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var expectedValue = Guid.NewGuid().ToString();
+            var saga = new MySaga
+            {
+                CorrelationId = correlationId,
+                Headers = new Dictionary<string, string>() { { "SomeKey", Guid.NewGuid().ToString() } },
+            };
+
+            SetStoredModel(correlationId, new AzureTablesSagaRepository.StorageModel()
+            {
+                BlobData = JsonConvert.SerializeObject(saga.SagaData),
+                Headers = JsonConvert.SerializeObject(saga.Headers),
+            });
+
+            saga.Headers["SomeKey"] = expectedValue;
+
+            // Act
+            sut.Save(saga);
+
+            // Assert
+            var storedHeaders = GetStoredModel(correlationId).Headers;
+            var updatedHeaders = JsonConvert.DeserializeObject<Dictionary<String,String>>( storedHeaders);
+            updatedHeaders.Should().HaveCount(1);
+            updatedHeaders.First().Value.Should().Be(expectedValue);
+        }
+
+
+        [Fact]
+        public void Complete_Removes_Data()
+        {
+            //Arrange
+            var correlationId = Guid.NewGuid();
+            var saga = new MySaga
+            {
+                CorrelationId = correlationId,
+            };
+
+            SetStoredModel(correlationId, new AzureTablesSagaRepository.StorageModel()
+            {
+                BlobData = JsonConvert.SerializeObject(saga.SagaData),
+                Headers = JsonConvert.SerializeObject(saga.Headers),
+            });
+
+
+            // Act
+            sut.Complete(saga);
+
+            // Assert
+            var updatedData = GetStoredModel(correlationId);
+            updatedData.Should().BeNull();
+        }
+
+
         private AzureTablesSagaRepository.StorageModel GetStoredModel(Guid correlationId)
         {
             var table = GetTable();
