@@ -38,6 +38,8 @@ Task("Clean")
             Directory(parameters.AutofacBinDir + "../../obj/"),
             Directory(parameters.SimpleInjectorBinDir),
             Directory(parameters.SimpleInjectorBinDir + "../../obj/"),
+            Directory(parameters.StructureMapBinDir),
+            Directory(parameters.StructureMapBinDir + "../../obj/"),
             Directory(parameters.AzureTablesBinDir),
             Directory(parameters.AzureTablesBinDir + "../../obj/"),
         });
@@ -112,11 +114,13 @@ Task("Copy-Files")
         CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.pdb", parameters.ArtefactsBin);
         CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.xml", parameters.ArtefactsBin);
 
+        CopyFileToDirectory(parameters.StructureMapBinDir + "NSaga.StructureMap.dll", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.StructureMapBinDir + "NSaga.StructureMap.pdb", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.StructureMapBinDir + "NSaga.StructureMap.xml", parameters.ArtefactsBin);
 
         CopyFileToDirectory(parameters.AzureTablesBinDir + "NSaga.AzureTables.dll", parameters.ArtefactsBin);
         CopyFileToDirectory(parameters.AzureTablesBinDir + "NSaga.AzureTables.pdb", parameters.ArtefactsBin);
         CopyFileToDirectory(parameters.AzureTablesBinDir + "NSaga.AzureTables.xml", parameters.ArtefactsBin);
-
 	});
 
 
@@ -139,6 +143,7 @@ Task("Package")
 		NuGetPack("./src/NSaga/NSaga.nuspec", settings);
 		NuGetPack("./src/NSaga.Autofac/NSaga.Autofac.nuspec", settings);
 		NuGetPack("./src/NSaga.SimpleInjector/NSaga.SimpleInjector.nuspec", settings);
+		NuGetPack("./src/NSaga.StructureMap/NSaga.StructureMap.nuspec", settings);
 		NuGetPack("./src/NSaga.AzureTables/NSaga.AzureTables.nuspec", settings);
 	});
 

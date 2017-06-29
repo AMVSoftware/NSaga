@@ -2,8 +2,14 @@
 
 namespace NSaga.StructureMap
 {
+    /// <summary>
+    /// Registry containing default registrations of NSaga components for StructureMap
+    /// </summary>
     public class NSagaRegistry : Registry
     {
+        /// <summary>
+        /// Default constructor to create NSagaRegistry with default registrations for StructureMap
+        /// </summary>
         public NSagaRegistry()
         {           
             Scan(x =>

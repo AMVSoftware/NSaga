@@ -39,7 +39,7 @@ namespace NSaga.StructureMap
         /// <summary>
         /// Register <see cref="SqlSagaRepository"/> with a given connection string name. Actual connection string looked up from app.config or web.config by a provided name.
         /// </summary>
-        /// <param name="connectionStringName">Name of the connection string in app.config or web.config</param>
+        /// <param name="connectionString">Name of the connection string in app.config or web.config</param>
         /// <returns>StructureMap Container for fluent configuration</returns>
         public Container WithConnectionStringName(String connectionString)
         {
