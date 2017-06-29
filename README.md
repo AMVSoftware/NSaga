@@ -1,6 +1,6 @@
 # NSaga
-Lightweight Saga management framework for .Net. Provides an easy way to create sagas in your application. Saga is a long-running operation or a transaction; 
-Sagas have dependedencies and a state. NSaga provides you with easy means to inject dependencies and persist saga state.
+Lightweight Saga management framework for .Net. Provides an easy way to create sagas in your application. A Saga is a long-running operation or a transaction; 
+Sagas have dependencies and state. NSaga provides you with easy means to inject dependencies and persist saga state.
 
 Please read more on how to use this framework in [Documentation](https://github.com/AMVSoftware/NSaga/wiki).
 
