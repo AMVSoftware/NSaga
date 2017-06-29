@@ -18,6 +18,11 @@ namespace NSaga
             return builder;
         }
 
+        /// <summary>
+        /// Uses the internal DI container to configure all NSaga components
+        /// </summary>
+        /// <param name="assembliesToScan">List of assemblies to scan for registration</param>
+        /// <returns>an instance of <see cref="SagaMediatorBuilder"/> that guides configuration</returns>
         public static SagaMediatorBuilder UseInternalContainer(params Assembly[] assembliesToScan)
         {
             var builder = new SagaMediatorBuilder(assembliesToScan);
