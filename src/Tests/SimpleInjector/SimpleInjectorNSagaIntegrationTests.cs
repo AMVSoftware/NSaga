@@ -6,7 +6,7 @@ using NSaga.SimpleInjector;
 using SimpleInjector;
 using Tests.Stubs;
 using Xunit;
-
+using System.Reflection;
 
 namespace Tests.SimpleInjector
 {
@@ -19,7 +19,7 @@ namespace Tests.SimpleInjector
             var container = new Container();
 
             // Act
-            container.RegisterNSagaComponents();
+            container.RegisterNSagaComponents(Assembly.GetExecutingAssembly());
 
             // Assert
             container.Verify();
@@ -38,7 +38,7 @@ namespace Tests.SimpleInjector
         public void DefaultRegistration_Resolves_DefaultComponents(Type requestedType, Type expectedImplementation)
         {
             //Arrange
-            var container = new Container().RegisterNSagaComponents();
+            var container = new Container().RegisterNSagaComponents(Assembly.GetExecutingAssembly());
 
             // Act
             var result = container.GetInstance(requestedType);
@@ -53,7 +53,7 @@ namespace Tests.SimpleInjector
         public void OverrideGeneric_Repository_Complies()
         {
             //Arrange
-            var container = new Container().RegisterNSagaComponents()
+            var container = new Container().RegisterNSagaComponents(Assembly.GetExecutingAssembly())
                                            .UseSagaRepository<NullSagaRepository>();
 
             // Act
@@ -70,7 +70,7 @@ namespace Tests.SimpleInjector
         {
             //Arrange
             var container = new Container()
-                                .RegisterNSagaComponents()
+                                .RegisterNSagaComponents(Assembly.GetExecutingAssembly())
                                 .UseSqlServer()
                                 .WithConnectionStringName("TestingConnectionString")
                                 .UseSagaRepository<NullSagaRepository>();
@@ -88,7 +88,7 @@ namespace Tests.SimpleInjector
         {
             //Arrange
             var container = new Container()
-                                .RegisterNSagaComponents()
+                                .RegisterNSagaComponents(Assembly.GetExecutingAssembly())
                                 .UseSqlServer()
                                 .WithConnectionString(@"Server=(localdb)\v12.0;Database=NSaga-Testing");
 
@@ -104,7 +104,7 @@ namespace Tests.SimpleInjector
         public void Default_ResolvePiplineHooks_ResolvesMetadataHook()
         {
             //Arrange
-            var container = new Container().RegisterNSagaComponents();
+            var container = new Container().RegisterNSagaComponents(Assembly.GetExecutingAssembly());
 
             // Act
             var collection = container.GetInstance<IEnumerable<IPipelineHook>>();
@@ -119,7 +119,7 @@ namespace Tests.SimpleInjector
         public void AddPipline_Adds_ToCollection()
         {
             //Arrange
-            var container = new Container().RegisterNSagaComponents()
+            var container = new Container().RegisterNSagaComponents(Assembly.GetExecutingAssembly())
                                            .AddSagaPipelineHook<NullPipelineHook>();
 
             // Act
@@ -137,7 +137,7 @@ namespace Tests.SimpleInjector
         public void UseMessageSerialiser_Overrides_Default()
         {
             //Arrange
-            var container = new Container().RegisterNSagaComponents()
+            var container = new Container().RegisterNSagaComponents(Assembly.GetExecutingAssembly())
                                            .UseMessageSerialiser<NullMessageSerialiser>();
 
             // Act

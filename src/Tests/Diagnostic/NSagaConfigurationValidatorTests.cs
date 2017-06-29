@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NSaga;
 using Xunit;
+using System.Reflection;
 
 namespace Tests.Diagnostic
 {
@@ -11,7 +12,7 @@ namespace Tests.Diagnostic
         public void MethodName_StateUnderTests_ExpectedBehaviour()
         {
             //Arrange
-            var sut = new NSagaConfigurationValidator(AppDomain.CurrentDomain.GetAssemblies());
+            var sut = new NSagaConfigurationValidator(new[] { Assembly.GetExecutingAssembly() });
 
             // Act
             Action act = () => sut.AssertConfigurationIsValid();

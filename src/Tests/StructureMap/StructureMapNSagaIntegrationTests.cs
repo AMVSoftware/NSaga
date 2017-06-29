@@ -9,6 +9,7 @@ using NSaga.StructureMap;
 using StructureMap;
 using Xunit;
 using Xunit.Abstractions;
+using System.Reflection;
 
 namespace Tests.StructureMap
 {
@@ -19,6 +20,8 @@ namespace Tests.StructureMap
         {
             this.output = output;
         }
+
+
         [Theory]
         [InlineData(typeof(ISagaMediator), typeof(SagaMediator))]
         [InlineData(typeof(ISagaRepository), typeof(InMemorySagaRepository))]
@@ -31,7 +34,7 @@ namespace Tests.StructureMap
         public void DefaultRegistration_Resolves_DefaultComponents(Type requestedType, Type expectedImplementation)
         {
             //Arrange
-            var container = new Container().RegisterNSagaComponents();
+            var container = new Container().RegisterNSagaComponents(Assembly.GetExecutingAssembly());
 
             // Act
             var result = container.GetInstance(requestedType);
@@ -47,7 +50,7 @@ namespace Tests.StructureMap
         {
             //Arrange
             var container = new Container()
-                                .RegisterNSagaComponents();
+                                .RegisterNSagaComponents(Assembly.GetExecutingAssembly());
 
             // Act
             var result = container.GetInstance<IEnumerable<IPipelineHook>>();
@@ -63,7 +66,7 @@ namespace Tests.StructureMap
         {
             //Arrange
             var container = new Container()
-                                .RegisterNSagaComponents()
+                                .RegisterNSagaComponents(Assembly.GetExecutingAssembly())
                                 .AddSagaPipelineHook<NullPipelineHook>();
 
             // Act
@@ -81,7 +84,7 @@ namespace Tests.StructureMap
         {
             //Arrange
             var container = new Container()
-                                .RegisterNSagaComponents()
+                                .RegisterNSagaComponents(Assembly.GetExecutingAssembly())
                                 .UseSagaRepository<NullSagaRepository>();
 
             // Act
@@ -95,7 +98,7 @@ namespace Tests.StructureMap
         public void Default_Can_Initialise_Saga()
         {
             //Arrange
-            var container = new Container().RegisterNSagaComponents();
+            var container = new Container().RegisterNSagaComponents(Assembly.GetExecutingAssembly());
 
             var sagaMediator = container.GetInstance<ISagaMediator>();
             
@@ -110,7 +113,7 @@ namespace Tests.StructureMap
         public void UseSqlServerRepository_Registers_AndResolves()
         {
             //Arrange
-            var container = new Container().RegisterNSagaComponents()
+            var container = new Container().RegisterNSagaComponents(Assembly.GetExecutingAssembly())
                     .UseSqlServer()
                     .WithConnectionStringName("TestingConnectionString");
 
@@ -134,7 +137,7 @@ namespace Tests.StructureMap
         {
             //Arrange
             var container = new Container()
-                                .RegisterNSagaComponents()
+                                .RegisterNSagaComponents(Assembly.GetExecutingAssembly())
                                 .UseSqlServer()
                                 .WithConnectionString(@"Server=(localdb)\v12.0;Database=NSaga-Testing");
 

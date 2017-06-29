@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using NSaga;
 using Xunit;
-
+using System.Reflection;
 
 namespace Tests.Composition
 {
@@ -21,7 +21,7 @@ namespace Tests.Composition
         public void DefaultRegistration_Resolves_DefaultComponents(Type requestedType, Type expectedImplementation)
         {
             //Arrange
-            var builder = Wireup.UseInternalContainer();
+            var builder = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly());
 
             // Act
             var result = builder.Resolve(requestedType);
@@ -35,7 +35,7 @@ namespace Tests.Composition
         public void OverrideRepository_Resolves_OverridenRepository()
         {
             //Arrange
-            var builder = Wireup.UseInternalContainer()
+            var builder = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly())
                                 .UseRepository<NullSagaRepository>();
 
             // Act
@@ -50,7 +50,7 @@ namespace Tests.Composition
         public void OverrideSagaFactory_Resolves_OverridenFactory()
         {
             // Arrange
-            var builder = Wireup.UseInternalContainer()
+            var builder = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly())
                                 .UseSagaFactory<NullSagaFactory>();
 
             // Act
@@ -65,7 +65,7 @@ namespace Tests.Composition
         public void DefaultRegistration_ResolvePipline_ResolvesMetadataHook()
         {
             //Arrange
-            var builder = Wireup.UseInternalContainer();
+            var builder = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly());
 
             // Act
             var result = builder.Resolve<IEnumerable<IPipelineHook>>();
@@ -81,7 +81,7 @@ namespace Tests.Composition
         public void AddingPipeline_Adds_ToCollection()
         {
             //Arrange
-            var builder = Wireup.UseInternalContainer()
+            var builder = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly())
                                 .AddPiplineHook<NullPipelineHook>();
 
             // Act
@@ -99,7 +99,7 @@ namespace Tests.Composition
         {
             //Arrange
             var correlationId = Guid.NewGuid();
-            var sagaMediator = Wireup.UseInternalContainer().ResolveMediator();
+            var sagaMediator = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly()).ResolveMediator();
 
             // Act
             var result = sagaMediator.Consume(new MySagaInitiatingMessage(correlationId));

@@ -14,7 +14,7 @@ namespace Tests
         public void InvokeGenericMethod_Does_NotThrow()
         {
             // Arrange
-            var sagaType = NSagaReflection.GetSagaTypesInitiatedBy(new MySagaInitiatingMessage()).First(); // there could be only one!
+            var sagaType = NSagaReflection.GetSagaTypesInitiatedBy(new MySagaInitiatingMessage(), Assembly.GetExecutingAssembly()).First(); // there could be only one!
 
             var spy = new RepositorySpy();
             var repository = new MyStubRepository(spy);

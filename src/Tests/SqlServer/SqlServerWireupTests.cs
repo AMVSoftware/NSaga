@@ -3,7 +3,7 @@ using FluentAssertions;
 using NSaga;
 using PetaPoco;
 using Xunit;
-
+using System.Reflection;
 
 namespace Tests.SqlServer
 {
@@ -23,7 +23,7 @@ namespace Tests.SqlServer
         public void UseSqlServer_Registers_SqlServerRepository()
         {
             //Arrange
-            var mediatorBuilder = Wireup.UseInternalContainer()
+            var mediatorBuilder = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly())
                                         .UseSqlServer()
                                         .WithConnectionStringName("TestingConnectionString");
 
@@ -39,7 +39,7 @@ namespace Tests.SqlServer
         public void UseSqlServer_Database_IsUsed()
         {
             //Arrange
-            var mediator = Wireup.UseInternalContainer()
+            var mediator = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly())
                                  .UseSqlServer()
                                  .WithConnectionStringName("TestingConnectionString")
                                  .ResolveMediator();
@@ -59,7 +59,7 @@ namespace Tests.SqlServer
         public void UseSqlServerWithProviderName_Database_IsUsed()
         {
             //Arrange
-            var mediator = Wireup.UseInternalContainer()
+            var mediator = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly())
                                  .UseSqlServer()
                                  .WithConnectionString(@"Server=(localdb)\v12.0;Database=NSaga-Testing")
                                  .ResolveMediator();
@@ -79,7 +79,7 @@ namespace Tests.SqlServer
         public void UseSqlServer_SetsPrivate_ToSqlRepository()
         {
             //Arrange
-            var builder = Wireup.UseInternalContainer()
+            var builder = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly())
                                  .UseSqlServer()
                                  .WithConnectionStringName("TestingConnectionString");
             // Act
