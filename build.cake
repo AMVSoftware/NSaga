@@ -31,7 +31,7 @@ Task("Clean")
         CleanDirectories(new DirectoryPath[]{
             Directory("./src/Tests/bin/"),
             Directory("./src/Tests/obj/"),
-            Directory(parameters.Artefacts),
+            Directory(parameters.Artifacts),
             Directory(parameters.NSagaBinDir),
             Directory(parameters.NSagaBinDir + "../../obj/"),
             Directory(parameters.AutofacBinDir),
@@ -96,31 +96,31 @@ Task("Copy-Files")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 	{
-		EnsureDirectoryExists(parameters.Artefacts);
-		EnsureDirectoryExists(parameters.ArtefactsBin);
+		EnsureDirectoryExists(parameters.Artifacts);
+		EnsureDirectoryExists(parameters.ArtifactsBin);
 
-		CopyFiles(new FilePath[] { "LICENSE", "README.md", "ReleaseNotes.md" }, parameters.ArtefactsBin);
+		CopyFiles(new FilePath[] { "LICENSE", "README.md", "ReleaseNotes.md" }, parameters.ArtifactsBin);
 
-        CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.dll", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.pdb", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.xml", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.NSagaBinDir + "SqlServer/Install.sql", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.dll", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.pdb", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.NSagaBinDir + "NSaga.xml", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.NSagaBinDir + "SqlServer/Install.sql", parameters.ArtifactsBin);
 
-        CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.dll", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.pdb", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.xml", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.dll", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.pdb", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.AutofacBinDir + "NSaga.Autofac.xml", parameters.ArtifactsBin);
 
-        CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.dll", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.pdb", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.xml", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.dll", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.pdb", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.SimpleInjectorBinDir + "NSaga.SimpleInjector.xml", parameters.ArtifactsBin);
 
-        CopyFileToDirectory(parameters.StructureMapBinDir + "NSaga.StructureMap.dll", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.StructureMapBinDir + "NSaga.StructureMap.pdb", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.StructureMapBinDir + "NSaga.StructureMap.xml", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.StructureMapBinDir + "NSaga.StructureMap.dll", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.StructureMapBinDir + "NSaga.StructureMap.pdb", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.StructureMapBinDir + "NSaga.StructureMap.xml", parameters.ArtifactsBin);
 
-        CopyFileToDirectory(parameters.AzureTablesBinDir + "NSaga.AzureTables.dll", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.AzureTablesBinDir + "NSaga.AzureTables.pdb", parameters.ArtefactsBin);
-        CopyFileToDirectory(parameters.AzureTablesBinDir + "NSaga.AzureTables.xml", parameters.ArtefactsBin);
+        CopyFileToDirectory(parameters.AzureTablesBinDir + "NSaga.AzureTables.dll", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.AzureTablesBinDir + "NSaga.AzureTables.pdb", parameters.ArtifactsBin);
+        CopyFileToDirectory(parameters.AzureTablesBinDir + "NSaga.AzureTables.xml", parameters.ArtifactsBin);
 	});
 
 
@@ -134,8 +134,8 @@ Task("Package")
 		{
 			Version = parameters.Version,
 			ReleaseNotes = releaseNotes.Notes.ToArray(),
-			BasePath = parameters.ArtefactsBin,
-			OutputDirectory = parameters.Artefacts,
+			BasePath = parameters.ArtifactsBin,
+			OutputDirectory = parameters.Artifacts,
 			Symbols = false,
 			NoPackageAnalysis = true
 		};
@@ -166,7 +166,7 @@ Task("Publish-MyGet")
 		}
 
 		// Push the Packages
-        var files = GetFiles(parameters.Artefacts + "*.nupkg");
+        var files = GetFiles(parameters.Artifacts + "*.nupkg");
         foreach(var file in files)
         {
             Information("Found nupkg file: {0}", file);
@@ -190,7 +190,7 @@ Task("Upload-AppVeyor-Artifacts")
     .WithCriteria(() => parameters.IsRunningOnAppVeyor)
     .Does(() =>
 	{
-        var files = GetFiles(parameters.Artefacts + "*.nupkg");
+        var files = GetFiles(parameters.Artifacts + "*.nupkg");
         foreach(var file in files)
         {
     		AppVeyor.UploadArtifact(file);
