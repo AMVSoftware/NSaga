@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,6 +13,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -80,6 +83,10 @@
       <HintPath>..\packages\SimpleInjector.3.2.7\lib\net45\SimpleInjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="StructureMap, Version=4.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StructureMap.4.5.1\lib\net45\StructureMap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -123,6 +130,8 @@
     <Compile Include="Implementations\SagaFactoryTestsTemplate.cs" />
     <Compile Include="NamespaceTests.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorNSagaIntegrationTests.cs" />
+    <Compile Include="StructureMap\StructureMapFactoryTests.cs" />
+    <Compile Include="StructureMap\StructureMapNSagaIntegrationTests.cs" />
     <Compile Include="Stubs\NullMessageSerialiser.cs" />
     <Compile Include="Stubs\NullSagaFactory.cs" />
     <Compile Include="Stubs\NullSagaRepository.cs" />
@@ -171,6 +180,10 @@
       <Project>{b8596ea9-b88b-4415-bc6f-cad0ebf07a70}</Project>
       <Name>NSaga.SimpleInjector</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NSaga.StructureMap\NSaga.StructureMap.csproj">
+      <Project>{84952e5a-1629-4b1d-a978-ed4356986d0a}</Project>
+      <Name>NSaga.StructureMap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NSaga\NSaga.csproj">
       <Project>{e537d1bf-80a4-413b-a8f8-116c2a2382b1}</Project>
       <Name>NSaga</Name>
@@ -182,8 +195,16 @@
     </Content>
     <Content Include="SqlServer\CreateDatabase.sql" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
