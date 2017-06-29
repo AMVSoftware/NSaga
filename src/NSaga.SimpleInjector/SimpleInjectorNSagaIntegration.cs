@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using SimpleInjector;
 using SimpleInjector.Advanced;
@@ -44,15 +45,17 @@ namespace NSaga.SimpleInjector
             Guard.ArgumentIsNotNull(container, nameof(container));
             Guard.ArgumentIsNotNull(assemblies, nameof(assemblies));
 
+            var subset = assemblies.Where(x => !x.FullName.Contains("xunit"));
+
             container.Register<ISagaFactory, SimpleInjectorSagaFactory>();
             container.Register<IMessageSerialiser, JsonNetSerialiser>();
             container.Register<ISagaRepository, InMemorySagaRepository>();
             container.RegisterCollection<IPipelineHook>(new Type[] {typeof(MetadataPipelineHook)});
             container.Register<ISagaMediator, SagaMediator>();
 
-            container.Register(typeof(ISaga<>), assemblies);
-            container.Register(typeof(InitiatedBy<>), assemblies);
-            container.Register(typeof(ConsumerOf<>), assemblies);
+            container.Register(typeof(ISaga<>), subset);
+            container.Register(typeof(InitiatedBy<>), subset);
+            container.Register(typeof(ConsumerOf<>), subset);
 
             return container;
         }
