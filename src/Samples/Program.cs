@@ -28,6 +28,11 @@ namespace Samples
             azureTablesSample.WithSimpleInjector();
             Console.WriteLine("Azure Tables persistence demo is finished. Press Any Key to continue");
             Console.ReadKey();
+
+            var structureMapSample = new StructureMapSample();
+            structureMapSample.RunSample();
+            Console.WriteLine("StructureMap demo is finished. Press Any Key to continue");
+            Console.ReadKey();
         }
     }
 }

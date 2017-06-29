@@ -12,45 +12,59 @@ namespace Samples
 
         public void Run()
         {
-            // You need Azure Storage emulator running to run this
-            var connectionString = "UseDevelopmentStorage=true";
-            var builder = Wireup.UseInternalContainer()
-                                .UseRepository<AzureTablesSagaRepository>()
-                                .Register(typeof(ITableClientFactory), new TableClientFactory(connectionString));
-
-            sagaMediator = builder.ResolveMediator();
-
-            var correlationId = Guid.NewGuid();
-            var initMessage = new PersonalDetailsVerification(correlationId)
+            try
             {
-                FirstName = "James",
-                LastName = "Bond",
-            };
+                // You need Azure Storage emulator running to run this
+                var connectionString = "UseDevelopmentStorage=true";
+                var builder = Wireup.UseInternalContainer()
+                                    .UseRepository<AzureTablesSagaRepository>()
+                                    .Register(typeof(ITableClientFactory), new TableClientFactory(connectionString));
 
-            sagaMediator.Consume(initMessage);
+                sagaMediator = builder.ResolveMediator();
+
+                var correlationId = Guid.NewGuid();
+                var initMessage = new PersonalDetailsVerification(correlationId)
+                {
+                    FirstName = "James",
+                    LastName = "Bond",
+                };
+
+                sagaMediator.Consume(initMessage);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Quite likely you don't have Azure Storage Emulator running, so this sample can't be executed");
+            }
         }
 
 
         public void WithSimpleInjector()
         {
-            var container = new Container();
-            container.RegisterNSagaComponents();
-            container.UseSagaRepository<AzureTablesSagaRepository>();
-
-            // You need Azure Storage emulator running to run this
-            var connectionString = "UseDevelopmentStorage=true";
-            container.Register<ITableClientFactory>(()=> new TableClientFactory(connectionString), Lifestyle.Singleton);
-
-            sagaMediator = container.GetInstance<ISagaMediator>();
-
-            var correlationId = Guid.NewGuid();
-            var initMessage = new PersonalDetailsVerification(correlationId)
+            try
             {
-                FirstName = "James",
-                LastName = "Bond",
-            };
+                var container = new Container();
+                container.RegisterNSagaComponents();
+                container.UseSagaRepository<AzureTablesSagaRepository>();
 
-            sagaMediator.Consume(initMessage);
+                // You need Azure Storage emulator running to run this
+                var connectionString = "UseDevelopmentStorage=true";
+                container.Register<ITableClientFactory>(() => new TableClientFactory(connectionString), Lifestyle.Singleton);
+
+                sagaMediator = container.GetInstance<ISagaMediator>();
+
+                var correlationId = Guid.NewGuid();
+                var initMessage = new PersonalDetailsVerification(correlationId)
+                {
+                    FirstName = "James",
+                    LastName = "Bond",
+                };
+
+                sagaMediator.Consume(initMessage);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Quite likely you don't have Azure Storage Emulator running, so this sample can't be executed");
+            }
         }
     }
 }
