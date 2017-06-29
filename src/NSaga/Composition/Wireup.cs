@@ -1,4 +1,6 @@
-﻿namespace NSaga
+﻿using System.Reflection;
+
+namespace NSaga
 {
     /// <summary>
     /// Class to accommodate start of configuration of NSaga 
@@ -15,5 +17,13 @@
 
             return builder;
         }
+
+        public static SagaMediatorBuilder UseInternalContainer(params Assembly[] assembliesToScan)
+        {
+            var builder = new SagaMediatorBuilder(assembliesToScan);
+
+            return builder;
+        }
+
     }
 }

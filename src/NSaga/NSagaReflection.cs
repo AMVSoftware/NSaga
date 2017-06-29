@@ -85,10 +85,7 @@ namespace NSaga
                 var messageType = message.GetType();
                 var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(messageType);
 
-                var subset = assemblies.Where(x => !x.FullName.Contains("xunit"));
-
-
-                var scan = subset.SelectMany(a => a.GetTypes())
+                var scan = assemblies.SelectMany(a => a.GetTypes())
                                      .Where(t => initiatingInterfaceType.IsAssignableFrom(t))
                                      .ToList();
 
@@ -119,13 +116,10 @@ namespace NSaga
                     assemblies = AppDomain.CurrentDomain.GetAssemblies();
                 }
 
-                var subset = assemblies.Where(x => !x.FullName.Contains("xunit"));
-
-
                 var messageType = message.GetType();
                 var initiatingInterfaceType = typeof(ConsumerOf<>).MakeGenericType(messageType);
 
-                var scan = subset.SelectMany(a => a.GetTypes())
+                var scan = assemblies.SelectMany(a => a.GetTypes())
                                      .Where(t => initiatingInterfaceType.IsAssignableFrom(t))
                                      .ToList();
 
@@ -195,10 +189,9 @@ namespace NSaga
         {
             try
             {
-                var subset = assemblies.Where(x => !x.FullName.Contains("xunit"));
-              
-                var allSagaTypes = subset.SelectMany(a => a.GetTypes() )
-                                .Where(t => !t.FullName.Contains("xunit"))
+                var types = assemblies.SelectMany(a => a.GetTypes()).ToList();
+
+                var allSagaTypes = types
                                 .Where(t => NSagaReflection.TypeImplementsInterface(t, typeof(ISaga<>)))
                                 .Where(t => t.IsClass)
                                 .ToList();

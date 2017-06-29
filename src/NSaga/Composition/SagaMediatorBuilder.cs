@@ -50,11 +50,18 @@ namespace NSaga
         /// </list>
         /// </para>
         /// </summary>
-        public SagaMediatorBuilder()
+        public SagaMediatorBuilder(params Assembly[] assembliesToScan)
         {
             Container = new TinyIoCContainer();
             pipelineHooks = new List<Type>();
-            this.assembliesToScan = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            if (assembliesToScan == null || !assembliesToScan.Any())
+            {
+                this.assembliesToScan = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            }
+            else
+            {
+                this.assembliesToScan = assembliesToScan.ToList();
+            }
             areComponentsRegistered = false;
 
             RegisterDefaults();

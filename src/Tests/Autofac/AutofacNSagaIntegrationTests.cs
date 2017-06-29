@@ -5,6 +5,7 @@ using FluentAssertions;
 using NSaga;
 using NSaga.Autofac;
 using Xunit;
+using System.Reflection;
 
 namespace Tests.Autofac
 {
@@ -22,7 +23,7 @@ namespace Tests.Autofac
         public void DefaultRegistration_Resolves_DefaultComponents(Type requestedType, Type expectedImplementation)
         {
             //Arrange
-            var container = new ContainerBuilder().RegisterNSagaComponents().Build();
+            var container = GetBaseContainerBuilder().Build();
 
             // Act
             var result = container.Resolve(requestedType);
@@ -37,9 +38,7 @@ namespace Tests.Autofac
         public void DefaultRegistration_ResolvePipline_ResolvesMetadataHook()
         {
             //Arrange
-            var container = new ContainerBuilder()
-                                .RegisterNSagaComponents()
-                                .Build();
+            var container = GetBaseContainerBuilder().Build();
             
             // Act
             var result = container.Resolve<IEnumerable<IPipelineHook>>();
@@ -55,9 +54,9 @@ namespace Tests.Autofac
         public void AddPipeline_Resolves_AdditionalHooks()
         {
             //Arrange
-            var container = new ContainerBuilder()
-                                .RegisterNSagaComponents()
-                                .AddSagaPipelineHook<NullPipelineHook>().Build();
+            var container = GetBaseContainerBuilder()
+                                .AddSagaPipelineHook<NullPipelineHook>()
+                                .Build();
 
             // Act
             var result = container.Resolve<IEnumerable<IPipelineHook>>();
@@ -69,12 +68,12 @@ namespace Tests.Autofac
                        .And.Contain(h => h.GetType() == typeof(NullPipelineHook));
         }
 
+
         [Fact]
         public void OverrideRepository_Resolves_OverridenRepository()
         {
             //Arrange
-            var container = new ContainerBuilder()
-                                .RegisterNSagaComponents()
+            var container = GetBaseContainerBuilder()
                                 .UseSagaRepository<NullSagaRepository>()
                                 .Build();
 
@@ -85,11 +84,12 @@ namespace Tests.Autofac
             result.Should().NotBeNull().And.BeOfType<NullSagaRepository>();
         }
 
+
         [Fact]
         public void Default_Can_Initialise_Saga()
         {
             //Arrange
-            var container = new ContainerBuilder().RegisterNSagaComponents().Build();
+            var container = GetBaseContainerBuilder().Build();
             var sagaMediator = container.Resolve<ISagaMediator>();
 
             // Act
@@ -104,10 +104,10 @@ namespace Tests.Autofac
         public void UseSqlServerRepository_Registers_AndResolves()
         {
             //Arrange
-            var container = new ContainerBuilder().RegisterNSagaComponents()
-                    .UseSqlServer()
-                    .WithConnectionStringName("TestingConnectionString")
-                    .Build();
+            var container = GetBaseContainerBuilder()
+                                .UseSqlServer()
+                                .WithConnectionStringName("TestingConnectionString")
+                                .Build();
 
             // Act
             var repository = container.Resolve<ISagaRepository>();
@@ -121,8 +121,7 @@ namespace Tests.Autofac
         public void UseSqlServerRepository_RegistersByConnectionString_AndResolves()
         {
             //Arrange
-            var container = new ContainerBuilder()
-                                .RegisterNSagaComponents()
+            var container = GetBaseContainerBuilder()
                                 .UseSqlServer()
                                 .WithConnectionString(@"Server=(localdb)\v12.0;Database=NSaga-Testing")
                                 .Build();
@@ -132,6 +131,13 @@ namespace Tests.Autofac
 
             // Assert
             repository.Should().NotBeNull().And.BeOfType<SqlSagaRepository>();
+        }
+
+        private ContainerBuilder GetBaseContainerBuilder()
+        {
+            var result = new ContainerBuilder().RegisterNSagaComponents(Assembly.GetExecutingAssembly());
+
+            return result;
         }
     }
 }

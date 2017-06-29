@@ -1,6 +1,7 @@
 ﻿using System;
 using NSaga;
 using Tests.Implementations;
+using System.Reflection;
 
 namespace Tests.Composition
 {
@@ -8,7 +9,7 @@ namespace Tests.Composition
     {
         public TinyIocSagaFactoryTests()
         {
-            var builder = Wireup.UseInternalContainer();
+            var builder = Wireup.UseInternalContainer(Assembly.GetExecutingAssembly());
             Sut = builder.Resolve<ISagaFactory>();
         }
     }

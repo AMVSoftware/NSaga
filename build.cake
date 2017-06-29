@@ -69,7 +69,7 @@ Task("Create-DB-And-Schema")
     .Description("Creates database and installs schema")
     .Does(() => 
     {
-        LocalDbCreateInstance("v12.0", LocalDbVersion.V12);
+        LocalDbCreateInstance("v12.0");
 
         var masterConnectionString = @"data source=(LocalDb)\v12.0;";
         var dbConnectionString = @"data source=(LocalDb)\v12.0;Database=NSaga-Testing";

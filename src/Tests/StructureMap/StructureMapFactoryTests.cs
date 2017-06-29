@@ -7,6 +7,7 @@ using NSaga;
 using NSaga.StructureMap;
 using StructureMap;
 using Tests.Implementations;
+using System.Reflection;
 
 namespace Tests.StructureMap
 {
@@ -15,7 +16,7 @@ namespace Tests.StructureMap
         public StructureMapFactoryTests()
         {
             var builder = new Container();
-            builder.RegisterNSagaComponents();
+            builder.RegisterNSagaComponents(Assembly.GetExecutingAssembly());
 
             Sut = builder.GetInstance<ISagaFactory>();
             

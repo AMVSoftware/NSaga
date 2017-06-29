@@ -1,6 +1,7 @@
 ﻿using NSaga;
 using NSaga.SimpleInjector;
 using SimpleInjector;
+using System.Reflection;
 using Tests.Implementations;
 
 namespace Tests.SimpleInjector
@@ -10,7 +11,7 @@ namespace Tests.SimpleInjector
         public SimpleInjectorSagaFactoryTests()
         {
             var container = new Container();
-            container.RegisterNSagaComponents();
+            container.RegisterNSagaComponents(Assembly.GetExecutingAssembly());
             Sut = container.GetInstance<ISagaFactory>();
         }
     }
