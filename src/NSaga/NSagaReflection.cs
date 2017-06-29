@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-
+using System.Text;
 
 namespace NSaga
 {
@@ -74,19 +75,32 @@ namespace NSaga
         /// <returns></returns>
         internal static IEnumerable<Type> GetSagaTypesInitiatedBy(IInitiatingSagaMessage message, params Assembly[] assemblies)
         {
-            if (assemblies.Length == 0)
+            try
             {
-                assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                if (assemblies.Length == 0)
+                {
+                    assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                }
+
+                var messageType = message.GetType();
+                var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(messageType);
+
+                var subset = assemblies.Where(x => !x.FullName.Contains("xunit"));
+
+
+                var scan = subset.SelectMany(a => a.GetTypes())
+                                     .Where(t => initiatingInterfaceType.IsAssignableFrom(t))
+                                     .ToList();
+
+                return scan;
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                //Display or log the error based on your application.
+
+                throw new Exception(BuildFusionException(ex));
             }
 
-            var messageType = message.GetType();
-            var initiatingInterfaceType = typeof(InitiatedBy<>).MakeGenericType(messageType);
-
-            var scan = assemblies.SelectMany(a => a.GetTypes())
-                                 .Where(t => initiatingInterfaceType.IsAssignableFrom(t))
-                                 .ToList();
-
-            return scan;
         }
 
 
@@ -98,19 +112,32 @@ namespace NSaga
         /// <returns></returns>
         internal static IEnumerable<Type> GetSagaTypesConsuming(ISagaMessage message, params Assembly[] assemblies)
         {
-            if (assemblies.Length == 0)
+            try
             {
-                assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                if (assemblies.Length == 0)
+                {
+                    assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                }
+
+                var subset = assemblies.Where(x => !x.FullName.Contains("xunit"));
+
+
+                var messageType = message.GetType();
+                var initiatingInterfaceType = typeof(ConsumerOf<>).MakeGenericType(messageType);
+
+                var scan = subset.SelectMany(a => a.GetTypes())
+                                     .Where(t => initiatingInterfaceType.IsAssignableFrom(t))
+                                     .ToList();
+
+                return scan;
             }
+            catch (ReflectionTypeLoadException ex)
+            {
+                //Display or log the error based on your application.
 
-            var messageType = message.GetType();
-            var initiatingInterfaceType = typeof(ConsumerOf<>).MakeGenericType(messageType);
-
-            var scan = assemblies.SelectMany(a => a.GetTypes())
-                                 .Where(t => initiatingInterfaceType.IsAssignableFrom(t))
-                                 .ToList();
-
-            return scan;
+                throw new Exception(BuildFusionException(ex));
+            }
+            
         }
 
 
@@ -166,14 +193,26 @@ namespace NSaga
         /// <returns>List of Types that implement <see cref="ISaga{TSagaData}"/></returns>
         public static IEnumerable<Type> GetAllSagaTypes(IEnumerable<Assembly> assemblies)
         {
-            var allSagaTypes = assemblies.SelectMany(a => a.GetTypes())
+            try
+            {
+                var subset = assemblies.Where(x => !x.FullName.Contains("xunit"));
+              
+                var allSagaTypes = subset.SelectMany(a => a.GetTypes() )
+                                .Where(t => !t.FullName.Contains("xunit"))
                                 .Where(t => NSagaReflection.TypeImplementsInterface(t, typeof(ISaga<>)))
                                 .Where(t => t.IsClass)
                                 .ToList();
 
-            return allSagaTypes;
-        }
+                return allSagaTypes;
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                //Display or log the error based on your application.
 
+                throw new Exception(BuildFusionException(ex));
+            }
+            
+        }
 
         /// <summary>
         /// Returns list of all pairs of SagaType -> implemented interface
@@ -199,6 +238,31 @@ namespace NSaga
                     yield return new KeyValuePair<Type, Type>(sagaType, @interface);
                 }
             }
+        }
+
+        /// <summary>
+        /// Provides a details on the reflection exceptions
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        private static string BuildFusionException(ReflectionTypeLoadException ex)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Exception exSub in ex.LoaderExceptions)
+            {
+                sb.AppendLine(exSub.Message);
+                FileNotFoundException exFileNotFound = exSub as FileNotFoundException;
+                if (exFileNotFound != null)
+                {
+                    if (!string.IsNullOrEmpty(exFileNotFound.FusionLog))
+                    {
+                        sb.AppendLine("Fusion Log:");
+                        sb.AppendLine(exFileNotFound.FusionLog);
+                    }
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
         }
     }
 }

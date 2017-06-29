@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Benchmarking", "Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSaga.AzureTables", "NSaga.AzureTables\NSaga.AzureTables.csproj", "{2A3BAD16-35B7-41BB-964F-453360535D89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSaga.StructureMap", "NSaga.StructureMap\NSaga.StructureMap.csproj", "{84952E5A-1629-4B1D-A978-ED4356986D0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{2A3BAD16-35B7-41BB-964F-453360535D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A3BAD16-35B7-41BB-964F-453360535D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A3BAD16-35B7-41BB-964F-453360535D89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84952E5A-1629-4B1D-A978-ED4356986D0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84952E5A-1629-4B1D-A978-ED4356986D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84952E5A-1629-4B1D-A978-ED4356986D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84952E5A-1629-4B1D-A978-ED4356986D0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
