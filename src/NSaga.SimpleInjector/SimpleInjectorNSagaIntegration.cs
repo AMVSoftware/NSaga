@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using SimpleInjector;
 using SimpleInjector.Advanced;
@@ -19,8 +20,9 @@ namespace NSaga.SimpleInjector
         public static Container RegisterNSagaComponents(this Container container)
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
-
-            return container.RegisterNSagaComponents(AppDomain.CurrentDomain.GetAssemblies());
+            //exclude xunit runner from the loading assemblies, so the tests can be run via visual studio.net
+            var subset = AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.FullName.Contains("xunit"));
+            return container.RegisterNSagaComponents(subset.ToArray());
         }
 
         /// <summary>
