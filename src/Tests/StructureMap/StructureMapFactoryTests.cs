@@ -19,7 +19,6 @@ namespace Tests.StructureMap
             builder.RegisterNSagaComponents(Assembly.GetExecutingAssembly());
 
             Sut = builder.GetInstance<ISagaFactory>();
-            
         }
     }
 }

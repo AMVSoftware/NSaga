@@ -44,6 +44,9 @@
     <Reference Include="SimpleInjector, Version=4.0.8.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.4.0.8\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
+    <Reference Include="StructureMap, Version=4.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StructureMap.4.5.1\lib\net45\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -70,6 +73,7 @@
     <Compile Include="AccountCreation\VerificationCodeRequest.cs" />
     <Compile Include="SimpleInjectorSample.cs" />
     <Compile Include="StaticBuilderReference.cs" />
+    <Compile Include="StructureMapSample.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NSaga.Autofac\NSaga.Autofac.csproj">
@@ -83,6 +87,10 @@
     <ProjectReference Include="..\NSaga.SimpleInjector\NSaga.SimpleInjector.csproj">
       <Project>{b8596ea9-b88b-4415-bc6f-cad0ebf07a70}</Project>
       <Name>NSaga.SimpleInjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NSaga.StructureMap\NSaga.StructureMap.csproj">
+      <Project>{84952E5A-1629-4B1D-A978-ED4356986D0A}</Project>
+      <Name>NSaga.StructureMap</Name>
     </ProjectReference>
     <ProjectReference Include="..\NSaga\NSaga.csproj">
       <Project>{e537d1bf-80a4-413b-a8f8-116c2a2382b1}</Project>
