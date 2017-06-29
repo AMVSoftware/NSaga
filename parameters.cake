@@ -1,8 +1,8 @@
 public class BuildParameters
 {
     public String Solution = "./src/NSaga.sln";
-    public string Artefacts = "./artefacts/";
-    public string ArtefactsBin = "./artefacts/bin/";
+    public string Artifacts = "./artifacts/";
+    public string ArtifactsBin = "./artifacts/bin/";
 
     public string NSagaBinDir { get; private set; }
     public string AutofacBinDir { get; private set; }
