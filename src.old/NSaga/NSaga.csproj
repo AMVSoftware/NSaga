@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E537D1BF-80A4-413B-A8F8-116C2A2382B1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NSaga</RootNamespace>
+    <AssemblyName>NSaga</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;TINYIOC_INTERNAL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\NSaga.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;TINYIOC_INTERNAL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\NSaga.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Composition\SagaMediatorBuilder.cs" />
+    <Compile Include="Composition\TinyIocExtensions.cs" />
+    <Compile Include="Composition\Wireup.cs" />
+    <Compile Include="Composition\TinyIocSagaFactory.cs" />
+    <Compile Include="Diagnostic\NSagaConfigurationValidator.cs" />
+    <Compile Include="Guard.cs" />
+    <Compile Include="IMessageSerialiser.cs" />
+    <Compile Include="Implementations\InMemorySagaRepository.cs" />
+    <Compile Include="Implementations\TimeProvider.cs" />
+    <Compile Include="Composition\TinyIoC.cs" />
+    <Compile Include="Pipeline\CompositePipelineHook.cs" />
+    <Compile Include="Pipeline\MetadataPipelineHook.cs" />
+    <Compile Include="Pipeline\PipelineContext.cs" />
+    <Compile Include="Pipeline\IPipelineHook.cs" />
+    <Compile Include="ISaga.cs" />
+    <Compile Include="ISagaMediator.cs" />
+    <Compile Include="ISagaRepository.cs" />
+    <Compile Include="ISagaFactory.cs" />
+    <Compile Include="Implementations\JsonNetSerialiser.cs" />
+    <Compile Include="OperationResult.cs" />
+    <Compile Include="Pipeline\SagaMetadatExtension.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NSagaReflection.cs" />
+    <Compile Include="SagaMediator.cs" />
+    <Compile Include="Pipeline\SagaMetadata.cs" />
+    <Compile Include="SqlServer\IConnectionFactory.cs" />
+    <Compile Include="SqlServer\PetaPoco.cs" />
+    <Compile Include="SqlServer\SqlSagaRepository.cs" />
+    <Compile Include="SqlServer\SqlServerWireup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NSaga.nuspec" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SqlServer\Install.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
