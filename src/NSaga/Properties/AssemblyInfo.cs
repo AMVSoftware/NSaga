@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NSaga")]
-[assembly: AssemblyProduct("NSaga")]
-[assembly: AssemblyDescription("Lightweight Saga management framework")]
+//[assembly: AssemblyTitle("NSaga")]
+//[assembly: AssemblyProduct("NSaga")]
+//[assembly: AssemblyDescription("Lightweight Saga management framework")]
 
-[assembly: AssemblyCompany("AMV Software")]
+//[assembly: AssemblyCompany("AMV Software")]
 [assembly: AssemblyCopyright("Copyright AMV Software©  2016")]
 [assembly: AssemblyTrademark("AMV Software")]
 
