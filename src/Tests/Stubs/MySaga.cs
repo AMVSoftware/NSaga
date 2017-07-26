@@ -13,7 +13,7 @@ namespace Tests
     }
 
 
-    public class MySaga : ISaga<MySagaData>, 
+    public class MySaga : ISaga<MySagaData>,
                           InitiatedBy<MySagaInitiatingMessage>,
                           InitiatedBy<MultipleSagaInitiator>,
                           InitiatedBy<MySagaAdditionalInitialser>,

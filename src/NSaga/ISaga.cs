@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NSaga
 {
@@ -92,5 +93,20 @@ namespace NSaga
         /// <param name="message">The message.</param>
         /// <returns>Result of the operation</returns>
         OperationResult Consume(TMsg message);
+    }
+
+
+    /// <summary>
+    /// Interface for a Saga that defines that the Saga can consume particular type of message and that the message processing can be done async
+    /// </summary>
+    /// <typeparam name="TMsg">What type of message to be consumed</typeparam>
+    public interface AsyncConsumerOf<TMsg> where TMsg : ISagaMessage
+    {
+        /// <summary>
+        /// Consumes the specified message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>Result of the operation</returns>
+        Task<OperationResult> ConsumeAsync(TMsg message);
     }
 }

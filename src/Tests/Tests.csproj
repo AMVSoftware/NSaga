@@ -118,9 +118,11 @@
     <Compile Include="Diagnostic\NSagaConfigurationValidatorTests.cs" />
     <Compile Include="Implementations\SagaFactoryTestsTemplate.cs" />
     <Compile Include="NamespaceTests.cs" />
+    <Compile Include="SagaMediatorAsyncTests.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorNSagaIntegrationTests.cs" />
     <Compile Include="StructureMap\StructureMapFactoryTests.cs" />
     <Compile Include="StructureMap\StructureMapNSagaIntegrationTests.cs" />
+    <Compile Include="Stubs\MyAsyncSaga.cs" />
     <Compile Include="Stubs\NullMessageSerialiser.cs" />
     <Compile Include="Stubs\NullSagaFactory.cs" />
     <Compile Include="Stubs\NullSagaRepository.cs" />

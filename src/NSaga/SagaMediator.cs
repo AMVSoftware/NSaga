@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace NSaga
 {
@@ -113,6 +113,55 @@ namespace NSaga
             pipelineHook.BeforeConsuming(new PipelineContext(sagaMessage, (IAccessibleSaga)saga));
 
             var errors = (OperationResult)NSagaReflection.InvokeMethod(saga, "Consume", sagaMessage);
+
+            pipelineHook.AfterConsuming(new PipelineContext(sagaMessage, (IAccessibleSaga)saga, errors));
+
+            if (errors.IsSuccessful)
+            {
+                sagaRepository.Save((IAccessibleSaga)saga);
+                pipelineHook.AfterSave(new PipelineContext(sagaMessage, (IAccessibleSaga)saga, errors));
+            }
+
+            return errors;
+        }
+
+
+        /// <summary>
+        /// TODO this should be filled in
+        /// </summary>
+        /// <param name="initiatingMessage"></param>
+        /// <returns></returns>
+        public Task<OperationResult> ConsumeAsync(IInitiatingSagaMessage initiatingMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        /// <summary>
+        /// TODO this should be populatd
+        /// Consumes the specified saga message - finds the existing saga that can consume given message type and with matching CorrelationId.
+        /// </summary>
+        /// <param name="sagaMessage">The saga message.</param>
+        /// <returns>
+        /// Result of the operation
+        /// </returns>
+        /// <exception cref="System.ArgumentException"></exception>
+        public async Task<OperationResult> ConsumeAsync(ISagaMessage sagaMessage)
+        {
+            Guard.CheckSagaMessage(sagaMessage, nameof(sagaMessage));
+
+            var resolvedSaga = sagaFactory.ResolveSagaConsumedBy(sagaMessage);
+            var sagaType = resolvedSaga.GetType();
+
+            var saga = NSagaReflection.InvokeGenericMethod(sagaRepository, "Find", sagaType, sagaMessage.CorrelationId);
+            if (saga == null)
+            {
+                throw new ArgumentException($"Saga with this CorrelationId does not exist. Please initiate a saga with IInitiatingMessage.");
+            }
+
+            pipelineHook.BeforeConsuming(new PipelineContext(sagaMessage, (IAccessibleSaga)saga));
+
+            var errors = await (Task<OperationResult>)NSagaReflection.InvokeMethod(saga, "ConsumeAsync", sagaMessage);
 
             pipelineHook.AfterConsuming(new PipelineContext(sagaMessage, (IAccessibleSaga)saga, errors));
 
